@@ -1,0 +1,259 @@
+.nav-user-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.notif-trigger {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.notif-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
+    padding: 0 4px;
+}
+
+.profile-menu-wrap {
+    position: relative;
+}
+
+.profile-trigger {
+    border: none;
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.nav-avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+}
+
+.nav-user-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+}
+
+.nav-user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.nav-user-role {
+    font-size: 12px;
+    color: #888888;
+}
+
+.profile-trigger > i {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.notifications-panel {
+    position: fixed;
+    top: 74px;
+    right: 16px;
+    width: 340px;
+    max-height: calc(100vh - 92px);
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+    padding: 16px;
+    z-index: 1400;
+}
+
+.notif-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.notif-panel-header h3 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.notif-panel-header button {
+    border: none;
+    background: transparent;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.notif-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notif-item {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.notif-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.notif-content h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.notif-content p {
+    font-size: 12.5px;
+    color: #334155;
+    line-height: 1.45;
+    margin-bottom: 4px;
+}
+
+.notif-content span {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.notif-dot {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2563eb;
+}
+
+.notif-confirmed {
+    background: #f0fdf4;
+}
+
+.notif-confirmed .notif-icon {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.notif-reminder {
+    background: #fffbeb;
+}
+
+.notif-reminder .notif-icon {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.notif-cancelled {
+    background: #fef2f2;
+}
+
+.notif-cancelled .notif-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.notif-report {
+    background: #eff6ff;
+}
+
+.notif-report .notif-icon {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.notif-general {
+    background: #f8fafc;
+}
+
+.notif-general .notif-icon {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 200px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+    overflow: hidden;
+    z-index: 1410;
+}
+
+.profile-dropdown a {
+    display: block;
+    padding: 11px 14px;
+    color: #334155;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.profile-dropdown a:hover {
+    background: #f8fafc;
+    color: #1d4ed8;
+}
+
+@media (max-width: 768px) {
+    .nav-user-meta {
+        display: none;
+    }
+
+    .notifications-panel {
+        top: 62px;
+        right: 0;
+        width: 100%;
+        max-height: calc(100vh - 62px);
+        border-radius: 0;
+    }
+}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to Smart Clinic Management System – your intelligent healthcare portal.">
+    <title>Login – Smart Clinic Management System</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons (Phosphor) -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<div id="navbar-container"></div>
+<!-- ===================== LOGIN SECTION ===================== -->
+<main class="login" id="login-section">
+  <div class="container login-container">
+
+    <!-- LEFT: FORM -->
+    <div class="login-card" id="login-card">
+
+      <!-- Header -->
+      <div class="login-header">
+        <div class="login-badge">
+          <i class="ph-bold ph-shield-check"></i>
+          Secure Login
+        </div>
+        <h1>Welcome Back!</h1>
+        <p class="subtitle">Log in to access your Smart Clinic dashboard</p>
+      </div>
+
+      <!-- FORM -->
+      <form id="login-form" novalidate>
+
+        <!-- EMAIL -->
+        <div class="form-group" id="group-email">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <span class="input-icon"><i class="ph-bold ph-envelope"></i></span>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+          <span class="field-error" id="email-error"></span>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="form-group" id="group-password">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon"><i class="ph-bold ph-lock"></i></span>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            >
+            <button type="button" class="toggle-password" id="toggle-password" aria-label="Toggle password visibility">
+              <i class="ph-bold ph-eye" id="toggle-icon"></i>
+            </button>
+          </div>
+          <span class="field-error" id="password-error"></span>
+        </div>
+
+        <!-- OPTIONS -->
+        <div class="form-options">
+          <label class="remember-label" for="remember">
+            <input type="checkbox" id="remember" name="remember">
+            <span class="custom-check"></span>
+            Remember me
+          </label>
+          <a href="login.html#forgot-password" class="forgot-link" id="forgot-password">Forgot Password?</a>
+        </div>
+
+        <!-- LOGIN BUTTON -->
+        <button type="submit" class="btn-login" id="btn-login">
+          <span class="btn-text">Login</span>
+          <span class="btn-spinner" id="btn-spinner" aria-hidden="true"></span>
+        </button>
+
+        <!-- SIGNUP LINK -->
+        <p class="signup-text">
+          Don't have an account?
+          <a href="register.html" id="signup-link">Sign Up for Free</a>
+        </p>
+
+      </form>
+    </div>
+
+    <!-- RIGHT: ILLUSTRATION -->
+    <div class="login-image" id="login-illustration" aria-hidden="true">
+
+      <div class="illustration-bg">
+        <div class="floating-card card-1">
+          <i class="ph-bold ph-heartbeat"></i>
+          <div>
+            <strong>98.6°F</strong>
+            <span>Body Temp</span>
+          </div>
+        </div>
+
+        <div class="floating-card card-2">
+          <i class="ph-bold ph-check-circle"></i>
+          <div>
+            <strong>Appointment Confirmed</strong>
+            <span>Dr. Sarah Johnson</span>
+          </div>
+        </div>
+
+        <div class="floating-card card-3">
+          <i class="ph-bold ph-users"></i>
+          <div>
+            <strong>12,400+</strong>
+            <span>Patients Served</span>
+          </div>
+        </div>
+
+        <img src="../assets/images/login.png" alt="Doctor illustration" class="doctor-img" id="doctor-img">
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer" id="site-footer">
+  <div class="container footer-inner">
+
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+        <span>Smart Clinic</span>
+      </div>
+      <p>Empowering healthcare professionals with intelligent tools for a better patient experience.</p>
+    </div>
+
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="doctors.html">Our Doctors</a></li>
+        <li><a href="about.html">About Us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="about.html#help-center">Help Center</a></li>
+        <li><a href="about.html#privacy-policy">Privacy Policy</a></li>
+        <li><a href="about.html#terms-of-service">Terms of Service</a></li>
+        <li><a href="about.html#contact-us">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-contact">
+      <h4>Contact</h4>
+      <p><i class="ph-bold ph-map-pin"></i> 123 Medical Drive, Cairo, Egypt</p>
+      <p><i class="ph-bold ph-phone"></i> +20 100 000 0000</p>
+      <p><i class="ph-bold ph-envelope"></i> support@smartclinic.com</p>
+      <div class="social-links">
+        <a href="about.html#facebook" aria-label="Facebook"><i class="ph-bold ph-facebook-logo"></i></a>
+        <a href="about.html#twitter" aria-label="Twitter"><i class="ph-bold ph-twitter-logo"></i></a>
+        <a href="about.html#linkedin" aria-label="LinkedIn"><i class="ph-bold ph-linkedin-logo"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 Smart Clinic Management System. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="../js/components/nav-menu.js"></script>
+<script src="../js/components/components.js"></script>
+<script src="../js/components/navbar.js"></script>
+<script src="../js/pages/login.js"></script>
+
+</body>
+</html>

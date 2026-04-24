@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Profile – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/doctor-detail-pages.css">
+</head>
+<body>
+
+<nav class="navbar" id="main-navbar">
+  <div class="nav-container">
+    <a href="dashboard.html" class="logo">
+      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+      <span>Smart Clinic</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="appointments.html">Appointments</a></li>
+      <li><a href="patients.html" class="active">My Patients</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+      <i class="ph-bold ph-list"></i>
+    </button>
+    <div class="nav-doctor-badge">
+      <div class="nav-avatar-sm"><i class="ph-fill ph-user"></i></div>
+      <span>Dr. Ahmed Ali</span>
+    </div>
+  </div>
+</nav>
+
+<main class="detail-page">
+  <div class="detail-wrap">
+
+    <!-- Top Bar -->
+    <div class="detail-topbar">
+      <div class="detail-topbar-left">
+        <h1>Patient Profile</h1>
+        <nav class="breadcrumb" aria-label="breadcrumb">
+          <a href="patients.html">Patients</a>
+          <i class="ph-bold ph-caret-right"></i>
+          <a href="patients.html">My Patients</a>
+          <i class="ph-bold ph-caret-right"></i>
+          <span id="breadcrumb-name">Patient Profile</span>
+        </nav>
+      </div>
+      <a href="patients.html" class="btn-back">
+        <i class="ph-bold ph-arrow-left"></i> Back to My Patients
+      </a>
+    </div>
+
+    <!-- PROFILE TOP CARD -->
+    <div class="profile-top-card">
+      <div class="profile-avatar-lg" id="profile-avatar">
+        <i class="ph-fill ph-user"></i>
+      </div>
+      <div class="profile-identity">
+        <h2 id="profile-name">Mohamed Hassan</h2>
+        <div class="profile-id" id="profile-id">P1001</div>
+        <div class="profile-tags">
+          <span class="profile-tag" id="profile-gender">Male</span>
+          <span class="profile-tag" id="profile-age">45 years</span>
+          <span class="profile-tag" style="background:var(--green-100);color:var(--green-600)">Active Patient</span>
+        </div>
+      </div>
+      <div class="profile-divider" aria-hidden="true"></div>
+      <div class="profile-meta-grid">
+        <div class="profile-meta-item">
+          <i class="ph-bold ph-phone"></i>
+          <div>
+            <small>Phone</small>
+            <span id="profile-phone">0123 456 7890</span>
+          </div>
+        </div>
+        <div class="profile-meta-item">
+          <i class="ph-bold ph-envelope"></i>
+          <div>
+            <small>Email</small>
+            <span id="profile-email">m.hassan@email.com</span>
+          </div>
+        </div>
+        <div class="profile-meta-item">
+          <i class="ph-bold ph-cake"></i>
+          <div>
+            <small>Date of Birth</small>
+            <span id="profile-dob">Jan 5, 1981</span>
+          </div>
+        </div>
+        <div class="profile-meta-item">
+          <i class="ph-bold ph-map-pin"></i>
+          <div>
+            <small>Address</small>
+            <span id="profile-address">Cairo, Egypt</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEXT APPOINTMENT BANNER -->
+    <div class="next-appt-card">
+      <div class="next-appt-info">
+        <h3><i class="ph-bold ph-calendar-check"></i> &nbsp;Next Appointment</h3>
+        <div class="appt-dt" id="next-appt-dt">Wednesday, April 22, 2026 — 09:00 AM</div>
+        <div class="appt-dr" id="next-appt-dr">Dr. Ahmed Ali &bull; Cardiology</div>
+      </div>
+      <a href="appointment-details.html?id=A001" class="btn-view-appt">
+        <i class="ph-bold ph-arrow-right"></i> View Appointment
+      </a>
+    </div>
+
+    <!-- VISITS HISTORY TABLE -->
+    <div class="visits-card">
+      <div class="visits-card-header">
+        <h2><i class="ph-bold ph-clock-clockwise"></i> Visit History</h2>
+        <span id="visit-count" style="font-size:12.5px;color:var(--slate-500);font-weight:500;"></span>
+      </div>
+      <div class="table-wrap">
+        <table class="visits-table" id="visits-table">
+          <thead>
+            <tr>
+              <th>Date &amp; Time</th>
+              <th>Reason</th>
+              <th>Doctor</th>
+              <th>Diagnosis</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="visits-tbody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /detail-wrap -->
+</main>
+
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/pages/doctor/patient-profile.js"></script>
+</body>
+</html>

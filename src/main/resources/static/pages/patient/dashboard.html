@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/navbar.css">
+    <link rel="stylesheet" href="../../css/patient-dashboard.css">
+</head>
+<body>
+
+<div id="navbar-container"></div>
+
+<aside class="notifications-panel" id="notifications-panel" hidden>
+  <div class="notif-panel-header">
+    <h3>Notifications</h3>
+    <button type="button" id="mark-all-read">Mark all as read</button>
+  </div>
+
+  <div class="notif-list">
+    <article class="notif-item notif-confirmed" data-unread="true">
+      <div class="notif-icon"><i class="ph-bold ph-check-circle"></i></div>
+      <div class="notif-content">
+        <h4>Appointment Confirmed</h4>
+        <p>Your appointment with Dr. Ahmed Ali on May 20, 2025 at 10:00 AM is confirmed.</p>
+        <span>10 min ago</span>
+      </div>
+      <span class="notif-dot"></span>
+    </article>
+
+    <article class="notif-item notif-reminder" data-unread="true">
+      <div class="notif-icon"><i class="ph-bold ph-clock"></i></div>
+      <div class="notif-content">
+        <h4>Appointment Reminder</h4>
+        <p>This is a reminder for your appointment tomorrow at 10:00 AM with Dr. Ahmed Ali.</p>
+        <span>1 hour ago</span>
+      </div>
+      <span class="notif-dot"></span>
+    </article>
+
+    <article class="notif-item notif-cancelled" data-unread="true">
+      <div class="notif-icon"><i class="ph-bold ph-x-circle"></i></div>
+      <div class="notif-content">
+        <h4>Appointment Cancelled</h4>
+        <p>Your appointment on May 18, 2025 at 11:00 AM has been cancelled.</p>
+        <span>1 day ago</span>
+      </div>
+      <span class="notif-dot"></span>
+    </article>
+
+    <article class="notif-item notif-report">
+      <div class="notif-icon"><i class="ph-bold ph-file-text"></i></div>
+      <div class="notif-content">
+        <h4>New Medical Report</h4>
+        <p>Your medical report from Dr. Ahmed Ali is now available.</p>
+        <span>2 days ago</span>
+      </div>
+    </article>
+
+    <article class="notif-item notif-general">
+      <div class="notif-icon"><i class="ph-bold ph-bell"></i></div>
+      <div class="notif-content">
+        <h4>Clinic Notification</h4>
+        <p>Clinic will be closed on Friday, May 23, 2025 on occasion of public holiday.</p>
+        <span>3 days ago</span>
+      </div>
+    </article>
+  </div>
+</aside>
+
+<main class="dashboard" id="dashboard">
+  <div class="dash-container">
+
+    <!-- Greeting -->
+    <header class="dash-header">
+      <div>
+        <h1>Good morning, <span id="user-name">Patient</span> 👋</h1>
+        <p>Here's your health overview and upcoming appointments.</p>
+      </div>
+      <div class="dash-date" id="dash-date"></div>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="--s-hue:220"><i class="ph-bold ph-calendar-check"></i></div>
+        <div class="stat-body">
+          <span class="stat-num" id="stat-upcoming-num">0</span>
+          <span class="stat-label">Upcoming Appointments</span>
+          <a href="book-appointment.html" class="stat-link">Book new <i class="ph-bold ph-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="--s-hue:160"><i class="ph-bold ph-clipboard-text"></i></div>
+        <div class="stat-body">
+          <span class="stat-num" id="stat-visits-num">0</span>
+          <span class="stat-label">Total Visits</span>
+          <a href="#history-section" class="stat-link">View history <i class="ph-bold ph-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="--s-hue:30"><i class="ph-bold ph-pill"></i></div>
+        <div class="stat-body">
+          <span class="stat-num">2</span>
+          <span class="stat-label">Active Prescriptions</span>
+          <a href="reports.html" class="stat-link">View details <i class="ph-bold ph-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="--s-hue:340"><i class="ph-bold ph-bell-ringing"></i></div>
+        <div class="stat-body">
+          <span class="stat-num">1</span>
+          <span class="stat-label">Health Reminders</span>
+          <a href="appointments.html" class="stat-link">View reminders <i class="ph-bold ph-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main: Left + Sidebar -->
+    <div class="dash-main">
+
+      <!-- Left Column -->
+      <div class="dash-left">
+
+        <!-- Upcoming Appointments -->
+        <section class="dash-card" id="upcoming-section">
+          <div class="dash-card-header">
+            <h2><i class="ph-bold ph-calendar-check"></i> Upcoming Appointments</h2>
+          </div>
+          <div id="upcoming-list"></div>
+          <div class="no-data" id="no-upcoming" hidden>
+            <i class="ph-bold ph-calendar-x"></i>
+            <p>No upcoming appointments.</p>
+            <a href="book-appointment.html" class="btn-book-now">Book Appointment</a>
+          </div>
+        </section>
+
+        <!-- Medical History -->
+        <section class="dash-card" id="history-section">
+          <div class="dash-card-header">
+            <h2><i class="ph-bold ph-clock-clockwise"></i> Recent Medical History</h2>
+          </div>
+          <div class="table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Diagnosis</th>
+                  <th>Doctor</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="history-tbody"></tbody>
+            </table>
+          </div>
+          <div class="no-data" id="no-history" hidden>
+            <i class="ph-bold ph-file-x"></i>
+            <p>No medical history found.</p>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right Sidebar -->
+      <aside class="dash-sidebar">
+
+        <!-- Profile Card -->
+        <div class="dash-card profile-card">
+          <div class="profile-avatar"><i class="ph-fill ph-user"></i></div>
+          <h3 id="profile-name">—</h3>
+          <span class="profile-badge">Patient</span>
+          <ul class="profile-info">
+            <li><i class="ph-bold ph-identification-card"></i><span id="profile-id">—</span></li>
+            <li><i class="ph-bold ph-phone"></i><span id="profile-phone">—</span></li>
+            <li><i class="ph-bold ph-envelope"></i><span id="profile-email">—</span></li>
+            <li><i class="ph-bold ph-map-pin"></i><span id="profile-address">Cairo, Egypt</span></li>
+          </ul>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="dash-card">
+          <div class="dash-card-header"><h2>Quick Actions</h2></div>
+          <ul class="action-list">
+            <li><a href="book-appointment.html" class="action-item">
+              <div class="action-icon" style="--a-hue:220"><i class="ph-bold ph-calendar-plus"></i></div>
+              <span>Book Appointment</span><i class="ph-bold ph-caret-right"></i>
+            </a></li>
+            <li><a href="appointments.html" class="action-item">
+              <div class="action-icon" style="--a-hue:160"><i class="ph-bold ph-list-checks"></i></div>
+              <span>My Appointments</span><i class="ph-bold ph-caret-right"></i>
+            </a></li>
+            <li><a href="#history-section" class="action-item">
+              <div class="action-icon" style="--a-hue:30"><i class="ph-bold ph-clock-clockwise"></i></div>
+              <span>Medical History</span><i class="ph-bold ph-caret-right"></i>
+            </a></li>
+            <li><a href="profile.html" class="action-item">
+              <div class="action-icon" style="--a-hue:280"><i class="ph-bold ph-user-circle-gear"></i></div>
+              <span>Edit Profile</span><i class="ph-bold ph-caret-right"></i>
+            </a></li>
+          </ul>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+</main>
+
+<!-- Cancel Modal -->
+<div class="modal-overlay" id="cancel-overlay" hidden>
+  <div class="modal">
+    <div class="modal-icon warning"><i class="ph-bold ph-warning"></i></div>
+    <h3>Cancel Appointment?</h3>
+    <p>The time slot will be freed for other patients.</p>
+    <div class="modal-actions">
+      <button class="btn-keep" id="cancel-no">Keep It</button>
+      <button class="btn-confirm-cancel" id="cancel-yes">Yes, Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="ph-bold ph-check-circle" id="toast-icon"></i><span id="toast-msg"></span></div>
+
+<script src="../../js/appointmentService.js"></script>
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
+<script src="../../js/pages/patient/dashboard.js"></script>
+</body>
+</html>

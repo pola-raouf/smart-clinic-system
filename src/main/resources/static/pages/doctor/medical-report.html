@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script type="module">
+import { requireAuth, requireRole } from '/js/core/auth.js';
+requireAuth();
+requireRole('DOCTOR');
+</script>
+</body>
+</html>

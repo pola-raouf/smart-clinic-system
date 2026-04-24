@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Consultation – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/start-consultation.css">
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="consult-topbar">
+  <a href="dashboard.html" class="back-link">
+    <i class="ph-bold ph-arrow-left"></i> Back to Appointments
+  </a>
+  <div class="topbar-center">
+    <h1>Start Consultation</h1>
+    <nav class="breadcrumb" aria-label="breadcrumb">
+      <a href="dashboard.html">Appointments</a>
+      <i class="ph-bold ph-caret-right"></i>
+      <a href="dashboard.html">Today's Appointments</a>
+      <i class="ph-bold ph-caret-right"></i>
+      <span>Start Consultation</span>
+    </nav>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn-records" id="btn-records">
+      <i class="ph-bold ph-folder-open"></i> View Patient Records
+    </button>
+    <button class="btn-finish" id="btn-finish">
+      <i class="ph-bold ph-check"></i> Save &amp; Finish Consultation
+    </button>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<main class="consult-main">
+
+  <!-- ── LEFT SIDEBAR ── -->
+  <aside class="consult-sidebar">
+
+    <!-- Patient Info -->
+    <div class="sidebar-card patient-card">
+      <div class="patient-avatar"><i class="ph-fill ph-user"></i></div>
+      <h3 id="pt-name">Mohamed Hassan</h3>
+      <p class="pt-id" id="pt-id">ID: P1001</p>
+
+      <ul class="pt-details">
+        <li><i class="ph-bold ph-calendar-blank"></i><span id="pt-age">45 years, Male</span></li>
+        <li><i class="ph-bold ph-phone"></i><span id="pt-phone">0123 456 7890</span></li>
+        <li><i class="ph-bold ph-envelope"></i><span id="pt-email">m.hassan@email.com</span></li>
+        <li><i class="ph-bold ph-map-pin"></i><span id="pt-location">Cairo, Egypt</span></li>
+      </ul>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="sidebar-nav">
+      <a href="#diagnosis-section"  class="snav-item active" id="snav-consult">
+        <i class="ph-bold ph-stethoscope"></i> Consultation
+      </a>
+      <a href="#clinical-section"  class="snav-item" id="snav-history">
+        <i class="ph-bold ph-clock-clockwise"></i> Medical History
+      </a>
+      <a href="#prescription-section" class="snav-item" id="snav-rx">
+        <i class="ph-bold ph-pill"></i> Previous Prescriptions
+      </a>
+      <a href="#files-section" class="snav-item" id="snav-appts">
+        <i class="ph-bold ph-calendar-check"></i> Appointments
+      </a>
+      <a href="#diagnosis-section" class="snav-item" id="snav-info">
+        <i class="ph-bold ph-user-circle"></i> Patient Information
+      </a>
+    </nav>
+
+    <!-- Today's Appointment Card -->
+    <div class="sidebar-card today-appt-card">
+      <h4><i class="ph-bold ph-calendar-check"></i> Today's Appointment</h4>
+      <p class="appt-date-line" id="appt-date-line"></p>
+      <p class="appt-reason" id="appt-reason">Regular Checkup</p>
+      <span class="badge-in-progress">In Progress</span>
+    </div>
+
+  </aside><!-- /sidebar -->
+
+  <!-- ── RIGHT MAIN CONTENT ── -->
+  <div class="consult-content">
+
+    <!-- SECTION 1: DIAGNOSIS -->
+    <section class="consult-card" id="diagnosis-section">
+      <div class="consult-card-header">
+        <i class="ph-bold ph-stethoscope"></i>
+        <h2>1. Diagnosis</h2>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Chief Complaint</label>
+        <div class="textarea-wrap">
+          <textarea id="chief-complaint" placeholder="Enter chief complaint" maxlength="250" rows="3"></textarea>
+          <span class="char-count" data-max="250" data-target="chief-complaint">0/250</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Diagnosis</label>
+        <div class="diagnosis-input-row">
+          <input type="text" id="diagnosis-input" placeholder="Enter diagnosis (e.g. Hypertension I10)">
+          <button class="btn-add-tag" id="add-diagnosis-btn">
+            <i class="ph-bold ph-plus"></i> Add Diagnosis
+          </button>
+        </div>
+        <div class="tags-wrap" id="diagnosis-tags">
+          <!-- Tags injected by JS -->
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Notes</label>
+        <div class="textarea-wrap">
+          <textarea id="diagnosis-notes" placeholder="Additional notes about the diagnosis" maxlength="500" rows="3"></textarea>
+          <span class="char-count" data-max="500" data-target="diagnosis-notes">0/500</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: CLINICAL NOTES -->
+    <section class="consult-card" id="clinical-section">
+      <div class="consult-card-header">
+        <i class="ph-bold ph-note-pencil"></i>
+        <h2>2. Clinical Notes <span class="optional-label">(Optional)</span></h2>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Clinical Notes</label>
+        <div class="textarea-wrap">
+          <textarea id="clinical-notes" placeholder="Enter clinical notes…" maxlength="1000" rows="5"></textarea>
+          <span class="char-count" data-max="1000" data-target="clinical-notes">0/1000</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: PRESCRIPTION -->
+    <section class="consult-card" id="prescription-section">
+      <div class="consult-card-header">
+        <i class="ph-bold ph-prescription"></i>
+        <h2>3. Prescription</h2>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Add Medication</label>
+        <div class="med-search-wrap">
+          <i class="ph-bold ph-magnifying-glass"></i>
+          <input type="text" id="med-search" placeholder="Search medication (e.g., Paracetamol)">
+        </div>
+      </div>
+
+      <!-- Medications Table -->
+      <div class="table-wrap">
+        <table class="med-table" id="med-table">
+          <thead>
+            <tr>
+              <th>Medication</th>
+              <th>Dose</th>
+              <th>Frequency</th>
+              <th>Duration</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="med-tbody">
+            <!-- Default rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <button class="btn-add-med" id="add-med-btn">
+        <i class="ph-bold ph-plus"></i> Add Medication
+      </button>
+
+      <!-- Additional Instructions -->
+      <div class="field-group instructions-group">
+        <label class="field-label green-label">Additional Instructions (for patient)</label>
+        <div class="textarea-wrap">
+          <textarea id="instructions" placeholder="Enter additional instructions or advice for the patient…" maxlength="500" rows="3"></textarea>
+          <span class="char-count" data-max="500" data-target="instructions">0/500</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: ATTACH FILES -->
+    <section class="consult-card" id="files-section">
+      <div class="consult-card-header">
+        <i class="ph-bold ph-paperclip"></i>
+        <h2>4. Attach Files <span class="optional-label">(Optional)</span></h2>
+        <p class="section-sub">Upload lab results, images, or any related files</p>
+      </div>
+
+      <div class="upload-area" id="upload-area">
+        <i class="ph-bold ph-cloud-arrow-up"></i>
+        <p>Drag &amp; drop files here, or</p>
+        <label class="btn-upload-label" for="file-input">Browse Files</label>
+        <input type="file" id="file-input" multiple hidden>
+        <p class="upload-hint">Supports: PDF, JPG, PNG, DICOM (max 10MB each)</p>
+      </div>
+
+      <ul class="uploaded-files" id="uploaded-files"></ul>
+    </section>
+
+  </div><!-- /consult-content -->
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="ph-bold ph-check-circle"></i><span id="toast-msg"></span></div>
+
+<script src="../../js/pages/doctor/start-consultation.js"></script>
+</body>
+</html>

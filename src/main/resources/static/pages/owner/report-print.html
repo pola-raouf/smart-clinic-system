@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Report – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+/* ===================== PRINT REPORT STYLES ===================== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff;line-height:1.55;}
+
+.page{max-width:860px;margin:0 auto;padding:40px 48px;}
+
+/* ── Header ── */
+.rpt-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-bottom:16px;border-bottom:2px solid #1d4ed8;margin-bottom:24px;
+}
+.rpt-logo{display:flex;align-items:center;gap:10px;}
+.rpt-logo-icon{
+    width:40px;height:40px;border-radius:50%;
+    background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:18px;
+}
+.rpt-logo-text{line-height:1.2;}
+.rpt-logo-text strong{font-size:16px;font-weight:800;color:#0f172a;}
+.rpt-logo-text small{font-size:11px;color:#64748b;}
+.rpt-title-area{text-align:right;}
+.rpt-title-area h1{font-size:22px;font-weight:800;color:#0f172a;}
+.rpt-title-area p{font-size:12px;color:#64748b;}
+
+/* ── Meta ── */
+.rpt-meta{margin-bottom:24px;}
+.rpt-meta table{border-collapse:collapse;}
+.rpt-meta td{padding:3px 12px 3px 0;font-size:13px;color:#334155;}
+.rpt-meta td:first-child{font-weight:600;color:#64748b;min-width:120px;}
+
+/* ── Section title ── */
+.section-title{
+    text-align:center;font-size:12px;font-weight:700;
+    letter-spacing:0.14em;text-transform:uppercase;
+    color:#1d4ed8;margin:24px 0 16px;
+}
+
+/* ── Summary cards ── */
+.summary-cards{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;
+}
+.sum-card{
+    border:1.5px solid #e2e8f0;border-radius:10px;
+    padding:14px 16px;display:flex;align-items:center;gap:12px;
+}
+.sum-icon{
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+}
+.sum-icon svg{width:20px;height:20px;}
+.sum-icon.blue  {background:#eff6ff;color:#2563eb;}
+.sum-icon.green {background:#f0fdf4;color:#16a34a;}
+.sum-icon.orange{background:#fff7ed;color:#f97316;}
+.sum-icon.purple{background:#f5f3ff;color:#7c3aed;}
+.sum-label{font-size:11px;font-weight:600;color:#64748b;margin-bottom:2px;}
+.sum-num  {font-size:22px;font-weight:800;line-height:1.1;}
+.sum-num.blue  {color:#2563eb;}
+.sum-num.green {color:#16a34a;}
+.sum-num.orange{color:#f97316;}
+.sum-num.purple{color:#7c3aed;}
+.sum-pct  {font-size:11px;color:#94a3b8;margin-top:1px;}
+
+/* ── Charts ── */
+.charts-section{margin-bottom:28px;}
+.charts-row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.chart-box{border:1px solid #e2e8f0;border-radius:10px;padding:16px;}
+.chart-box-title{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#334155;margin-bottom:12px;}
+
+.pie-row{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:center;}
+.pie-legend-print{display:flex;flex-direction:column;gap:8px;}
+.pie-legend-print li{list-style:none;display:flex;align-items:center;gap:8px;font-size:13px;}
+.dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+
+/* ── Table ── */
+.rpt-table-section{margin-bottom:32px;}
+.rpt-table-title{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:10px;}
+.detail-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+.detail-table thead th{
+    padding:9px 12px;text-align:left;font-weight:600;
+    color:#64748b;border-bottom:1.5px solid #e2e8f0;
+    background:#f8fafc;font-size:11.5px;white-space:nowrap;
+}
+.detail-table tbody td{padding:10px 12px;border-bottom:1px solid #f1f5f9;color:#334155;}
+.detail-table tfoot td{
+    padding:10px 12px;font-weight:800;color:#2563eb;
+    border-top:2px solid #bfdbfe;background:#eff6ff;font-size:13px;
+}
+.detail-table tfoot td:first-child{color:#0f172a;}
+.green-rate{color:#16a34a;font-weight:700;}
+
+/* ── Footer ── */
+.rpt-footer{
+    display:flex;align-items:center;justify-content:space-between;
+    border-top:1px solid #e2e8f0;padding-top:14px;margin-top:8px;
+    font-size:11px;color:#94a3b8;
+}
+.rpt-footer i{margin-right:4px;}
+
+/* ── Print button (screen only) ── */
+.print-bar{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:#fff;border-bottom:1px solid #e2e8f0;
+    padding:10px 24px;display:flex;align-items:center;justify-content:space-between;
+}
+.print-bar span{font-size:14px;font-weight:700;color:#0f172a;}
+.btn-print-now{
+    padding:9px 22px;font-size:13px;font-weight:700;
+    background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+    color:#fff;border:none;border-radius:8px;
+    cursor:pointer;font-family:'Inter',sans-serif;
+    box-shadow:0 3px 10px rgba(37,99,235,0.22);
+}
+.btn-print-now:hover{opacity:0.9;}
+
+/* ── @media print ── */
+@media print{
+    .print-bar{display:none;}
+    .page{padding:20px 24px;max-width:none;}
+    body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+    </style>
+</head>
+<body>
+
+<!-- Print Bar (hidden when printing) -->
+<div class="print-bar">
+    <span>Clinic Report Preview</span>
+    <button class="btn-print-now" onclick="window.print()">🖨 Print / Save as PDF</button>
+</div>
+
+<div style="height:52px"></div><!-- spacer for fixed bar -->
+
+<div class="page" id="report-page">
+
+    <!-- ── HEADER ── -->
+    <div class="rpt-header">
+        <div class="rpt-logo">
+            <div class="rpt-logo-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20"><path d="M12 5v14M5 12h14"/></svg>
+            </div>
+            <div class="rpt-logo-text">
+                <strong>Smart Clinic</strong><br>
+                <small>Management System</small>
+            </div>
+        </div>
+        <div class="rpt-title-area">
+            <h1>Clinic Report</h1>
+        </div>
+    </div>
+
+    <!-- ── META ── -->
+    <div class="rpt-meta">
+        <table>
+            <tr><td>Date Range</td><td>: May 13, 2025 - May 19, 2025</td></tr>
+            <tr><td>Generated By</td><td>: Dr. Eyad Ashraf (Clinic Owner)</td></tr>
+            <tr><td>Generated On</td><td id="gen-date">: —</td></tr>
+        </table>
+    </div>
+
+    <!-- ── SUMMARY ── -->
+    <div class="section-title">SUMMARY</div>
+
+    <div class="summary-cards">
+        <div class="sum-card">
+            <div class="sum-icon blue">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            </div>
+            <div>
+                <div class="sum-label" style="color:#2563eb;font-weight:700">Total Appointments</div>
+                <div class="sum-num blue">120</div>
+                <div class="sum-pct">100% of total</div>
+            </div>
+        </div>
+        <div class="sum-card">
+            <div class="sum-icon green">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+            </div>
+            <div>
+                <div class="sum-label" style="color:#16a34a;font-weight:700">Completed</div>
+                <div class="sum-num green">95</div>
+                <div class="sum-pct">79.2% of total</div>
+            </div>
+        </div>
+        <div class="sum-card">
+            <div class="sum-icon orange">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            </div>
+            <div>
+                <div class="sum-label" style="color:#f97316;font-weight:700">Cancelled</div>
+                <div class="sum-num orange">10</div>
+                <div class="sum-pct">8.3% of total</div>
+            </div>
+        </div>
+        <div class="sum-card">
+            <div class="sum-icon purple">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            </div>
+            <div>
+                <div class="sum-label" style="color:#7c3aed;font-weight:700">No-show</div>
+                <div class="sum-num purple">15</div>
+                <div class="sum-pct">12.5% of total</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── CHARTS ── -->
+    <div class="charts-section">
+        <div class="charts-row-2">
+            <div class="chart-box">
+                <div class="chart-box-title">Appointments Overview (Weekly)</div>
+                <canvas id="printApptChart" height="180"></canvas>
+            </div>
+            <div class="chart-box">
+                <div class="chart-box-title">Patient Growth (Monthly)</div>
+                <canvas id="printPatientChart" height="180"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <div class="chart-box-title">Cancellation Rate</div>
+            <div class="pie-row">
+                <canvas id="printPieChart" width="180" height="180"></canvas>
+                <ul class="pie-legend-print">
+                    <li><span class="dot" style="background:#3b82f6"></span> <strong>Completed</strong> — 79.2%</li>
+                    <li><span class="dot" style="background:#f97316"></span> <strong>Cancelled</strong> — 8.3%</li>
+                    <li><span class="dot" style="background:#a78bfa"></span> <strong>No-show</strong> — 12.5%</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── DETAILED TABLE ── -->
+    <div class="rpt-table-section">
+        <div class="rpt-table-title">Detailed Report</div>
+        <table class="detail-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Total Appointments</th>
+                    <th>Completed</th>
+                    <th>Cancelled</th>
+                    <th>No-show</th>
+                    <th>Completion Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>May 13, 2025</td><td>15</td><td>12</td><td>1</td><td>2</td><td class="green-rate">80.0%</td></tr>
+                <tr><td>May 14, 2025</td><td>18</td><td>14</td><td>2</td><td>2</td><td class="green-rate">77.8%</td></tr>
+                <tr><td>May 15, 2025</td><td>20</td><td>16</td><td>2</td><td>2</td><td class="green-rate">80.0%</td></tr>
+                <tr><td>May 16, 2025</td><td>22</td><td>18</td><td>2</td><td>2</td><td class="green-rate">81.8%</td></tr>
+                <tr><td>May 17, 2025</td><td>16</td><td>12</td><td>1</td><td>3</td><td class="green-rate">75.0%</td></tr>
+                <tr><td>May 18, 2025</td><td>14</td><td>10</td><td>1</td><td>3</td><td class="green-rate">71.4%</td></tr>
+                <tr><td>May 19, 2025</td><td>15</td><td>13</td><td>1</td><td>1</td><td class="green-rate">86.7%</td></tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Total</td><td>120</td><td>95</td><td>10</td><td>15</td><td class="green-rate">79.2%</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <div class="rpt-footer">
+        <span>⚠ This report is confidential and intended for internal use only.</span>
+        <span>Page 1 of 1</span>
+    </div>
+
+</div><!-- /page -->
+
+<script type="module">
+import { requireAuth, requireRole } from '/js/core/auth.js';
+requireAuth();
+requireRole('OWNER');
+</script>
+<script>
+/* Generated date */
+const d = new Date();
+document.getElementById('gen-date').textContent =
+    ': ' + d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) +
+    ' ' + d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+
+/* Appointments chart */
+new Chart(document.getElementById('printApptChart'), {
+    type:'line',
+    data:{
+        labels:['May 13','May 14','May 15','May 16','May 17','May 18','May 19'],
+        datasets:[{
+            label:'Appointments',
+            data:[15,18,20,22,16,14,15],
+            borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.07)',
+            borderWidth:2, pointRadius:3, pointBackgroundColor:'#3b82f6',
+            fill:true, tension:0.3
+        }]
+    },
+    options:{
+        responsive:false, maintainAspectRatio:false,
+        plugins:{legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:12}}},
+        scales:{
+            x:{grid:{display:false},ticks:{font:{size:9},color:'#94a3b8'}},
+            y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:9},color:'#94a3b8'}}
+        }
+    }
+});
+
+/* Patient Growth chart */
+new Chart(document.getElementById('printPatientChart'), {
+    type:'line',
+    data:{
+        labels:['Jan','Feb','Mar','Apr','May'],
+        datasets:[{
+            label:'New Patients',
+            data:[40,52,61,75,90],
+            borderColor:'#22c55e', backgroundColor:'rgba(34,197,94,0.10)',
+            borderWidth:2, pointRadius:3, pointBackgroundColor:'#22c55e',
+            fill:true, tension:0.4
+        }]
+    },
+    options:{
+        responsive:false, maintainAspectRatio:false,
+        plugins:{legend:{display:true,position:'top',labels:{font:{size:10},boxWidth:12}}},
+        scales:{
+            x:{grid:{display:false},ticks:{font:{size:9},color:'#94a3b8'}},
+            y:{beginAtZero:false,grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:9},color:'#94a3b8'}}
+        }
+    }
+});
+
+/* Pie chart */
+new Chart(document.getElementById('printPieChart'), {
+    type:'doughnut',
+    data:{
+        labels:['Completed','Cancelled','No-show'],
+        datasets:[{
+            data:[79.2,8.3,12.5],
+            backgroundColor:['#3b82f6','#f97316','#a78bfa'],
+            borderWidth:0, hoverOffset:4
+        }]
+    },
+    options:{
+        responsive:false, cutout:'65%',
+        plugins:{
+            legend:{display:false},
+            tooltip:{callbacks:{label:c=>` ${c.label}: ${c.raw}%`}}
+        }
+    }
+});
+</script>
+</body>
+</html>

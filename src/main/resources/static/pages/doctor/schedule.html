@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Schedule – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/schedule.css">
+</head>
+<body>
+
+<nav class="navbar" id="main-navbar">
+  <div class="nav-container">
+    <a href="dashboard.html" class="logo">
+      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+      <span>Smart Clinic</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="appointments.html">Appointments</a></li>
+      <li><a href="patients.html">My Patients</a></li>
+      <li><a href="schedule.html" class="active">Schedule</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+      <i class="ph-bold ph-list"></i>
+    </button>
+    <div class="nav-doctor-badge">
+      <div class="nav-avatar-sm"><i class="ph-fill ph-user"></i></div>
+      <span>Dr. Ahmed Ali</span>
+    </div>
+  </div>
+</nav>
+
+<main class="sched-page">
+  <div class="sched-wrap">
+
+    <!-- TOP BAR row 1: title -->
+    <div class="sched-title-row">
+      <div>
+        <h1>My Schedule</h1>
+        <p>View your weekly schedule and appointments.</p>
+      </div>
+    </div>
+
+    <!-- TOP BAR row 2: controls -->
+    <div class="sched-controls-row">
+      <!-- Today button (left) -->
+      <button class="today-btn" id="today-btn">Today</button>
+
+      <!-- Week navigation (center) -->
+      <div class="week-nav-group">
+        <button class="week-nav-btn" id="prev-week"><i class="ph-bold ph-caret-left"></i></button>
+        <span id="week-range-label" class="week-range-label">Loading…</span>
+        <button class="week-nav-btn" id="next-week"><i class="ph-bold ph-caret-right"></i></button>
+      </div>
+
+      <!-- Toggle + Legend (right) -->
+      <div class="sched-right-controls">
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" id="week-view-btn">Week</button>
+          <button class="view-toggle-btn" id="day-view-btn">Day</button>
+        </div>
+        <div class="sched-legend">
+          <div class="legend-item"><div class="legend-dot confirmed"></div> Confirmed</div>
+          <div class="legend-item"><div class="legend-dot pending"></div> Pending</div>
+          <div class="legend-item"><div class="legend-dot completed"></div> Completed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY: Grid + Panel -->
+    <div class="sched-body">
+
+      <!-- LEFT: Weekly Schedule Grid -->
+      <div class="sched-card">
+        <div class="sched-grid-wrap">
+          <table class="sched-table" id="sched-table">
+            <thead id="sched-thead"></thead>
+            <tbody id="sched-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RIGHT: Panel -->
+      <aside class="sched-panel">
+
+        <!-- Doctor Info -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <i class="ph-bold ph-user-circle"></i>
+            <h3>Doctor (View Only)</h3>
+          </div>
+          <div class="panel-card-body panel-body-center">
+            <div class="panel-doc-av"><i class="ph-fill ph-user-circle"></i></div>
+            <div class="panel-doc-name">Dr. Ahmed Ali</div>
+            <div class="panel-doc-spec">Cardiologist</div>
+            <ul class="perm-list">
+              <li class="perm-item allowed"><i class="ph-bold ph-check-circle"></i> View schedule</li>
+              <li class="perm-item allowed"><i class="ph-bold ph-check-circle"></i> View appointment details</li>
+              <li class="perm-item allowed"><i class="ph-bold ph-check-circle"></i> Start consultation</li>
+              <li class="perm-item denied"><i class="ph-bold ph-x-circle"></i> Edit appointments</li>
+              <li class="perm-item denied"><i class="ph-bold ph-x-circle"></i> Delete records</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Week Summary -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <i class="ph-bold ph-chart-bar"></i>
+            <h3>This Week</h3>
+          </div>
+          <div class="panel-card-body">
+            <div class="panel-stats">
+              <div class="ps-item">
+                <span class="ps-label">Total Appointments</span>
+                <span class="ps-val" id="stat-total">0</span>
+              </div>
+              <div class="ps-item">
+                <span class="ps-label">Confirmed</span>
+                <span class="ps-val" style="color:var(--green-600)" id="stat-confirmed">0</span>
+              </div>
+              <div class="ps-item">
+                <span class="ps-label">Pending</span>
+                <span class="ps-val" style="color:var(--orange-500)" id="stat-pending">0</span>
+              </div>
+              <div class="ps-item">
+                <span class="ps-label">Completed</span>
+                <span class="ps-val" style="color:var(--purple-600)" id="stat-completed">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sessions Today -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <i class="ph-bold ph-clock"></i>
+            <h3>Today's Sessions</h3>
+          </div>
+          <div class="panel-card-body" style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--green-50);border-radius:6px;border-left:3px solid var(--green-500)">
+              <div style="flex:1">
+                <div style="font-size:12px;font-weight:700;color:var(--slate-900)">09:00 AM – 01:00 PM</div>
+                <div style="font-size:11px;color:var(--slate-500)">Morning Session</div>
+              </div>
+              <span style="font-size:10.5px;font-weight:700;background:var(--green-100);color:var(--green-600);padding:2px 8px;border-radius:99px">Active</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--blue-50);border-radius:6px;border-left:3px solid var(--blue-500)">
+              <div style="flex:1">
+                <div style="font-size:12px;font-weight:700;color:var(--slate-900)">02:00 PM – 06:00 PM</div>
+                <div style="font-size:11px;color:var(--slate-500)">Afternoon Session</div>
+              </div>
+              <span style="font-size:10.5px;font-weight:700;background:var(--blue-100);color:var(--blue-700);padding:2px 8px;border-radius:99px">Upcoming</span>
+            </div>
+          </div>
+        </div>
+
+      </aside><!-- /panel -->
+
+    </div><!-- /sched-body -->
+  </div><!-- /wrap -->
+</main>
+
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/pages/doctor/schedule.js"></script>
+</body>
+</html>

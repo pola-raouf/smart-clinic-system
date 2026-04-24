@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Secretary dashboard – Smart Clinic front desk.">
+    <title>Secretary Dashboard – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/manage-appointments.css">
+</head>
+<body>
+
+<nav class="navbar" id="main-navbar">
+  <div class="nav-container">
+    <a href="../../index.html" class="logo">
+      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+      <span>Smart Clinic</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="dashboard.html" class="active">Dashboard</a></li>
+      <li><a href="manage-appointments.html">Appointments</a></li>
+      <li><a href="patients.html">Patients</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+      <i class="ph-bold ph-list"></i>
+    </button>
+    <button class="btn-logout" id="btn-logout" type="button">
+      <i class="ph-bold ph-sign-out"></i> Logout
+    </button>
+  </div>
+</nav>
+
+<main class="sec-page">
+  <div class="container">
+    <div class="page-header">
+      <div>
+        <h1 id="sec-dash-greeting">Secretary dashboard</h1>
+        <p class="page-subtitle">Manage appointments, patient accounts, and daily front-desk tasks.</p>
+      </div>
+      <div class="header-meta">
+        <span class="role-badge"><i class="ph-bold ph-identification-badge"></i> Secretary</span>
+      </div>
+    </div>
+
+    <div class="stats-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;">
+      <div class="stat-card" style="background:var(--card-bg,#fff);border-radius:12px;padding:1rem;border:1px solid var(--border,#e2e8f0);">
+        <div style="font-size:0.85rem;color:var(--muted,#64748b);">Quick access</div>
+        <div style="font-size:1.5rem;font-weight:700;margin:0.25rem 0;">Today</div>
+        <p style="margin:0;font-size:0.9rem;color:var(--muted,#64748b);">Book and reschedule visits</p>
+      </div>
+      <div class="stat-card" style="background:var(--card-bg,#fff);border-radius:12px;padding:1rem;border:1px solid var(--border,#e2e8f0);">
+        <div style="font-size:0.85rem;color:var(--muted,#64748b);">Patients</div>
+        <div style="font-size:1.5rem;font-weight:700;margin:0.25rem 0;">Registry</div>
+        <p style="margin:0;font-size:0.9rem;color:var(--muted,#64748b);">Create &amp; update patient records</p>
+      </div>
+    </div>
+
+    <h2 style="font-size:1.1rem;margin:1.5rem 0 0.75rem 0;">Shortcuts</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;">
+      <a href="appointments.html" class="booking-card" style="text-decoration:none;color:inherit;display:block;">
+        <div style="font-weight:600;margin-bottom:0.35rem;"><i class="ph-bold ph-calendar-blank"></i> Appointments</div>
+        <div style="font-size:0.9rem;opacity:0.85;">View secretary appointments overview</div>
+      </a>
+      <a href="manage-appointments.html" class="booking-card" style="text-decoration:none;color:inherit;display:block;">
+        <div style="font-weight:600;margin-bottom:0.35rem;"><i class="ph-bold ph-calendar-plus"></i> Manage appointments</div>
+        <div style="font-size:0.9rem;opacity:0.85;">Book, edit, or cancel on behalf of patients</div>
+      </a>
+      <a href="patients.html" class="booking-card" style="text-decoration:none;color:inherit;display:block;">
+        <div style="font-weight:600;margin-bottom:0.35rem;"><i class="ph-bold ph-users"></i> Patients</div>
+        <div style="font-size:0.9rem;opacity:0.85;">Full CRUD on patient registration</div>
+      </a>
+      <a href="profile.html" class="booking-card" style="text-decoration:none;color:inherit;display:block;">
+        <div style="font-weight:600;margin-bottom:0.35rem;"><i class="ph-bold ph-user-circle"></i> My profile</div>
+        <div style="font-size:0.9rem;opacity:0.85;">Account details &amp; password</div>
+      </a>
+    </div>
+  </div>
+</main>
+
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/pages/secretary/dashboard.js"></script>
+</body>
+</html>

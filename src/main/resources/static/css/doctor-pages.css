@@ -1,0 +1,318 @@
+/* ================================================
+   doctor-pages.css  –  Shared styles for
+   patients.html & appointments.html
+   ================================================ */
+
+:root {
+    --blue-50:    #eff6ff;
+    --blue-100:   #dbeafe;
+    --blue-500:   #3b82f6;
+    --blue-600:   #2563eb;
+    --blue-700:   #1d4ed8;
+    --blue-900:   #1e3a8a;
+    --slate-50:   #f8fafc;
+    --slate-100:  #f1f5f9;
+    --slate-200:  #e2e8f0;
+    --slate-300:  #cbd5e1;
+    --slate-400:  #94a3b8;
+    --slate-500:  #64748b;
+    --slate-700:  #334155;
+    --slate-900:  #0f172a;
+    --white:      #ffffff;
+    --page-bg:    #eef3fb;
+    --green-50:   #f0fdf4;
+    --green-100:  #dcfce7;
+    --green-600:  #16a34a;
+    --orange-50:  #fff7ed;
+    --orange-100: #ffedd5;
+    --orange-500: #f97316;
+    --red-50:     #fef2f2;
+    --red-500:    #ef4444;
+    --purple-50:  #f5f3ff;
+    --purple-100: #ede9fe;
+    --purple-600: #7c3aed;
+
+    --card-r: 12px;
+    --card-sh: 0 2px 12px rgba(30,58,138,0.08);
+    --card-bd: 1px solid var(--slate-200);
+    --rsm: 8px;
+    --rfull: 999px;
+    --tr: 0.18s ease;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Inter',sans-serif; color:var(--slate-700); background:var(--page-bg); line-height:1.55; }
+
+/* ── NAVBAR EXTRAS ── */
+.nav-doctor-badge { display:flex; align-items:center; gap:8px; }
+.nav-avatar-sm {
+    width:34px; height:34px; border-radius:50%;
+    background:linear-gradient(135deg,var(--blue-500),var(--blue-700));
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px; color:var(--white);
+}
+.nav-doctor-badge span { font-size:13px; font-weight:600; color:var(--slate-700); }
+
+/* ================================================
+   PAGE LAYOUT
+   ================================================ */
+.doc-page { padding:32px 0 56px; }
+.page-wrap { width:90%; max-width:1200px; margin:auto; }
+
+/* ── PAGE HEADER ── */
+.page-header {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:24px; gap:16px; flex-wrap:wrap;
+}
+.page-header-left h1 { font-size:24px; font-weight:700; color:var(--slate-900); margin-bottom:3px; }
+.page-header-left p  { font-size:13.5px; color:var(--slate-500); }
+
+.page-header-illustration {
+    font-size:64px; color:var(--blue-100); line-height:1;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0.6;
+}
+
+/* Export button */
+.btn-export {
+    padding:10px 22px; font-size:13.5px; font-weight:700;
+    background:linear-gradient(135deg,var(--blue-500),var(--blue-700));
+    color:var(--white); border:none; border-radius:var(--rsm);
+    cursor:pointer; font-family:'Inter',sans-serif;
+    display:flex; align-items:center; gap:7px;
+    box-shadow:0 3px 10px rgba(37,99,235,0.22);
+    transition:all var(--tr);
+}
+.btn-export:hover { box-shadow:0 5px 16px rgba(37,99,235,0.35); transform:translateY(-1px); }
+
+/* ================================================
+   FILTER BAR
+   ================================================ */
+.filter-bar {
+    background:var(--white); border:var(--card-bd);
+    border-radius:var(--card-r); box-shadow:var(--card-sh);
+    padding:16px 20px; margin-bottom:20px;
+    display:flex; align-items:flex-end; gap:14px; flex-wrap:wrap;
+}
+
+/* Simple filter (patients page) */
+.filter-bar .search-wrap {
+    flex:1; min-width:240px; position:relative;
+    display:flex; align-items:center;
+}
+.filter-bar .search-wrap i {
+    position:absolute; left:12px; color:var(--slate-400);
+    font-size:15px; pointer-events:none;
+}
+.filter-bar .search-wrap input {
+    width:100%; padding:10px 14px 10px 38px;
+    border:1.5px solid var(--slate-200); border-radius:var(--rsm);
+    font-size:13.5px; font-family:'Inter',sans-serif;
+    color:var(--slate-900); outline:none; height:44px;
+    transition:border-color var(--tr);
+}
+.filter-bar .search-wrap input:focus { border-color:var(--blue-500); }
+.filter-bar .search-wrap input::placeholder { color:var(--slate-400); }
+
+/* Extended filter (appointments page) */
+.filter-bar.extended { align-items:flex-end; }
+.filter-item { display:flex; flex-direction:column; gap:4px; }
+.filter-item.grow { flex:1; min-width:180px; }
+.filter-label { font-size:11.5px; font-weight:600; color:var(--slate-500); }
+
+.input-icon-wrap {
+    position:relative; display:flex; align-items:center;
+}
+.input-icon-wrap i:not(.sel-arrow) {
+    position:absolute; left:11px; color:var(--slate-400);
+    font-size:14px; pointer-events:none; z-index:1;
+}
+.input-icon-wrap input,
+.input-icon-wrap select {
+    height:42px; padding:0 12px 0 34px;
+    border:1.5px solid var(--slate-200); border-radius:var(--rsm);
+    font-size:13px; font-family:'Inter',sans-serif;
+    color:var(--slate-900); background:var(--white);
+    outline:none; transition:border-color var(--tr); min-width:140px;
+}
+.input-icon-wrap input:focus,
+.input-icon-wrap select:focus { border-color:var(--blue-500); }
+.input-icon-wrap input::placeholder { color:var(--slate-400); }
+
+.select-wrap select { appearance:none; padding-right:30px; }
+.sel-arrow { position:absolute; right:10px; color:var(--slate-400); font-size:12px; pointer-events:none; }
+
+.btn-filter, .btn-clear {
+    height:42px; padding:0 16px; font-size:13px; font-weight:600;
+    border:1.5px solid var(--slate-200); color:var(--slate-600);
+    background:var(--white); border-radius:var(--rsm);
+    cursor:pointer; font-family:'Inter',sans-serif;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:all var(--tr); white-space:nowrap;
+}
+.btn-filter:hover, .btn-clear:hover { border-color:var(--blue-500); color:var(--blue-600); }
+
+/* ================================================
+   TABLE CARD
+   ================================================ */
+.table-card {
+    background:var(--white); border:var(--card-bd);
+    border-radius:var(--card-r); box-shadow:var(--card-sh);
+    overflow:hidden;
+}
+
+.table-card-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; border-bottom:1px solid var(--slate-100);
+}
+.table-card-header h2 { font-size:14px; font-weight:700; color:var(--slate-900); }
+
+/* View toggle */
+.view-toggle { display:flex; gap:6px; }
+.view-btn {
+    padding:7px 14px; font-size:12.5px; font-weight:600;
+    border:1.5px solid var(--slate-200); color:var(--slate-500);
+    background:var(--white); border-radius:var(--rsm);
+    cursor:pointer; font-family:'Inter',sans-serif;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:all var(--tr);
+}
+.view-btn.active { border-color:var(--blue-500); color:var(--blue-600); background:var(--blue-50); }
+
+/* ================================================
+   SHARED TABLE STYLES
+   ================================================ */
+.table-wrap { overflow-x:auto; }
+
+.data-table { width:100%; border-collapse:collapse; font-size:13px; }
+.data-table thead th {
+    background:var(--slate-50); color:var(--slate-500);
+    font-size:11.5px; font-weight:600; text-transform:uppercase;
+    letter-spacing:0.05em; padding:10px 20px; text-align:left;
+    border-bottom:1px solid var(--slate-200); white-space:nowrap;
+}
+.data-table tbody tr {
+    transition:background var(--tr); border-bottom:1px solid var(--slate-100);
+}
+.data-table tbody tr:last-child { border-bottom:none; }
+.data-table tbody tr:hover { background:var(--slate-50); }
+.data-table tbody td { padding:14px 20px; vertical-align:middle; }
+
+/* Patient cell */
+.pt-cell { display:flex; align-items:center; gap:10px; }
+.pt-av {
+    width:40px; height:40px; border-radius:50%; flex-shrink:0;
+    background:hsl(var(--hue,220),48%,55%);
+    display:flex; align-items:center; justify-content:center;
+    font-size:17px; color:rgba(255,255,255,0.9);
+    border:2px solid rgba(255,255,255,0.8);
+    box-shadow:0 1px 6px rgba(0,0,0,0.1);
+}
+.pt-name { font-size:13px; font-weight:700; color:var(--slate-900); }
+.pt-sub  { font-size:11.5px; color:var(--slate-400); margin-top:1px; }
+.pt-id-link { font-size:13px; font-weight:600; color:var(--blue-600); text-decoration:none; }
+.pt-id-link:hover { text-decoration:underline; }
+
+/* Gender symbols */
+.gender-male   { color:#3b82f6; }
+.gender-female { color:#ec4899; }
+
+/* Status badges */
+.badge {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:5px 11px; border-radius:var(--rfull);
+    font-size:11.5px; font-weight:700; letter-spacing:0.02em;
+}
+.badge::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+.badge.confirmed  { background:var(--green-100);  color:var(--green-600); }
+.badge.pending    { background:var(--orange-100); color:var(--orange-500); }
+.badge.completed  { background:var(--purple-100); color:var(--purple-600); }
+
+/* Time column */
+.time-col strong { display:block; font-size:13px; font-weight:700; color:var(--slate-900); }
+.time-col span   { display:block; font-size:11.5px; color:var(--slate-400); margin-top:1px; }
+.time-icon { color:var(--blue-400); font-size:14px; vertical-align:middle; margin-right:4px; }
+
+/* Booked-on column */
+.booked-col strong { display:block; font-size:12.5px; font-weight:600; color:var(--slate-700); }
+.booked-col span   { display:block; font-size:11.5px; color:var(--slate-400); }
+
+/* Action buttons */
+.btn-start {
+    padding:7px 14px; font-size:12px; font-weight:700;
+    background:linear-gradient(135deg,var(--blue-500),var(--blue-700));
+    color:var(--white); border:none; border-radius:var(--rsm);
+    cursor:pointer; font-family:'Inter',sans-serif;
+    display:inline-flex; align-items:center; gap:5px;
+    text-decoration:none; transition:all var(--tr);
+    box-shadow:0 2px 8px rgba(37,99,235,0.2);
+}
+.btn-start:hover { box-shadow:0 4px 14px rgba(37,99,235,0.35); transform:translateY(-1px); }
+
+.btn-secondary {
+    padding:7px 14px; font-size:12px; font-weight:600;
+    border:1.5px solid var(--slate-200); color:var(--slate-600);
+    background:var(--white); border-radius:var(--rsm);
+    cursor:pointer; font-family:'Inter',sans-serif;
+    display:inline-flex; align-items:center; gap:5px;
+    text-decoration:none; transition:all var(--tr);
+}
+.btn-secondary:hover { border-color:var(--blue-500); color:var(--blue-600); }
+
+.btn-more {
+    width:32px; height:32px; border:1.5px solid var(--slate-200);
+    border-radius:var(--rsm); background:var(--white);
+    display:inline-flex; align-items:center; justify-content:center;
+    cursor:pointer; color:var(--slate-400); transition:all var(--tr);
+}
+.btn-more:hover { border-color:var(--slate-400); color:var(--slate-700); }
+
+.action-group { display:flex; align-items:center; gap:8px; }
+
+/* ================================================
+   PAGINATION + TABLE FOOTER
+   ================================================ */
+.table-footer {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 20px; border-top:1px solid var(--slate-100);
+    gap:12px; flex-wrap:wrap;
+}
+.show-info { font-size:12.5px; color:var(--slate-500); }
+
+.pagination { display:flex; align-items:center; gap:5px; }
+.pg-btn {
+    width:34px; height:34px; border:1.5px solid var(--slate-200);
+    border-radius:var(--rsm); background:var(--white);
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:600; color:var(--slate-600);
+    cursor:pointer; font-family:'Inter',sans-serif; transition:all var(--tr);
+}
+.pg-btn:hover:not(:disabled) { border-color:var(--blue-500); color:var(--blue-600); }
+.pg-btn.active { background:var(--blue-600); border-color:var(--blue-600); color:var(--white); }
+.pg-btn:disabled { opacity:0.4; cursor:default; }
+.pg-btn.ellipsis { cursor:default; border:none; background:none; }
+
+.rows-per-page {
+    display:flex; align-items:center; gap:8px;
+    font-size:12.5px; color:var(--slate-500);
+}
+.rows-per-page select {
+    padding:4px 24px 4px 8px; border:1.5px solid var(--slate-200);
+    border-radius:var(--rsm); font-size:12.5px; font-family:'Inter',sans-serif;
+    color:var(--slate-700); background:var(--white);
+    appearance:none; outline:none; cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 6px center;
+}
+
+/* Page note */
+.page-note {
+    text-align:center; margin-top:16px;
+    font-size:12px; color:var(--slate-400);
+    display:flex; align-items:center; justify-content:center; gap:5px;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px) { .filter-bar.extended { flex-direction:column; align-items:stretch; } .filter-item.grow { min-width:unset; } }
+@media(max-width:640px) { .table-card-header { flex-direction:column; align-items:flex-start; gap:10px; } }

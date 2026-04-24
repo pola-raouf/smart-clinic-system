@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/owner-reports.css">
+</head>
+<body>
+
+<nav class="navbar" id="main-navbar">
+  <div class="nav-container">
+    <a href="dashboard.html" class="logo">
+      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+      <span>Smart Clinic</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="reports.html" class="active">Reports</a></li>
+      <li><a href="profile.html">My Profile</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+      <i class="ph-bold ph-list"></i>
+    </button>
+    <div class="nav-owner-badge">
+      <div class="nav-av-owner"><i class="ph-fill ph-user-gear"></i></div>
+      <span>Dr. Eyad Ashraf</span>
+    </div>
+  </div>
+</nav>
+
+<main class="rpt-page">
+  <div class="rpt-wrap">
+
+    <!-- ── TOPBAR ── -->
+    <div class="rpt-topbar">
+      <div class="rpt-topbar-left">
+        <h1>Reports &amp; Analytics</h1>
+        <p>Analyze clinic performance and generate insightful reports.</p>
+      </div>
+      <div class="rpt-actions">
+        <button class="btn-export pdf" id="btn-export-pdf">
+          <i class="ph-bold ph-file-pdf"></i> Export PDF
+        </button>
+        <button class="btn-export excel" id="btn-export-excel">
+          <i class="ph-bold ph-microsoft-excel-logo"></i> Export Excel
+        </button>
+      </div>
+    </div>
+
+    <!-- ── FILTER BAR ── -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="filter-label">Date Range</span>
+        <div class="filter-input-wrap">
+          <i class="ph-bold ph-calendar-blank"></i>
+          <span>May 13, 2025 – May 19, 2025</span>
+          <i class="ph-bold ph-caret-down caret"></i>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Select Period</span>
+        <div class="period-toggle">
+          <button class="period-btn">Daily</button>
+          <button class="period-btn active" id="period-weekly">Weekly</button>
+          <button class="period-btn">Monthly</button>
+          <button class="period-btn">Custom</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Doctor</span>
+        <select class="filter-select">
+          <option>All Doctors</option>
+          <option>Dr. Ahmed Ali</option>
+          <option>Dr. Sara Hassan</option>
+          <option>Dr. Mohamed Said</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Department</span>
+        <select class="filter-select">
+          <option>All Departments</option>
+          <option>Cardiology</option>
+          <option>Dentistry</option>
+          <option>General Medicine</option>
+          <option>Pediatrics</option>
+        </select>
+      </div>
+
+      <button class="btn-apply">
+        <i class="ph-bold ph-funnel"></i> Apply Filters
+      </button>
+    </div>
+
+    <!-- ── STAT CARDS ── -->
+    <div class="rpt-stats-grid">
+
+      <div class="rpt-stat-card">
+        <div class="rpt-stat-icon blue"><i class="ph-bold ph-calendar-blank"></i></div>
+        <div class="rpt-stat-content">
+          <div class="rpt-stat-label">Total Appointments</div>
+          <div class="rpt-stat-num">120</div>
+          <div class="rpt-stat-pct blue">100% of total</div>
+        </div>
+      </div>
+
+      <div class="rpt-stat-card">
+        <div class="rpt-stat-icon green"><i class="ph-bold ph-check-circle"></i></div>
+        <div class="rpt-stat-content">
+          <div class="rpt-stat-label">Completed Appointments</div>
+          <div class="rpt-stat-num">95</div>
+          <div class="rpt-stat-pct green">79.2% of total</div>
+        </div>
+      </div>
+
+      <div class="rpt-stat-card">
+        <div class="rpt-stat-icon orange"><i class="ph-bold ph-x-circle"></i></div>
+        <div class="rpt-stat-content">
+          <div class="rpt-stat-label">Cancelled Appointments</div>
+          <div class="rpt-stat-num">10</div>
+          <div class="rpt-stat-pct orange">8.3% of total</div>
+        </div>
+      </div>
+
+      <div class="rpt-stat-card">
+        <div class="rpt-stat-icon purple"><i class="ph-bold ph-prohibit"></i></div>
+        <div class="rpt-stat-content">
+          <div class="rpt-stat-label">No-show Appointments</div>
+          <div class="rpt-stat-num">15</div>
+          <div class="rpt-stat-pct purple">12.5% of total</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── CHARTS ROW ── -->
+    <div class="charts-row">
+
+      <!-- Appointments Overview -->
+      <div class="chart-panel">
+        <div class="chart-panel-header">
+          <div class="chart-panel-title">
+            <i class="ph-bold ph-trend-up"></i> Appointments Overview
+          </div>
+          <div class="period-badge">Weekly <i class="ph-bold ph-caret-down"></i></div>
+        </div>
+        <div class="chart-container">
+          <canvas id="rptApptChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Patient Growth -->
+      <div class="chart-panel">
+        <div class="chart-panel-header">
+          <div class="chart-panel-title">
+            <i class="ph-bold ph-users-three"></i> Patient Growth
+          </div>
+          <div class="period-badge">Monthly <i class="ph-bold ph-caret-down"></i></div>
+        </div>
+        <div class="chart-container">
+          <canvas id="rptPatientChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Cancellation Rate (Pie) -->
+      <div class="chart-panel">
+        <div class="chart-panel-header">
+          <div class="chart-panel-title">
+            <i class="ph-bold ph-chart-pie-slice"></i> Cancellation Rate
+          </div>
+        </div>
+        <div class="pie-center-wrap">
+          <canvas id="rptPieChart" width="160" height="160"></canvas>
+        </div>
+        <div class="pie-legend">
+          <div class="pie-legend-item">
+            <span class="pie-legend-label"><span class="pie-legend-dot" style="background:#3b82f6"></span>Completed</span>
+            <span class="pie-legend-val">79.2%</span>
+          </div>
+          <div class="pie-legend-item">
+            <span class="pie-legend-label"><span class="pie-legend-dot" style="background:#f97316"></span>Cancelled</span>
+            <span class="pie-legend-val">8.3%</span>
+          </div>
+          <div class="pie-legend-item">
+            <span class="pie-legend-label"><span class="pie-legend-dot" style="background:#a78bfa"></span>No-show</span>
+            <span class="pie-legend-val">12.5%</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /charts-row -->
+
+    <!-- ── DETAILED TABLE ── -->
+    <div class="table-section">
+      <div class="table-section-header">
+        Detailed Report (May 13 – May 19, 2025)
+      </div>
+      <div style="overflow-x:auto">
+        <table class="detail-table" id="detail-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Total Appointments</th>
+              <th>Completed</th>
+              <th>Cancelled</th>
+              <th>No-show</th>
+              <th>Completion Rate</th>
+            </tr>
+          </thead>
+          <tbody id="detail-tbody">
+            <!-- JS rendered -->
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>Total</td>
+              <td>120</td>
+              <td>95</td>
+              <td>10</td>
+              <td>15</td>
+              <td class="completion-rate">79.2%</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /rpt-wrap -->
+</main>
+
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/pages/owner/reports.js"></script>
+</body>
+</html>

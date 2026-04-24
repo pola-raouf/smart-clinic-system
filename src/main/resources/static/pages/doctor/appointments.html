@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/doctor-pages.css">
+</head>
+<body>
+
+<nav class="navbar" id="main-navbar">
+  <div class="nav-container">
+    <a href="dashboard.html" class="logo">
+      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+      <span>Smart Clinic</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="appointments.html" class="active">Appointments</a></li>
+      <li><a href="patients.html">My Patients</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+      <i class="ph-bold ph-list"></i>
+    </button>
+    <div class="nav-doctor-badge">
+      <div class="nav-avatar-sm"><i class="ph-fill ph-user"></i></div>
+      <span>Dr. Ahmed Ali</span>
+    </div>
+  </div>
+</nav>
+
+<main class="doc-page">
+  <div class="page-wrap">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <h1>Appointments</h1>
+        <p>View and manage all your bookings.</p>
+      </div>
+      <button class="btn-export" id="btn-export">
+        <i class="ph-bold ph-export"></i> Export
+      </button>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar extended">
+      <div class="filter-item">
+        <label class="filter-label">Date</label>
+        <div class="input-icon-wrap">
+          <i class="ph-bold ph-calendar-blank"></i>
+          <input type="date" id="filter-date">
+        </div>
+      </div>
+      <div class="filter-item">
+        <label class="filter-label">Status</label>
+        <div class="input-icon-wrap select-wrap">
+          <select id="filter-status">
+            <option value="">All Statuses</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+          </select>
+          <i class="ph-bold ph-caret-down sel-arrow"></i>
+        </div>
+      </div>
+      <div class="filter-item grow">
+        <label class="filter-label">Search Patient</label>
+        <div class="input-icon-wrap">
+          <i class="ph-bold ph-magnifying-glass"></i>
+          <input type="text" id="filter-search" placeholder="Search by patient name…">
+        </div>
+      </div>
+      <button class="btn-clear" id="btn-clear-filters">
+        <i class="ph-bold ph-x-circle"></i> Clear Filters
+      </button>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+      <div class="table-card-header">
+        <h2>Appointments (<span id="appt-count">0</span>)</h2>
+        <div class="view-toggle">
+          <button class="view-btn active" id="list-view-btn">
+            <i class="ph-bold ph-list"></i> List View
+          </button>
+          <button class="view-btn" id="cal-view-btn">
+            <i class="ph-bold ph-calendar-blank"></i> Calendar View
+          </button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table appt-data-table" id="appt-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Patient</th>
+              <th>Reason for Visit</th>
+              <th>Status</th>
+              <th>Booked On</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="appt-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="table-footer">
+        <span class="show-info" id="appt-show-info">Showing 1 to 8 of 0 appointments</span>
+        <div class="pagination" id="appt-pagination"></div>
+        <div class="rows-per-page">
+          Rows per page
+          <select id="rows-per-page">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+          </select>
+        </div>
+      </div>
+
+    </div><!-- /table-card -->
+
+    <!-- Footer note -->
+    <p class="page-note">
+      <i class="ph-bold ph-shield-check"></i>
+      All patient information is confidential and protected.
+    </p>
+
+  </div>
+</main>
+
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/pages/doctor/appointments.js"></script>
+</body>
+</html>

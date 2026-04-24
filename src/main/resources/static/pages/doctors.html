@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Browse Smart Clinic's experienced doctors. Filter by specialty and book an appointment online."
+    />
+    <title>Our Doctors – Smart Clinic Management System</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"
+      defer
+    ></script>
+
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/doctors.css" />
+  </head>
+  <body>
+    <!-- ===================== NAVBAR ===================== -->
+    <nav class="navbar" id="main-navbar">
+      <div class="nav-container">
+        <a href="../index.html" class="logo" id="nav-logo">
+          <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+          <span>Smart Clinic</span>
+        </a>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="doctors.html" class="active">Doctors</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+        <button
+          class="hamburger"
+          id="hamburger-btn"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+        >
+          <i class="ph-bold ph-list"></i>
+        </button>
+        <a href="register.html" class="btn-signup" id="nav-signup">Sign Up</a>
+      </div>
+    </nav>
+
+    <!-- ===================== PAGE HERO ===================== -->
+    <section class="doctors-hero" id="doctors-hero">
+      <div class="deco-plus plus-1" aria-hidden="true">+</div>
+      <div class="deco-plus plus-2" aria-hidden="true">+</div>
+      <div class="deco-plus plus-3" aria-hidden="true">+</div>
+      <div class="deco-circle circle-1" aria-hidden="true"></div>
+      <div class="deco-circle circle-2" aria-hidden="true"></div>
+
+      <div class="container">
+        <h1>Our Doctors</h1>
+        <p>
+          Browse our list of experienced and trusted doctors. Book an
+          appointment with the right specialist for you.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== FILTER BAR ===================== -->
+    <div class="filter-bar" id="filter-bar">
+      <div class="container filter-inner">
+        <!-- Search -->
+        <div class="filter-search-wrapper">
+          <i class="ph-bold ph-magnifying-glass"></i>
+          <input
+            type="text"
+            id="search-input"
+            class="filter-search"
+            placeholder="Search doctor by name…"
+            aria-label="Search doctors"
+          />
+        </div>
+
+        <div class="filter-divider" aria-hidden="true"></div>
+
+        <!-- Specialization -->
+        <div class="filter-select-wrapper">
+          <i class="ph-bold ph-stethoscope"></i>
+          <select id="spec-filter" aria-label="Filter by specialization">
+            <option value="">All Specializations</option>
+            <option value="cardiologist">Cardiologist</option>
+            <option value="dentist">Dentist</option>
+            <option value="general-physician">General Physician</option>
+            <option value="pediatrician">Pediatrician</option>
+            <option value="orthopedic-surgeon">Orthopedic Surgeon</option>
+            <option value="dermatologist">Dermatologist</option>
+            <option value="neurologist">Neurologist</option>
+            <option value="gynecologist">Gynecologist</option>
+          </select>
+          <i class="ph-bold ph-caret-down select-caret"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== DOCTORS GRID ===================== -->
+    <section class="doctors-section" id="doctors-section">
+      <div class="container">
+        <div class="doctors-grid" id="doctors-grid">
+          <!-- Card 1 -->
+          <article
+            class="doctor-card"
+            data-name="dr. ahmed ali"
+            data-spec="cardiologist"
+          >
+            <div class="card-photo">
+              <div class="doc-avatar" style="--hue: 215">
+                <i class="ph-fill ph-user"></i>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="doc-name">Dr. Ahmed Ali</h3>
+              <p class="doc-spec">Cardiologist</p>
+              <p class="doc-rating">
+                <i class="ph-fill ph-star"></i>
+                4.8 <span>(120 reviews)</span>
+              </p>
+              <p class="doc-exp">
+                <i class="ph-bold ph-clock"></i>
+                10+ Years Experience
+              </p>
+              <div class="card-actions">
+                <a href="doctor/patient-profile.html?id=1" class="btn-profile"
+                  >View Profile</a
+                >
+                <a href="patient/book-appointment.html?id=1" class="btn-book"
+                  >Book Appointment</a
+                >
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article
+            class="doctor-card"
+            data-name="dr. sara hassan"
+            data-spec="dentist"
+          >
+            <div class="card-photo">
+              <div class="doc-avatar" style="--hue: 160">
+                <i class="ph-fill ph-user"></i>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="doc-name">Dr. Sara Hassan</h3>
+              <p class="doc-spec">Dentist</p>
+              <p class="doc-rating">
+                <i class="ph-fill ph-star"></i>
+                4.9 <span>(98 reviews)</span>
+              </p>
+              <p class="doc-exp">
+                <i class="ph-bold ph-clock"></i>
+                8+ Years Experience
+              </p>
+              <div class="card-actions">
+                <a href="doctor/patient-profile.html?id=2" class="btn-profile"
+                  >View Profile</a
+                >
+                <a href="patient/book-appointment.html?id=2" class="btn-book"
+                  >Book Appointment</a
+                >
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article
+            class="doctor-card"
+            data-name="dr. mohamed said"
+            data-spec="general-physician"
+          >
+            <div class="card-photo">
+              <div class="doc-avatar" style="--hue: 200">
+                <i class="ph-fill ph-user"></i>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="doc-name">Dr. Mohamed Said</h3>
+              <p class="doc-spec">General Physician</p>
+              <p class="doc-rating">
+                <i class="ph-fill ph-star"></i>
+                4.7 <span>(110 reviews)</span>
+              </p>
+              <p class="doc-exp">
+                <i class="ph-bold ph-clock"></i>
+                7+ Years Experience
+              </p>
+              <div class="card-actions">
+                <a href="doctor/patient-profile.html?id=3" class="btn-profile"
+                  >View Profile</a
+                >
+                <a href="patient/book-appointment.html?id=3" class="btn-book"
+                  >Book Appointment</a
+                >
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article
+            class="doctor-card"
+            data-name="dr. dina ahmed"
+            data-spec="pediatrician"
+          >
+            <div class="card-photo">
+              <div class="doc-avatar" style="--hue: 340">
+                <i class="ph-fill ph-user"></i>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="doc-name">Dr. Dina Ahmed</h3>
+              <p class="doc-spec">Pediatrician</p>
+              <p class="doc-rating">
+                <i class="ph-fill ph-star"></i>
+                4.9 <span>(130 reviews)</span>
+              </p>
+              <p class="doc-exp">
+                <i class="ph-bold ph-clock"></i>
+                9+ Years Experience
+              </p>
+              <div class="card-actions">
+                <a href="doctor/patient-profile.html?id=4" class="btn-profile"
+                  >View Profile</a
+                >
+                <a href="patient/book-appointment.html?id=4" class="btn-book"
+                  >Book Appointment</a
+                >
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5 -->
+          <article
+            class="doctor-card"
+            data-name="dr. karim mostafa"
+            data-spec="orthopedic-surgeon"
+          >
+            <div class="card-photo">
+              <div class="doc-avatar" style="--hue: 30">
+                <i class="ph-fill ph-user"></i>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="doc-name">Dr. Karim Mostafa</h3>
+              <p class="doc-spec">Orthopedic Surgeon</p>
+              <p class="doc-rating">
+                <i class="ph-fill ph-star"></i>
+                4.6 <span>(95 reviews)</span>
+              </p>
+              <p class="doc-exp">
+                <i class="ph-bold ph-clock"></i>
+                12+ Years Experience
+              </p>
+              <div class="card-actions">
+                <a href="doctor/patient-profile.html?id=5" class="btn-profile"
+                  >View Profile</a
+                >
+                <a href="patient/book-appointment.html?id=5" class="btn-book"
+                  >Book Appointment</a
+                >
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 6 -->
+          <article
+            class="doctor-card"
+            data-name="dr. nour el din"
+            data-spec="dermatologist"
+          >
+            <div class="card-photo">
+              <div class="doc-avatar" style="--hue: 280">
+                <i class="ph-fill ph-user"></i>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="doc-name">Dr. Nour El Din</h3>
+              <p class="doc-spec">Dermatologist</p>
+              <p class="doc-rating">
+                <i class="ph-fill ph-star"></i>
+                4.8 <span>(101 reviews)</span>
+              </p>
+              <p class="doc-exp">
+                <i class="ph-bold ph-clock"></i>
+                6+ Years Experience
+              </p>
+              <div class="card-actions">
+                <a href="doctor/patient-profile.html?id=6" class="btn-profile"
+                  >View Profile</a
+                >
+                <a href="patient/book-appointment.html?id=6" class="btn-book"
+                  >Book Appointment</a
+                >
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 7 -->
+          <article
+            class="doctor-card"
+            data-name="dr. tamer salah"
+            data-spec="neurologist"
+          >
+            <div class="card-photo">
+              <div class="doc-avatar" style="--hue: 50">
+                <i class="ph-fill ph-user"></i>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="doc-name">Dr. Tamer Salah</h3>
+              <p class="doc-spec">Neurologist</p>
+              <p class="doc-rating">
+                <i class="ph-fill ph-star"></i>
+                4.7 <span>(89 reviews)</span>
+              </p>
+              <p class="doc-exp">
+                <i class="ph-bold ph-clock"></i>
+                11+ Years Experience
+              </p>
+              <div class="card-actions">
+                <a href="doctor/patient-profile.html?id=7" class="btn-profile"
+                  >View Profile</a
+                >
+                <a href="patient/book-appointment.html?id=7" class="btn-book"
+                  >Book Appointment</a
+                >
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 8 -->
+          <article
+            class="doctor-card"
+            data-name="dr. reem essam"
+            data-spec="gynecologist"
+          >
+            <div class="card-photo">
+              <div class="doc-avatar" style="--hue: 190">
+                <i class="ph-fill ph-user"></i>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="doc-name">Dr. Reem Essam</h3>
+              <p class="doc-spec">Gynecologist</p>
+              <p class="doc-rating">
+                <i class="ph-fill ph-star"></i>
+                4.8 <span>(115 reviews)</span>
+              </p>
+              <p class="doc-exp">
+                <i class="ph-bold ph-clock"></i>
+                10+ Years Experience
+              </p>
+              <div class="card-actions">
+                <a href="doctor/patient-profile.html?id=8" class="btn-profile"
+                  >View Profile</a
+                >
+                <a href="patient/book-appointment.html?id=8" class="btn-book"
+                  >Book Appointment</a
+                >
+              </div>
+            </div>
+          </article>
+        </div>
+        <!-- /doctors-grid -->
+
+        <!-- EMPTY STATE -->
+        <div class="empty-state" id="empty-state" hidden>
+          <i class="ph-bold ph-magnifying-glass"></i>
+          <p>No doctors found. Try a different name or specialization.</p>
+          <button id="reset-filter">Clear Filters</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PAGINATION ===================== -->
+    <nav
+      class="pagination-section"
+      id="pagination"
+      aria-label="Page navigation"
+    >
+      <div class="pagination">
+        <button
+          class="page-btn prev-next"
+          id="prev-btn"
+          aria-label="Previous page"
+          disabled
+        >
+          <i class="ph-bold ph-caret-left"></i>
+        </button>
+        <button class="page-btn active" data-page="1" aria-current="page">
+          1
+        </button>
+        <button class="page-btn" data-page="2">2</button>
+        <button class="page-btn" data-page="3">3</button>
+        <button class="page-btn prev-next" id="next-btn" aria-label="Next page">
+          <i class="ph-bold ph-caret-right"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="footer" id="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <div class="logo">
+            <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+            <span>Smart Clinic</span>
+          </div>
+          <p>
+            Empowering healthcare professionals with intelligent tools for a
+            better patient experience.
+          </p>
+        </div>
+
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="doctors.html">Our Doctors</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="about.html">About Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="about.html#help-center">Help Center</a></li>
+            <li><a href="about.html#privacy-policy">Privacy Policy</a></li>
+            <li><a href="about.html#terms-of-service">Terms of Service</a></li>
+            <li><a href="about.html#contact-us">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-contact">
+          <h4>Contact &amp; Hours</h4>
+          <p>
+            <i class="ph-bold ph-map-pin"></i> 123 Medical Drive, Cairo, Egypt
+          </p>
+          <p><i class="ph-bold ph-phone"></i> +20 100 000 0000</p>
+          <p><i class="ph-bold ph-envelope"></i> support@smartclinic.com</p>
+          <p><i class="ph-bold ph-clock"></i> Mon – Fri: 8:00 AM – 8:00 PM</p>
+          <div class="social-links">
+            <a href="about.html#facebook" aria-label="Facebook"
+              ><i class="ph-bold ph-facebook-logo"></i
+            ></a>
+            <a href="about.html#twitter" aria-label="Twitter"
+              ><i class="ph-bold ph-twitter-logo"></i
+            ></a>
+            <a href="about.html#linkedin" aria-label="LinkedIn"
+              ><i class="ph-bold ph-linkedin-logo"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Smart Clinic Management System. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="../js/components/nav-menu.js"></script>
+    <script src="../js/pages/doctors.js"></script>
+  </body>
+</html>

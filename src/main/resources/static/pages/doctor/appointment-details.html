@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Details – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/doctor-detail-pages.css">
+</head>
+<body>
+
+<nav class="navbar" id="main-navbar">
+  <div class="nav-container">
+    <a href="dashboard.html" class="logo">
+      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+      <span>Smart Clinic</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="appointments.html" class="active">Appointments</a></li>
+      <li><a href="patients.html">My Patients</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+      <i class="ph-bold ph-list"></i>
+    </button>
+    <div class="nav-doctor-badge">
+      <div class="nav-avatar-sm"><i class="ph-fill ph-user"></i></div>
+      <span>Dr. Ahmed Ali</span>
+    </div>
+  </div>
+</nav>
+
+<main class="detail-page">
+  <div class="detail-wrap">
+
+    <!-- Top Bar -->
+    <div class="detail-topbar">
+      <div class="detail-topbar-left">
+        <h1>Appointment Details</h1>
+        <nav class="breadcrumb" aria-label="breadcrumb">
+          <a href="dashboard.html">Dashboard</a>
+          <i class="ph-bold ph-caret-right"></i>
+          <a href="appointments.html">Appointments</a>
+          <i class="ph-bold ph-caret-right"></i>
+          <span>Appointment Details</span>
+        </nav>
+      </div>
+      <a href="appointments.html" class="btn-back">
+        <i class="ph-bold ph-arrow-left"></i> Back to Appointments
+      </a>
+    </div>
+
+    <!-- Status Alert -->
+    <div class="status-alert confirmed" id="status-alert">
+      <i class="ph-bold ph-check-circle" id="status-icon"></i>
+      <span id="status-message">This appointment is <strong>Confirmed</strong> and ready to proceed.</span>
+      <span class="alert-badge" id="status-badge">Confirmed</span>
+    </div>
+
+    <!-- MAIN 2-COLUMN GRID -->
+    <div class="detail-grid left-wide">
+
+      <!-- LEFT COLUMN -->
+      <div class="left-col" style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- Patient Information -->
+        <div class="detail-card">
+          <div class="detail-card-header">
+            <i class="ph-bold ph-user-circle"></i>
+            <h2>Patient Information</h2>
+          </div>
+          <div class="detail-card-body">
+            <div class="person-header">
+              <div class="person-avatar" id="pt-avatar"><i class="ph-fill ph-user"></i></div>
+              <div class="person-info-block">
+                <h3 id="pt-name">Mohamed Hassan</h3>
+                <div class="pid" id="pt-id">ID: P1001</div>
+              </div>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-calendar-blank"></i>
+              <span class="info-label">Age / Gender</span>
+              <span class="info-value" id="pt-age-gender">45 years, Male</span>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-phone"></i>
+              <span class="info-label">Phone</span>
+              <span class="info-value" id="pt-phone">0123 456 7890</span>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-envelope"></i>
+              <span class="info-label">Email</span>
+              <span class="info-value" id="pt-email">m.hassan@email.com</span>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-map-pin"></i>
+              <span class="info-label">Address</span>
+              <span class="info-value" id="pt-address">Cairo, Egypt</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Doctor Information -->
+        <div class="detail-card">
+          <div class="detail-card-header">
+            <i class="ph-bold ph-stethoscope"></i>
+            <h2>Doctor Information</h2>
+          </div>
+          <div class="detail-card-body">
+            <div class="person-header">
+              <div class="person-avatar" style="--hue:215;background:linear-gradient(135deg,var(--blue-500),var(--blue-700))">
+                <i class="ph-fill ph-user-circle"></i>
+              </div>
+              <div class="person-info-block">
+                <h3>Dr. Ahmed Ali</h3>
+                <div class="pid">Cardiologist</div>
+              </div>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-phone"></i>
+              <span class="info-label">Phone</span>
+              <span class="info-value">+20 100 999 0000</span>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-envelope"></i>
+              <span class="info-label">Email</span>
+              <span class="info-value">dr.ahmed@smartclinic.com</span>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-hospital"></i>
+              <span class="info-label">Department</span>
+              <span class="info-value">Cardiology, Floor 3</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /left-col -->
+
+      <!-- RIGHT COLUMN -->
+      <div class="right-col" style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- Appointment Information -->
+        <div class="detail-card">
+          <div class="detail-card-header">
+            <i class="ph-bold ph-calendar-check"></i>
+            <h2>Appointment Information</h2>
+          </div>
+          <div class="detail-card-body">
+            <div style="margin-bottom:14px;">
+              <div class="appt-id-pill" id="appt-id-pill">ID: A001</div>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-calendar-blank"></i>
+              <span class="info-label">Date</span>
+              <span class="info-value" id="appt-date">Wednesday, April 22, 2026</span>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-clock"></i>
+              <span class="info-label">Time</span>
+              <span class="info-value" id="appt-time">09:00 AM</span>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-clipboard-text"></i>
+              <span class="info-label">Reason</span>
+              <span class="info-value" id="appt-reason">Chest Pain</span>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-shield-check"></i>
+              <span class="info-label">Status</span>
+              <span class="info-value"><span class="badge confirmed" id="appt-status-badge">Confirmed</span></span>
+            </div>
+            <div class="info-row">
+              <i class="ph-bold ph-clock-clockwise"></i>
+              <span class="info-label">Booked On</span>
+              <span class="info-value" id="appt-booked">Apr 12, 2026 — 02:35 PM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Notes -->
+        <div class="detail-card">
+          <div class="detail-card-header">
+            <i class="ph-bold ph-note-pencil"></i>
+            <h2>Additional Notes</h2>
+          </div>
+          <div class="detail-card-body" id="notes-body">
+            <div class="notes-empty">
+              <i class="ph-bold ph-note"></i>
+              No notes have been added for this appointment.
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /right-col -->
+
+    </div><!-- /detail-grid -->
+
+    <!-- BOTTOM ACTION BAR -->
+    <div class="action-bar" id="action-bar">
+      <div class="action-bar-info">
+        <i class="ph-bold ph-info" id="action-icon"></i>
+        <p id="action-msg">This appointment is confirmed. You can start the consultation now.</p>
+      </div>
+      <a href="start-consultation.html?patient=P1001" class="btn-primary" id="btn-start-consult">
+        <i class="ph-bold ph-play"></i> Start Consultation
+      </a>
+    </div>
+
+  </div><!-- /detail-wrap -->
+</main>
+
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/pages/doctor/appointment-details.js"></script>
+</body>
+</html>

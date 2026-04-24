@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/doctor-dashboard.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="main-navbar">
+  <div class="nav-container">
+    <a href="../../index.html" class="logo">
+      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+      <span>Smart Clinic</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="../doctors.html">Doctors</a></li>
+      <li><a href="dashboard.html" class="active">Dashboard</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+      <i class="ph-bold ph-list"></i>
+    </button>
+    <div class="nav-doctor-info">
+      <div class="nav-avatar"><i class="ph-fill ph-user"></i></div>
+      <span class="nav-doctor-name">Dr. Ahmed Ali</span>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN DASHBOARD -->
+<main class="doc-dash" id="doc-dash">
+  <div class="dash-wrap">
+
+    <!-- GREETING -->
+    <header class="doc-greeting">
+      <div>
+        <h1>Good morning, <span>Dr. Ahmed Ali</span> 👋</h1>
+        <p>Here's what's happening in your practice today.</p>
+      </div>
+      <div class="greeting-date" id="greeting-date"></div>
+    </header>
+
+    <!-- STATS ROW -->
+    <div class="doc-stats">
+
+      <div class="doc-stat-card">
+        <div class="dstat-icon" style="--hue:220">
+          <i class="ph-bold ph-calendar-check"></i>
+        </div>
+        <div class="dstat-body">
+          <span class="dstat-num">6</span>
+          <span class="dstat-label">Today's Appointments</span>
+          <a href="#appointments-section" class="dstat-link">View today's schedule <i class="ph-bold ph-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="doc-stat-card">
+        <div class="dstat-icon" style="--hue:160">
+          <i class="ph-bold ph-users"></i>
+        </div>
+        <div class="dstat-body">
+          <span class="dstat-num">248</span>
+          <span class="dstat-label">Total Patients</span>
+          <a href="#patients-section" class="dstat-link">View all patients <i class="ph-bold ph-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="doc-stat-card">
+        <div class="dstat-icon" style="--hue:280">
+          <i class="ph-bold ph-clipboard-text"></i>
+        </div>
+        <div class="dstat-body">
+          <span class="dstat-num">32</span>
+          <span class="dstat-label">Reports (This Month)</span>
+          <a href="medical-report.html" class="dstat-link">View reports <i class="ph-bold ph-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="doc-stat-card">
+        <div class="dstat-icon" style="--hue:30">
+          <i class="ph-bold ph-clock"></i>
+        </div>
+        <div class="dstat-body">
+          <span class="dstat-num">5</span>
+          <span class="dstat-label">Pending Reports</span>
+          <a href="medical-report.html" class="dstat-link">Review reports <i class="ph-bold ph-arrow-right"></i></a>
+        </div>
+      </div>
+
+    </div><!-- /doc-stats -->
+
+    <!-- MIDDLE: Appointments Table + Schedule -->
+    <div class="doc-mid" id="appointments-section">
+
+      <!-- LEFT: Appointments Table -->
+      <section class="doc-card appt-section">
+        <div class="doc-card-header">
+          <h2><i class="ph-bold ph-calendar-check"></i> Today's Appointments</h2>
+          <a href="schedule.html" class="btn-header-link"><i class="ph-bold ph-calendar-blank"></i> View Calendar</a>
+        </div>
+
+        <div class="table-wrap">
+          <table class="appt-table" id="appt-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Patient</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="appt-tbody">
+              <!-- JS populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="doc-card-footer">
+          <a href="appointments.html" class="link-all">View all appointments <i class="ph-bold ph-arrow-right"></i></a>
+        </div>
+      </section>
+
+      <!-- RIGHT: Calendar + Schedule -->
+      <aside class="doc-card schedule-section">
+        <div class="doc-card-header">
+          <h2><i class="ph-bold ph-calendar-blank"></i> My Schedule</h2>
+          <div class="cal-nav-btns">
+            <button class="cal-nav-btn" id="cal-prev"><i class="ph-bold ph-caret-left"></i></button>
+            <button class="cal-nav-btn" id="cal-next"><i class="ph-bold ph-caret-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Mini Calendar -->
+        <div class="mini-cal" id="mini-cal">
+          <div class="mini-cal-header" id="mini-cal-header"></div>
+          <div class="mini-cal-weekdays">
+            <span>Sun</span><span>Mon</span><span>Tue</span>
+            <span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+          </div>
+          <div class="mini-cal-days" id="mini-cal-days"></div>
+        </div>
+
+        <!-- Selected Day Label -->
+        <div class="schedule-day-label" id="schedule-day-label"></div>
+
+        <!-- Sessions -->
+        <div class="sessions">
+          <div class="session-item">
+            <div class="session-bar morning"></div>
+            <div class="session-info">
+              <span class="session-time">09:00 AM – 01:00 PM</span>
+              <span class="session-name">Morning Session</span>
+            </div>
+            <span class="session-badge active">Active</span>
+          </div>
+          <div class="session-item">
+            <div class="session-bar afternoon"></div>
+            <div class="session-info">
+              <span class="session-time">02:00 PM – 06:00 PM</span>
+              <span class="session-name">Afternoon Session</span>
+            </div>
+            <span class="session-badge upcoming">Upcoming</span>
+          </div>
+        </div>
+
+        <button class="btn-manage-schedule">
+          <i class="ph-bold ph-calendar-dots"></i> Manage Schedule
+        </button>
+      </aside>
+
+    </div><!-- /doc-mid -->
+
+    <!-- BOTTOM: Recent Patients + Quick Actions -->
+    <div class="doc-bottom" id="patients-section">
+
+      <!-- Recent Patients -->
+      <section class="doc-card patients-section">
+        <div class="doc-card-header">
+          <h2><i class="ph-bold ph-users-three"></i> Recent Patients</h2>
+          <div class="patient-search-wrap">
+            <i class="ph-bold ph-magnifying-glass"></i>
+            <input type="text" id="patient-search" placeholder="Search patients…">
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="patients-table" id="patients-table">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Age / Gender</th>
+                <th>Phone</th>
+                <th>Last Visit</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="patients-tbody">
+              <!-- JS populated -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="doc-card-footer">
+          <a href="patients.html" class="link-all">View all patients <i class="ph-bold ph-arrow-right"></i></a>
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <aside class="doc-card quick-actions-section">
+        <div class="doc-card-header">
+          <h2><i class="ph-bold ph-lightning"></i> Quick Actions</h2>
+        </div>
+
+        <div class="qa-grid">
+          <a href="start-consultation.html" class="qa-card" id="qa-diagnosis">
+            <div class="qa-icon" style="--q-hue:220"><i class="ph-bold ph-stethoscope"></i></div>
+            <h4>Add Diagnosis</h4>
+            <p>Record a new diagnosis for a patient</p>
+          </a>
+          <a href="start-consultation.html#prescription-section" class="qa-card" id="qa-prescribe">
+            <div class="qa-icon" style="--q-hue:160"><i class="ph-bold ph-pill"></i></div>
+            <h4>Prescribe Medication</h4>
+            <p>Create a new prescription</p>
+          </a>
+          <a href="patients.html" class="qa-card" id="qa-records">
+            <div class="qa-icon" style="--q-hue:30"><i class="ph-bold ph-folder-open"></i></div>
+            <h4>View Patient Records</h4>
+            <p>Access and review patient reports</p>
+          </a>
+        </div>
+      </aside>
+
+    </div><!-- /doc-bottom -->
+
+  </div><!-- /dash-wrap -->
+</main>
+
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/pages/doctor/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Secretary – Manage all clinic appointments.">
+    <title>Manage Appointments – Smart Clinic</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/manage-appointments.css">
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar" id="main-navbar">
+  <div class="nav-container">
+    <a href="../../index.html" class="logo" id="nav-logo">
+      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+      <span>Smart Clinic</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="../doctors.html">Doctors</a></li>
+      <li><a href="../services.html">Services</a></li>
+      <li><a href="manage-appointments.html" class="active">Appointments</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+      <i class="ph-bold ph-list"></i>
+    </button>
+    <button class="btn-logout" id="btn-logout">
+      <i class="ph-bold ph-sign-out"></i> Logout
+    </button>
+  </div>
+</nav>
+
+<!-- ===================== MAIN PAGE ===================== -->
+<main class="sec-page" id="sec-page">
+  <div class="container">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <h1>Manage Appointments</h1>
+        <p class="page-subtitle">Book, edit, and cancel appointments for patients</p>
+      </div>
+      <div class="header-meta" id="header-meta">
+        <span class="role-badge"><i class="ph-bold ph-identification-badge"></i> Secretary</span>
+        <span class="user-name" id="sec-username">—</span>
+      </div>
+    </div>
+
+    <!-- ── BOOKING FORM CARD ── -->
+    <div class="form-card" id="booking-form-card">
+      <div class="form-card-header">
+        <i class="ph-bold ph-calendar-plus"></i>
+        <h2>New Appointment</h2>
+      </div>
+
+      <form class="appt-form" id="appt-form" novalidate>
+
+        <div class="form-row">
+
+          <!-- Patient -->
+          <div class="form-group" id="fg-patient">
+            <label for="patient-select">
+              <i class="ph-bold ph-user"></i> Patient Name
+            </label>
+            <div class="input-wrap">
+              <input
+                type="text"
+                id="patient-name-input"
+                placeholder="Type patient name..."
+                autocomplete="off"
+              >
+            </div>
+            <span class="field-err" id="err-patient"></span>
+          </div>
+
+          <!-- Doctor -->
+          <div class="form-group" id="fg-doctor">
+            <label for="doctor-select">
+              <i class="ph-bold ph-stethoscope"></i> Doctor
+            </label>
+            <div class="input-wrap select-wrap">
+              <select id="doctor-select">
+                <option value="">— Select Doctor —</option>
+              </select>
+              <i class="ph-bold ph-caret-down sel-arrow"></i>
+            </div>
+            <span class="field-err" id="err-doctor"></span>
+          </div>
+
+          <!-- Date -->
+          <div class="form-group" id="fg-date">
+            <label for="date-input">
+              <i class="ph-bold ph-calendar"></i> Date
+            </label>
+            <div class="input-wrap">
+              <input type="date" id="date-input" min="">
+            </div>
+            <span class="field-err" id="err-date"></span>
+          </div>
+
+        </div>
+
+        <!-- Time Slots -->
+        <div class="form-group full-width" id="fg-time">
+          <label><i class="ph-bold ph-clock"></i> Time Slot</label>
+          <div class="time-grid" id="time-grid"></div>
+          <span class="field-err" id="err-time"></span>
+        </div>
+
+        <!-- Submit -->
+        <div class="form-actions">
+          <button type="submit" class="btn-book" id="btn-book">
+            <i class="ph-bold ph-calendar-check"></i> Book Appointment
+          </button>
+          <button type="reset" class="btn-reset" id="btn-reset">
+            <i class="ph-bold ph-x"></i> Clear
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- ── APPOINTMENTS TABLE ── -->
+    <div class="table-card" id="table-card">
+
+      <div class="table-header">
+        <div>
+          <h2><i class="ph-bold ph-list-checks"></i> All Appointments</h2>
+          <p class="table-count" id="table-count">Loading…</p>
+        </div>
+
+        <div class="table-filters">
+          <div class="search-wrap">
+            <i class="ph-bold ph-magnifying-glass"></i>
+            <input type="text" id="table-search" placeholder="Search patient or doctor…">
+          </div>
+          <div class="input-wrap select-wrap filter-select">
+            <select id="status-filter">
+              <option value="">All Statuses</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <i class="ph-bold ph-caret-down sel-arrow"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="appt-table" id="appt-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Patient</th>
+              <th>Doctor</th>
+              <th>Specialty</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Booked By</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="appt-tbody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state" hidden>
+        <i class="ph-bold ph-calendar-x"></i>
+        <p>No appointments found.</p>
+      </div>
+
+    </div><!-- /table-card -->
+
+  </div>
+</main>
+
+<!-- ── Toast Notification ── -->
+<div class="toast" id="toast" aria-live="polite">
+  <i class="ph-bold ph-check-circle" id="toast-icon"></i>
+  <span id="toast-msg">Done</span>
+</div>
+
+<!-- ── Confirm Cancel Modal ── -->
+<div class="modal-overlay" id="cancel-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cancel-title">
+    <div class="modal-icon cancel"><i class="ph-bold ph-warning"></i></div>
+    <h3 id="cancel-title">Cancel Appointment?</h3>
+    <p>This will mark the appointment as cancelled. The time slot will become available again.</p>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" id="cancel-no">Keep It</button>
+      <button class="btn-modal-confirm" id="cancel-yes">Yes, Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Shared services -->
+<script src="../../js/appointmentService.js"></script>
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/pages/secretary/manage-appointments.js"></script>
+
+</body>
+</html>

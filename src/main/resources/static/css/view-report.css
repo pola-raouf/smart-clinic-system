@@ -1,0 +1,303 @@
+/* ================================================
+   view-report.css  –  Patient Medical Report Page
+   ================================================ */
+
+:root {
+    --blue-50:    #eff6ff;
+    --blue-100:   #dbeafe;
+    --blue-500:   #3b82f6;
+    --blue-600:   #2563eb;
+    --blue-700:   #1d4ed8;
+    --slate-50:   #f8fafc;
+    --slate-100:  #f1f5f9;
+    --slate-200:  #e2e8f0;
+    --slate-300:  #cbd5e1;
+    --slate-400:  #94a3b8;
+    --slate-500:  #64748b;
+    --slate-700:  #334155;
+    --slate-900:  #0f172a;
+    --white:      #ffffff;
+    --page-bg:    #eef3fb;
+    --green-50:   #f0fdf4;
+    --green-100:  #dcfce7;
+    --green-500:  #22c55e;
+    --green-600:  #16a34a;
+    --orange-50:  #fff7ed;
+    --orange-100: #ffedd5;
+    --orange-500: #f97316;
+    --red-50:     #fef2f2;
+    --red-100:    #fee2e2;
+    --red-500:    #ef4444;
+
+    --card-r:  12px;
+    --card-sh: 0 2px 12px rgba(30,58,138,0.08);
+    --card-bd: 1px solid var(--slate-200);
+    --rsm:     8px;
+    --rfull:   999px;
+    --tr:      0.18s ease;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Inter',sans-serif; color:var(--slate-700); background:var(--page-bg); line-height:1.55; }
+
+/* ── NAV extras ── */
+.nav-user-badge { display:flex; align-items:center; gap:8px; }
+.nav-av {
+    width:34px; height:34px; border-radius:50%;
+    background:linear-gradient(135deg,var(--blue-500),var(--blue-700));
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px; color:var(--white);
+}
+.nav-user-badge span { font-size:13px; font-weight:600; color:var(--slate-700); }
+
+/* ================================================
+   PAGE LAYOUT
+   ================================================ */
+.report-page { padding:24px 0 56px; }
+.report-wrap { width:90%; max-width:1150px; margin:auto; }
+
+/* ── TOPBAR ── */
+.report-topbar {
+    display:flex; align-items:flex-start; justify-content:space-between;
+    margin-bottom:22px; gap:12px; flex-wrap:wrap;
+}
+.report-topbar-left { display:flex; flex-direction:column; gap:4px; }
+
+.btn-back {
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:13px; font-weight:600; color:var(--blue-600);
+    text-decoration:none; margin-bottom:4px; transition:gap var(--tr);
+}
+.btn-back:hover { gap:8px; }
+.btn-back i { font-size:14px; }
+
+.report-topbar-left h1 { font-size:22px; font-weight:800; color:var(--slate-900); }
+.report-topbar-left p  { font-size:13px; color:var(--slate-500); }
+
+.report-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; padding-top:4px; }
+
+.btn-print {
+    padding:9px 18px; font-size:13px; font-weight:600;
+    border:1.5px solid var(--slate-200); color:var(--slate-700);
+    background:var(--white); border-radius:var(--rsm);
+    cursor:pointer; font-family:'Inter',sans-serif;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:all var(--tr);
+}
+.btn-print:hover { border-color:var(--slate-400); color:var(--slate-900); }
+
+.btn-download {
+    padding:9px 20px; font-size:13px; font-weight:700;
+    background:linear-gradient(135deg,var(--blue-500),var(--blue-700));
+    color:var(--white); border:none; border-radius:var(--rsm);
+    cursor:pointer; font-family:'Inter',sans-serif;
+    display:inline-flex; align-items:center; gap:6px;
+    box-shadow:0 3px 10px rgba(37,99,235,0.22); transition:all var(--tr);
+}
+.btn-download:hover { box-shadow:0 5px 16px rgba(37,99,235,0.38); transform:translateY(-1px); }
+
+/* ================================================
+   MAIN 2-COLUMN GRID
+   ================================================ */
+.report-grid {
+    display:grid; grid-template-columns:1fr 300px;
+    gap:20px; align-items:start;
+}
+
+/* ================================================
+   SHARED CARD
+   ================================================ */
+.report-card {
+    background:var(--white); border:var(--card-bd);
+    border-radius:var(--card-r); box-shadow:var(--card-sh);
+    overflow:hidden; margin-bottom:16px;
+}
+.report-card:last-child { margin-bottom:0; }
+
+.card-header {
+    padding:14px 20px; border-bottom:1px solid var(--slate-100);
+    display:flex; align-items:center; gap:8px;
+}
+.card-header i  { font-size:16px; color:var(--blue-500); }
+.card-header h2 { font-size:13.5px; font-weight:700; color:var(--slate-900); }
+
+.card-body { padding:20px; }
+
+/* ================================================
+   DOCTOR & VISIT INFO CARD
+   ================================================ */
+.visit-card-body {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px; gap:20px; flex-wrap:wrap;
+}
+
+.doc-identity { display:flex; align-items:center; gap:14px; }
+.doc-av {
+    width:60px; height:60px; border-radius:50%; flex-shrink:0;
+    background:linear-gradient(135deg,var(--blue-500),var(--blue-700));
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px; color:var(--white);
+    box-shadow:0 4px 14px rgba(37,99,235,0.22);
+}
+.doc-info h3  { font-size:15px; font-weight:700; color:var(--slate-900); margin-bottom:2px; }
+.doc-info p   { font-size:12.5px; color:var(--slate-500); margin-bottom:6px; }
+
+.badge-completed {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:5px 12px; border-radius:var(--rfull);
+    background:var(--green-100); color:var(--green-600);
+    font-size:11.5px; font-weight:700;
+}
+.badge-completed::before {
+    content:''; width:6px; height:6px; border-radius:50%; background:var(--green-500);
+}
+
+.visit-meta {
+    display:flex; gap:24px; flex-wrap:wrap;
+    border-left:1px solid var(--slate-100);
+    padding-left:24px;
+}
+.meta-item { display:flex; flex-direction:column; gap:2px; }
+.meta-label { font-size:11px; font-weight:600; color:var(--slate-400); text-transform:uppercase; letter-spacing:0.04em; }
+.meta-value { font-size:13.5px; font-weight:600; color:var(--slate-900); display:flex; align-items:center; gap:5px; }
+.meta-value i { color:var(--blue-400); font-size:14px; }
+
+/* ================================================
+   CHIEF COMPLAINT
+   ================================================ */
+.complaint-box {
+    background:var(--slate-50); border:1px solid var(--slate-100);
+    border-radius:var(--rsm); padding:14px 16px;
+    font-size:14px; color:var(--slate-700); line-height:1.7;
+    border-left:4px solid var(--blue-500);
+}
+
+/* ================================================
+   DIAGNOSIS & NOTES  (side by side)
+   ================================================ */
+.dx-notes-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+/* Diagnosis card */
+.dx-box {
+    background:var(--blue-50); border:1px solid var(--blue-100);
+    border-radius:var(--rsm); padding:14px 16px;
+}
+.dx-name { font-size:16px; font-weight:800; color:var(--blue-700); margin-bottom:4px; }
+.dx-icd  { font-size:12px; font-weight:600; color:var(--blue-500); }
+
+/* Notes card */
+.notes-box {
+    background:var(--green-50); border:1px solid var(--green-100);
+    border-radius:var(--rsm); padding:14px 16px;
+    font-size:13.5px; color:var(--slate-700); line-height:1.7;
+}
+
+/* ================================================
+   PRESCRIPTION TABLE
+   ================================================ */
+.table-wrap { overflow-x:auto; }
+
+.rx-table { width:100%; border-collapse:collapse; font-size:13px; min-width:520px; }
+.rx-table thead th {
+    background:var(--slate-50); color:var(--slate-500);
+    font-size:11.5px; font-weight:600; text-transform:uppercase;
+    letter-spacing:0.05em; padding:10px 16px; text-align:left;
+    border-bottom:1px solid var(--slate-200); white-space:nowrap;
+}
+.rx-table thead th:first-child { width:32px; text-align:center; }
+
+.rx-table tbody tr { border-bottom:1px solid var(--slate-100); transition:background var(--tr); }
+.rx-table tbody tr:last-child { border-bottom:none; }
+.rx-table tbody tr:hover { background:var(--slate-50); }
+.rx-table tbody td { padding:12px 16px; vertical-align:middle; }
+.rx-table tbody td:first-child { text-align:center; color:var(--slate-400); font-weight:600; }
+
+.med-name { font-weight:700; color:var(--slate-900); }
+.med-note { font-size:12px; color:var(--slate-400); margin-top:1px; }
+
+.dosage-pill {
+    display:inline-block; padding:3px 10px;
+    background:var(--blue-50); color:var(--blue-700);
+    border-radius:var(--rfull); font-size:12px; font-weight:600;
+}
+
+/* ================================================
+   RIGHT PANEL
+   ================================================ */
+.panel-col { display:flex; flex-direction:column; gap:16px; }
+
+/* Summary card */
+.summary-row {
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:9px 0; border-bottom:1px solid var(--slate-100);
+    font-size:13px;
+}
+.summary-row:last-child { border-bottom:none; padding-bottom:0; }
+.summary-label { color:var(--slate-500); font-size:12px; font-weight:600; }
+.summary-value { color:var(--slate-900); font-weight:600; text-align:right; max-width:160px; word-break:break-word; }
+
+/* Report ID pill */
+.report-id-pill {
+    display:inline-block; padding:3px 10px;
+    background:var(--blue-50); border:1px solid var(--blue-100);
+    border-radius:var(--rfull); font-size:12px; font-weight:700; color:var(--blue-600);
+}
+
+/* Important notes card */
+.note-item {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:9px 0; border-bottom:1px solid var(--slate-100);
+    font-size:13px; line-height:1.5;
+}
+.note-item:last-child { border-bottom:none; padding-bottom:0; }
+.note-item i { font-size:16px; flex-shrink:0; margin-top:1px; }
+.note-item.danger  i { color:var(--red-500); }
+.note-item.warn    i { color:var(--orange-500); }
+.note-item.info    i { color:var(--blue-500); }
+.note-item.success i { color:var(--green-600); }
+.note-item span { color:var(--slate-700); }
+
+/* ================================================
+   FOOTER NOTE
+   ================================================ */
+.report-footer-note {
+    text-align:center; margin-top:20px;
+    padding:14px 20px;
+    background:var(--white); border:var(--card-bd);
+    border-radius:var(--card-r); box-shadow:var(--card-sh);
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:10px;
+}
+.report-footer-note p { font-size:13px; color:var(--slate-500); display:flex; align-items:center; gap:6px; }
+.report-footer-note i { color:var(--blue-400); }
+
+.btn-contact {
+    padding:8px 18px; font-size:12.5px; font-weight:600;
+    border:1.5px solid var(--blue-200,var(--blue-100));
+    color:var(--blue-600); background:var(--blue-50);
+    border-radius:var(--rsm); cursor:pointer; font-family:'Inter',sans-serif;
+    display:inline-flex; align-items:center; gap:5px; text-decoration:none;
+    transition:all var(--tr);
+}
+.btn-contact:hover { background:var(--blue-100); }
+
+/* ================================================
+   PRINT STYLES
+   ================================================ */
+@media print {
+    body { background:var(--white); }
+    .navbar, .report-actions, .btn-back, .report-footer-note { display:none !important; }
+    .report-grid { grid-template-columns:1fr; }
+    .panel-col { display:none; }
+    .report-card { box-shadow:none; border:1px solid #e2e8f0; }
+    .report-page { padding:0; }
+    .report-wrap { width:100%; max-width:none; }
+}
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+@media(max-width:960px)  { .report-grid { grid-template-columns:1fr; } .panel-col { order:-1; } }
+@media(max-width:620px)  { .dx-notes-grid { grid-template-columns:1fr; } .visit-meta { border-left:none; padding-left:0; border-top:1px solid var(--slate-100); padding-top:14px; } }
+@media(max-width:480px)  { .report-actions { flex-direction:column; align-items:flex-start; } }

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create your Smart Clinic account – manage appointments, records and more.">
+    <title>Register – Smart Clinic Management System</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/register.css">
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<div id="navbar-container"></div>
+
+<!-- ===================== REGISTER SECTION ===================== -->
+<main class="register" id="register-section">
+  <div class="container register-container">
+
+    <!-- ══════ LEFT: FORM CARD ══════ -->
+    <div class="register-card" id="register-card">
+
+      <!-- Header -->
+      <div class="register-header">
+        <div class="register-badge">
+          <i class="ph-bold ph-user-circle-plus"></i>
+          New Account
+        </div>
+        <h1>Create Your Account</h1>
+        <p class="subtitle">Join Smart Clinic and manage your health easily</p>
+      </div>
+
+      <!-- FORM -->
+      <form id="register-form" novalidate>
+
+        <!-- ── SECTION 1: Account Information ── -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="section-num">1</span>
+            Account Information
+          </div>
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label for="full-name">Full Name</label>
+            <div class="input-wrapper">
+              <span class="input-icon"><i class="ph-bold ph-user"></i></span>
+              <input type="text" id="full-name" name="fullName"
+                     placeholder="e.g. Ahmed Mohamed"
+                     autocomplete="name" required>
+            </div>
+            <span class="field-error" id="name-error"></span>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-wrapper">
+              <span class="input-icon"><i class="ph-bold ph-envelope"></i></span>
+              <input type="email" id="email" name="email"
+                     placeholder="you@example.com"
+                     autocomplete="email" required>
+            </div>
+            <span class="field-error" id="email-error"></span>
+          </div>
+
+          <!-- Password row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="input-wrapper">
+                <span class="input-icon"><i class="ph-bold ph-lock"></i></span>
+                <input type="password" id="password" name="password"
+                       placeholder="Min. 8 characters"
+                       autocomplete="new-password" required>
+                <button type="button" class="toggle-password" id="toggle-pass"
+                        aria-label="Toggle password visibility">
+                  <i class="ph-bold ph-eye" id="toggle-pass-icon"></i>
+                </button>
+              </div>
+              <span class="field-error" id="pass-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="confirm-password">Confirm Password</label>
+              <div class="input-wrapper">
+                <span class="input-icon"><i class="ph-bold ph-lock-key"></i></span>
+                <input type="password" id="confirm-password" name="confirmPassword"
+                       placeholder="Re-enter password"
+                       autocomplete="new-password" required>
+                <button type="button" class="toggle-password" id="toggle-confirm"
+                        aria-label="Toggle confirm password visibility">
+                  <i class="ph-bold ph-eye" id="toggle-confirm-icon"></i>
+                </button>
+              </div>
+              <span class="field-error" id="confirm-error"></span>
+            </div>
+          </div>
+
+        </div><!-- /section 1 -->
+
+        <!-- ── SECTION 2: Personal Information ── -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="section-num">2</span>
+            Personal Information
+          </div>
+
+          <div class="form-row">
+            <!-- Phone -->
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <div class="input-wrapper">
+                <span class="input-icon"><i class="ph-bold ph-phone"></i></span>
+                <input type="tel" id="phone" name="phone"
+                       placeholder="+20 100 000 0000"
+                       autocomplete="tel" required>
+              </div>
+              <span class="field-error" id="phone-error"></span>
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="form-group">
+              <label for="dob">Date of Birth</label>
+              <div class="input-wrapper">
+                <span class="input-icon"><i class="ph-bold ph-calendar"></i></span>
+                <input type="date" id="dob" name="dob" required>
+              </div>
+              <span class="field-error" id="dob-error"></span>
+            </div>
+          </div>
+
+          <!-- Gender -->
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <div class="input-wrapper select-wrapper">
+              <span class="input-icon"><i class="ph-bold ph-gender-intersex"></i></span>
+              <select id="gender" name="gender" required>
+                <option value="" disabled selected>Select your gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+              <span class="select-arrow"><i class="ph-bold ph-caret-down"></i></span>
+            </div>
+            <span class="field-error" id="gender-error"></span>
+          </div>
+
+          <!-- Address -->
+          <div class="form-group">
+            <label for="address">Address</label>
+            <div class="input-wrapper">
+              <span class="input-icon"><i class="ph-bold ph-map-pin"></i></span>
+              <input type="text" id="address" name="address"
+                     placeholder="123 Street, City, Country"
+                     autocomplete="street-address">
+            </div>
+          </div>
+
+        </div><!-- /section 2 -->
+
+        <!-- TERMS CHECKBOX -->
+        <div class="terms-row">
+          <label class="remember-label" for="terms">
+            <input type="checkbox" id="terms" name="terms" required>
+            <span class="custom-check"></span>
+            I agree to the
+            <a href="about.html#terms-of-service" class="terms-link">Terms of Use</a>
+            and
+            <a href="about.html#privacy-policy" class="terms-link">Privacy Policy</a>
+          </label>
+          <span class="field-error" id="terms-error"></span>
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <button type="submit" class="btn-register" id="btn-register">
+          <span class="btn-text">Create Account</span>
+          <span class="btn-spinner" id="reg-spinner" aria-hidden="true"></span>
+        </button>
+
+        <!-- LOGIN LINK -->
+        <p class="login-text">
+          Already have an account?
+          <a href="login.html" id="login-link">Login here</a>
+        </p>
+
+      </form>
+    </div><!-- /register-card -->
+
+    <!-- ══════ RIGHT: ILLUSTRATION ══════ -->
+    <div class="register-image" id="register-illustration" aria-hidden="true">
+      <div class="illustration-bg">
+
+        <div class="floating-card card-a">
+          <i class="ph-bold ph-shield-check"></i>
+          <div>
+            <strong>Secure &amp; Private</strong>
+            <span>HIPAA Compliant</span>
+          </div>
+        </div>
+
+        <div class="floating-card card-b">
+          <i class="ph-bold ph-calendar-check"></i>
+          <div>
+            <strong>Easy Booking</strong>
+            <span>Book in 60 seconds</span>
+          </div>
+        </div>
+
+        <div class="floating-card card-c">
+          <i class="ph-bold ph-star"></i>
+          <div>
+            <strong>4.9 / 5 Rating</strong>
+            <span>From 3,200+ patients</span>
+          </div>
+        </div>
+
+        <img src="../assets/images/register.png"
+             alt="Doctor registration illustration"
+             class="doctor-img"
+             id="register-img">
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer" id="site-footer">
+  <div class="container footer-inner">
+
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+        <span>Smart Clinic</span>
+      </div>
+      <p>Empowering healthcare professionals with intelligent tools for a better patient experience.</p>
+    </div>
+
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="doctors.html">Our Doctors</a></li>
+        <li><a href="about.html">About Us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="about.html#help-center">Help Center</a></li>
+        <li><a href="about.html#privacy-policy">Privacy Policy</a></li>
+        <li><a href="about.html#terms-of-service">Terms of Service</a></li>
+        <li><a href="about.html#contact-us">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-contact">
+      <h4>Contact &amp; Hours</h4>
+      <p><i class="ph-bold ph-map-pin"></i> 123 Medical Drive, Cairo, Egypt</p>
+      <p><i class="ph-bold ph-phone"></i> +20 100 000 0000</p>
+      <p><i class="ph-bold ph-envelope"></i> support@smartclinic.com</p>
+      <p><i class="ph-bold ph-clock"></i> Mon – Fri: 8:00 AM – 8:00 PM</p>
+      <div class="social-links">
+        <a href="about.html#facebook" aria-label="Facebook"><i class="ph-bold ph-facebook-logo"></i></a>
+        <a href="about.html#twitter" aria-label="Twitter"><i class="ph-bold ph-twitter-logo"></i></a>
+        <a href="about.html#linkedin" aria-label="LinkedIn"><i class="ph-bold ph-linkedin-logo"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 Smart Clinic Management System. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="../js/components/nav-menu.js"></script>
+<script src="../js/components/components.js"></script>
+<script src="../js/components/navbar.js"></script>
+<script src="../js/pages/register.js"></script>
+
+</body>
+</html>

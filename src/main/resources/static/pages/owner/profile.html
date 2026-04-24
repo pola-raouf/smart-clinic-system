@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/profile.css">
+</head>
+<body data-role="owner">
+
+<nav class="navbar" id="main-navbar">
+  <div class="nav-container">
+    <a href="../../index.html" class="logo">
+      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
+      <span>Smart Clinic</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="../../index.html">Home</a></li>
+      <li><a href="profile.html" class="active">My Profile</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+      <i class="ph-bold ph-list"></i>
+    </button>
+    <div class="nav-user-badge">
+      <div class="nav-av" style="background:linear-gradient(135deg,#7c3aed,#5b21b6)"><i class="ph-fill ph-user"></i></div>
+      <span>Dr. Mostafa Omar</span>
+    </div>
+  </div>
+</nav>
+
+<main class="profile-page">
+  <div class="profile-wrap">
+    <div class="profile-topbar">
+      <h1>My Profile</h1>
+      <button class="btn-edit-profile" id="btn-edit">
+        <i class="ph-bold ph-pencil"></i> Edit Profile
+      </button>
+    </div>
+    <div class="profile-grid">
+
+      <aside>
+        <div class="profile-card">
+          <div class="profile-av-wrap">
+            <div class="profile-av" style="background:linear-gradient(135deg,#7c3aed,#5b21b6)"><i class="ph-fill ph-user-circle"></i></div>
+            <button class="profile-av-change" title="Change photo"><i class="ph-bold ph-camera"></i></button>
+          </div>
+          <h2>Dr. Mostafa Omar</h2>
+          <span class="role-badge owner">Owner</span>
+          <p class="pid">ID: O0001 · Clinic Director</p>
+          <div class="profile-divider"></div>
+          <ul class="profile-meta-list">
+            <li><i class="ph-bold ph-calendar-blank"></i> <div><small style="font-size:10.5px;color:var(--slate-400);display:block">Joined</small> <strong>January 2020</strong></div></li>
+            <li><i class="ph-bold ph-buildings"></i> <div>Smart Clinic, Cairo</div></li>
+            <li><i class="ph-bold ph-crown"></i> <div>Full system access</div></li>
+          </ul>
+        </div>
+      </aside>
+
+      <div class="profile-sections">
+
+        <div class="profile-section">
+          <div class="section-header">
+            <i class="ph-bold ph-user-circle"></i><h3>Personal Information</h3>
+          </div>
+          <div class="section-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-input" id="f-name" value="Dr. Mostafa Omar" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date of Birth</label>
+                <input type="date" class="form-input" id="f-dob" value="1975-11-01" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Gender</label>
+                <select class="form-input form-select" id="f-gender" disabled>
+                  <option value="male" selected>Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Title / Role</label>
+                <input type="text" class="form-input" value="Clinic Owner & Director" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <div class="section-header">
+            <i class="ph-bold ph-address-book"></i><h3>Contact Information</h3>
+          </div>
+          <div class="section-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input type="tel" class="form-input" id="f-phone" value="+20 100 000 0000" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="f-email" value="owner@smartclinic.com" readonly>
+              </div>
+              <div class="form-group" style="grid-column:1/-1">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-input" id="f-address" value="Smart Clinic HQ, 123 Medical Drive, Cairo, Egypt" readonly>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <div class="section-header">
+            <i class="ph-bold ph-lock"></i><h3>Password</h3>
+          </div>
+          <div class="section-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Current Password</label>
+                <input type="password" class="form-input" id="f-pwd-cur" value="••••••••" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">New Password</label>
+                <input type="password" class="form-input" id="f-pwd-new" placeholder="Enter new password" readonly>
+              </div>
+            </div>
+            <div style="margin-top:10px">
+              <button class="btn-change-pwd" id="btn-change-pwd"><i class="ph-bold ph-lock-key"></i> Change Password</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"><i class="ph-bold ph-check-circle"></i><span id="toast-msg"></span></div>
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/pages/profile.js"></script>
+</body>
+</html>

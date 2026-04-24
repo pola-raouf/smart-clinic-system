@@ -1,0 +1,51 @@
+<nav class="navbar">
+  <div class="nav-container">
+
+    <!-- Logo -->
+    <a href="/index.html" class="logo">
+      <div class="logo-icon">
+        <i class="ph-bold ph-plus"></i>
+      </div>
+      <span>Smart Clinic</span>
+    </a>
+
+    <!-- Links -->
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/pages/doctors.html">Doctors</a></li>
+      <li><a href="/pages/services.html">Services</a></li>
+      <li><a href="/pages/patient/dashboard.html">Dashboard</a></li>
+    </ul>
+
+    <!-- USER (logged in) -->
+    <div id="nav-user" hidden>
+      <button class="profile-trigger" id="profile-trigger">
+
+        <!-- 🔥 FIXED PATH -->
+        <img src="/assets/images/doctor.png" class="nav-avatar-img">
+
+        <div class="nav-user-meta">
+          <span id="nav-user-name">User</span>
+          <span id="nav-user-role">Patient</span>
+        </div>
+      </button>
+
+      <div id="profile-dropdown" hidden>
+        <a href="/pages/patient/profile.html">My Profile</a>
+        <a href="#" id="logout-btn">Logout</a>
+      </div>
+    </div>
+
+    <!-- GUEST -->
+    <div id="nav-guest">
+      <a href="/pages/login.html">Login</a>
+      <a href="/pages/register.html">Sign Up</a>
+    </div>
+
+    <!-- Hamburger -->
+    <button class="hamburger" id="hamburger-btn">
+      <i class="ph-bold ph-list"></i>
+    </button>
+
+  </div>
+</nav>
