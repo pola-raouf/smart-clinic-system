@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td><a href="patient-profile.html?id=${p.id}" class="pt-id-link">${p.id}</a></td>
                     <td>${p.age} yrs, ${p.gender}<br>${gIco}</td>
                     <td>${fmt(p.lastVisit)}<br><span style="font-size:11.5px;color:var(--slate-400)">${p.lastTime}</span></td>
-                    <td><a href="patient-details.html?id=${p.id}" class="btn-secondary"><i class="ph-bold ph-eye"></i> View Profile</a></td>`;
+                    <td><a href="patient-profile.html?id=${p.id}" class="btn-secondary"><i class="ph-bold ph-eye"></i> View Profile</a></td>`;
                 tbody.appendChild(tr);
             });
         }
