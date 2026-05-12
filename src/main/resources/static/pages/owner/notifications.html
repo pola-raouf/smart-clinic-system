@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/notifications.css">
+</head>
+<body>
+
+<div id="navbar-container"></div>
+
+<main class="notif-page">
+  <div class="notif-wrap">
+
+    <div class="notif-topbar">
+      <div class="notif-topbar-left">
+        <h1>Notifications Center</h1>
+        <p>Review all your past and present notifications, reminders, and alerts.</p>
+      </div>
+    </div>
+
+    <div class="notif-container">
+      <div class="notif-header-bar">
+        <h2>All Notifications</h2>
+        <button class="btn-mark-all" id="btn-mark-all-page"><i class="ph-bold ph-checks"></i> Mark all as read</button>
+      </div>
+      
+      <div class="notif-empty" id="notif-empty">
+        <i class="ph-duotone ph-bell-z"></i>
+        <p>You're all caught up! No notifications to show.</p>
+      </div>
+
+      <div class="notif-list-full" id="full-notif-list">
+        <!-- Injected via JS -->
+      </div>
+      
+      <div class="pagination">
+        <button class="page-btn" id="btn-prev-page" disabled>Previous</button>
+        <span class="page-info" id="page-info">Page 1</span>
+        <button class="page-btn" id="btn-next-page" disabled>Next</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
+<script src="../../js/pages/shared/notifications.js"></script>
+</body>
+</html>

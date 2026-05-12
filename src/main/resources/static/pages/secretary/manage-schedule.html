@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage doctor schedules – Smart Clinic Secretary.">
+    <title>Manage Schedule – Smart Clinic</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/manage-appointments.css">
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<div id="navbar-container"></div>
+
+<!-- ── Page ── -->
+<main class="sec-page">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div>
+        <h1><i class="ph-bold ph-calendar-blank"></i> Manage Doctor Schedules</h1>
+        <p class="page-subtitle">Define available time ranges for a specific doctor and date</p>
+      </div>
+    </div>
+
+    <!-- Controls card: doctor + date -->
+    <div class="form-card">
+      <div class="form-card-header">
+        <i class="ph-bold ph-sliders"></i>
+        <h2>Select Doctor &amp; Date</h2>
+      </div>
+
+      <div class="form-row">
+        <!-- Doctor -->
+        <div class="form-group">
+          <label for="doctor-select"><i class="ph-bold ph-stethoscope"></i> Doctor</label>
+          <div class="input-wrap select-wrap">
+            <select id="doctor-select">
+              <option value="">— Choose a Doctor —</option>
+            </select>
+            <i class="ph-bold ph-caret-down sel-arrow"></i>
+          </div>
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label for="schedule-date"><i class="ph-bold ph-calendar"></i> Date</label>
+          <div class="input-wrap">
+            <input id="schedule-date" type="date">
+          </div>
+        </div>
+      </div>
+    </div><!-- /controls card -->
+
+    <!-- Schedule editor (shown after doctor + date selected) -->
+    <div id="schedule-editor" hidden>
+
+      <div class="form-card">
+        <div class="form-card-header">
+          <i class="ph-bold ph-clock"></i>
+          <h2>Time Ranges for <span id="display-date" style="color:var(--blue-600);"></span></h2>
+          <button type="button" id="btn-add-time" class="btn-book" style="margin-left:auto;">
+            <i class="ph-bold ph-plus"></i> Add Time Range
+          </button>
+        </div>
+
+        <!-- Time ranges list -->
+        <div id="time-ranges-container" style="display:flex;flex-direction:column;gap:12px;">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Empty state -->
+        <div id="empty-state" class="empty-state" hidden>
+          <i class="ph-bold ph-calendar-x"></i>
+          <p>No time ranges defined. The doctor is off on this date.<br>Click <strong>Add Time Range</strong> to set working hours.</p>
+        </div>
+
+        <!-- Save action -->
+        <div class="form-actions" style="margin-top:20px;border-top:1px solid var(--slate-100);padding-top:20px;">
+          <button id="btn-save" class="btn-book" disabled>
+            <i class="ph-bold ph-floppy-disk"></i> Save Schedule
+          </button>
+          <button id="btn-cancel-edit" class="btn-reset" type="button">
+            <i class="ph-bold ph-x"></i> Cancel
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /schedule-editor -->
+
+  </div>
+</main>
+
+<!-- Loading overlay -->
+<div id="loading-overlay" hidden style="position:fixed;inset:0;background:rgba(255,255,255,0.75);display:flex;align-items:center;justify-content:center;z-index:999;font-size:1.4rem;color:var(--blue-600);">
+  <i class="ph-bold ph-circle-notch" style="animation:spin 0.8s linear infinite;"></i>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" aria-live="polite">
+  <i class="ph-bold ph-check-circle" id="toast-icon"></i>
+  <span id="toast-msg"></span>
+</div>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Time range row – rendered by JS */
+.time-range-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: var(--card-radius);
+    padding: 14px 16px;
+}
+.time-range-row .tr-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--slate-500);
+    margin-bottom: 4px;
+}
+.time-range-row input[type="time"] {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid var(--slate-200);
+    border-radius: var(--radius-sm);
+    font-size: 13.5px;
+    font-family: 'Inter', sans-serif;
+    color: var(--slate-900);
+    background: var(--white);
+    outline: none;
+    transition: border-color var(--transition);
+}
+.time-range-row input[type="time"]:focus {
+    border-color: var(--blue-500);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+}
+.time-range-row .btn-remove-range {
+    padding: 9px 14px;
+    background: var(--white);
+    border: 1.5px solid var(--slate-300);
+    border-radius: var(--radius-sm);
+    color: var(--slate-500);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+}
+.time-range-row .btn-remove-range:hover {
+    border-color: var(--red-500);
+    color: var(--red-500);
+    background: #fff5f5;
+}
+</style>
+
+<script src="/js/components/nav-menu.js"></script>
+<script src="/js/components/navbar.js"></script>
+<script src="/js/components/components.js"></script>
+<script src="/js/appointmentService.js"></script>
+<script src="/js/pages/secretary/secretaryState.js"></script>
+<script src="/js/pages/secretary/scheduleService.js"></script>
+<script src="/js/pages/secretary/validationStrategies.js"></script>
+<script type="module" src="/js/pages/secretary/manage-schedule.js"></script>
+</body>
+</html>

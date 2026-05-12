@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Logs – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/activity-log.css">
+</head>
+<body>
+
+<div id="navbar-container"></div>
+
+<main class="log-page">
+  <div class="log-wrap">
+
+    <div class="log-topbar">
+      <div class="log-topbar-left">
+        <h1>Recent Activities &amp; Logs</h1>
+        <p>Monitor real-time system events, user actions, and administrative logs.</p>
+      </div>
+      <div class="log-actions">
+        <button class="btn-apply" id="btn-refresh" style="background:var(--blue-500); color:#fff; border:none;">
+          <i class="ph-bold ph-arrows-clockwise"></i> Refresh Logs
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="filter-label">Level</span>
+        <select class="filter-select" id="filter-level">
+          <option value="">All Levels</option>
+          <option value="INFO">INFO</option>
+          <option value="WARN">WARN</option>
+          <option value="ERROR">ERROR</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Module</span>
+        <select class="filter-select" id="filter-module">
+          <option value="">All Modules</option>
+          <option value="CORE">CORE</option>
+          <option value="AUTH">AUTH</option>
+          <option value="APPOINTMENTS">APPOINTMENTS</option>
+          <option value="PATIENTS">PATIENTS</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">User Role</span>
+        <select class="filter-select" id="filter-role">
+          <option value="">All Roles</option>
+          <option value="OWNER">OWNER</option>
+          <option value="DOCTOR">DOCTOR</option>
+          <option value="SECRETARY">SECRETARY</option>
+          <option value="PATIENT">PATIENT</option>
+        </select>
+      </div>
+
+      <button class="btn-apply" id="btn-apply-filters">
+        <i class="ph-bold ph-funnel"></i> Apply Filters
+      </button>
+    </div>
+
+    <div class="table-section">
+      <div style="overflow-x:auto">
+        <table class="log-table" id="log-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Level</th>
+              <th>Event Type</th>
+              <th>User</th>
+              <th>Role</th>
+              <th>Action</th>
+              <th>Module</th>
+              <th>Status</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody id="log-tbody">
+          </tbody>
+        </table>
+        <div id="log-empty" style="text-align:center; padding:40px; font-size:14px; color:var(--slate-400); display:none;">
+          No logs found matching your criteria.
+        </div>
+        <div id="log-loading" style="text-align:center; padding:40px; font-size:14px; color:var(--slate-400);">
+          <i class="ph-bold ph-spinner ph-spin" style="font-size:24px; color:var(--blue-500); margin-bottom:10px;"></i>
+          <br>Loading system logs...
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
+<script src="../../js/pages/owner/activity-log.js"></script>
+</body>
+</html>
