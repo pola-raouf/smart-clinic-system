@@ -58,6 +58,8 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
 
                         .requestMatchers(
                                 "/",
@@ -68,13 +70,18 @@ public class SecurityConfig {
                                 "/assets/**",
                                 "/images/**",
                                 "/pages/**",
-                                "/components/**"
+                                "/components/**",
+                                "/error"
                         ).permitAll()
 
                         .requestMatchers("/api/patient/**").hasRole("PATIENT")
-                        .requestMatchers("/api/doctor/**").hasRole("DOCTOR")
+                        .requestMatchers("/api/doctor/me/**").hasRole("DOCTOR")
+                        .requestMatchers("/api/doctor/**").authenticated()
                         .requestMatchers("/api/owner/**").hasRole("OWNER")
                         .requestMatchers("/api/secretary/**").hasRole("SECRETARY")
+
+                        .requestMatchers("/api/appointments/**").authenticated()
+                        .requestMatchers("/api/schedules/**").hasRole("SECRETARY")
 
                         .anyRequest().authenticated()
                 )

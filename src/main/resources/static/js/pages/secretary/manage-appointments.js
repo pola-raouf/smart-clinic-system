@@ -12,20 +12,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     /* ─── State ─── */
-    let selectedTime   = null;
-    let pendingCancelId= null;
+    let selectedTime = null;
+    let pendingCancelId = null;
+    let allAppointments = [];
+    let patients = [];
+    let linkedPatientHistory = [];
 
     const $ = id => document.getElementById(id);
+    const patientInput = $('patient-name-input');
+    const patientSuggestions = $('patient-suggestions');
 
     /* ─────────────────────────────────────────
        POPULATE DOCTOR DROPDOWN
     ───────────────────────────────────────── */
     const doctorSelect = $('doctor-select');
-    AppointmentService.getDoctors().forEach(doc => {
-        const opt   = document.createElement('option');
-        opt.value   = doc.id;
-        opt.textContent = `${doc.name} — ${doc.specialty}`;
-        doctorSelect.appendChild(opt);
+    let doctors = [];
+    try {
+        doctors = await AppointmentService.getDoctors();
+        doctors.forEach(doc => {
+            const opt = document.createElement('option');
+            opt.value = doc.id;
+            opt.textContent = `${doc.name} — ${doc.specialty}`;
+            doctorSelect.appendChild(opt);
+        });
+    } catch (err) {
+        showToast(err.message || 'Failed to load doctors.', true);
+    }
+
+    try {
+        patients = await AppointmentService.getSecretaryPatients();
+        renderPatientSuggestions('');
+    } catch (err) {
+        showToast(err.message || 'Patients list is unavailable.', true);
+    }
+
+    patientInput?.addEventListener('input', (e) => {
+        renderPatientSuggestions(e.target.value);
     });
 
     /* ─────────────────────────────────────────
@@ -36,13 +58,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (dateInput) dateInput.min = todayStr;
 
     /* Whenever doctor OR date changes, refresh time slots */
-    doctorSelect?.addEventListener('change', renderTimeSlots);
+    doctorSelect?.addEventListener('change', async () => {
+        SecretaryState.setSelectedDoctorId(doctorSelect?.value || null);
+        await Promise.all([renderTimeSlots(), refreshDoctorLinkedState()]);
+    });
     dateInput?.addEventListener('change',   renderTimeSlots);
 
     /* ─────────────────────────────────────────
        TIME SLOTS
     ───────────────────────────────────────── */
-    function renderTimeSlots() {
+    async function renderTimeSlots() {
         const grid     = $('time-grid');
         if (!grid) return;
         grid.innerHTML = '';
@@ -50,28 +75,32 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const docId = doctorSelect?.value;
         const date  = dateInput?.value;
+        if (!docId || !date) return;
 
-        const booked = (docId && date)
-            ? AppointmentService.getBookedSlots(docId, date)
-            : [];
+        let slots = [];
+        try {
+            slots = await AppointmentService.getDoctorAvailability(docId, date);
+        } catch (err) {
+            showToast(err.message || 'Failed to load available slots.', true);
+            return;
+        }
 
-        AppointmentService.getTimeSlots().forEach(slot => {
+        if (!slots.length) {
+            grid.innerHTML = `<p class="text-muted">No available slots for this date.</p>`;
+            return;
+        }
+
+        slots.forEach(slot => {
             const btn       = document.createElement('button');
             btn.type        = 'button';
             btn.className   = 'time-slot';
-            btn.textContent = slot;
-
-            if (booked.includes(slot)) {
-                btn.classList.add('booked');
-                btn.disabled = true;
-            } else {
-                btn.addEventListener('click', () => {
-                    selectedTime = slot;
-                    grid.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    $('err-time').textContent = '';
-                });
-            }
+            btn.textContent = slot.substring(0, 5);
+            btn.addEventListener('click', () => {
+                selectedTime = slot;
+                grid.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                $('err-time').textContent = '';
+            });
             grid.appendChild(btn);
         });
     }
@@ -83,10 +112,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     ───────────────────────────────────────── */
     const form = $('appt-form');
 
-    form?.addEventListener('submit', (e) => {
+    form?.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const patientName = $('patient-name-input')?.value.trim();
+        const patientRef  = patientInput?.value.trim();
         const docId       = doctorSelect?.value;
         const date        = dateInput?.value;
 
@@ -95,34 +124,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         let valid = true;
-        if (!patientName) { $('err-patient').textContent = 'Patient name is required.'; valid = false; }
+        if (!patientRef)  { $('err-patient').textContent = 'Patient ID or name is required.'; valid = false; }
         if (!docId)        { $('err-doctor').textContent  = 'Please select a doctor.';   valid = false; }
         if (!date)         { $('err-date').textContent    = 'Please pick a date.';       valid = false; }
         if (!selectedTime) { $('err-time').textContent    = 'Please select a time slot.'; valid = false; }
         if (!valid) return;
 
-        const doctor = AppointmentService.getDoctorById(docId);
+        const patient = resolvePatient(patientRef);
+        if (!patient) {
+            $('err-patient').textContent = 'Patient not found. Enter valid ID or exact name.';
+            return;
+        }
+
+        const dateError = window.ValidationStrategies.dateNotPastStrategy.validate({ date });
+        if (dateError) {
+            $('err-date').textContent = dateError;
+            return;
+        }
 
         try {
-            AppointmentService.book({
-                doctorId:    doctor.id,
-                doctorName:  doctor.name,
-                specialty:   doctor.specialty,
-                patientId:   'sec_' + Date.now(),
-                patientName: patientName,
-                date:        date,
-                time:        selectedTime,
-                createdBy:   'secretary',
+            await BookingService.bookAppointment({
+                doctorId: Number(docId),
+                patientId: Number(patient.id),
+                date,
+                slotId: selectedTime
             });
 
             showToast('Appointment booked successfully!');
             form.reset();
             selectedTime = null;
-            renderTimeSlots();
-            renderTable();
+            await Promise.all([renderTimeSlots(), loadAppointments(), refreshDoctorLinkedState()]);
 
         } catch (err) {
-            showToast(err.message, true);
+            showToast(err.message || 'Failed to book appointment.', true);
         }
     });
 
@@ -139,16 +173,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         const query     = (searchInput?.value || '').toLowerCase().trim();
         const statusVal = statusFilt?.value || '';
 
-        let appointments = AppointmentService.getAll();
+        let appointments = [...allAppointments];
 
         if (query) {
             appointments = appointments.filter(a =>
-                a.patientName.toLowerCase().includes(query) ||
-                a.doctorName.toLowerCase().includes(query)
+                (a.patientName || '').toLowerCase().includes(query) ||
+                (a.doctorName || '').toLowerCase().includes(query)
             );
         }
         if (statusVal) {
-            appointments = appointments.filter(a => a.status === statusVal);
+            appointments = appointments.filter(a => toDisplayStatus(a.status).key === statusVal);
         }
 
         appointments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -166,8 +200,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         appointments.forEach((appt, idx) => {
             const tr          = document.createElement('tr');
-            const statusClass = appt.status === 'confirmed' ? 'confirmed' : 'cancelled';
-            const createdClass= appt.createdBy === 'secretary' ? 'secretary' : '';
+            const displayStatus = toDisplayStatus(appt.status);
+            const normalizedStatus = displayStatus.key;
+            const statusClass = normalizedStatus;
+            const createdClass= 'secretary';
 
             tr.innerHTML = `
                 <td>${idx + 1}</td>
@@ -176,17 +212,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>${escHtml(appt.specialty || '—')}</td>
                 <td>${formatDate(appt.date)}</td>
                 <td>${escHtml(appt.time)}</td>
-                <td><span class="created-by-badge ${createdClass}">${escHtml(appt.createdBy)}</span></td>
-                <td><span class="status-badge ${statusClass}">${appt.status}</span></td>
+                <td><span class="created-by-badge ${createdClass}">secretary</span></td>
+                <td><span class="status-badge ${statusClass}">${escHtml(displayStatus.label)}</span></td>
                 <td>
+                    <button class="btn-cancel-row btn-confirm-row" data-confirm-id="${appt.id}"
+                        ${normalizedStatus === 'pending' ? '' : 'disabled'}>Confirm</button>
                     <button class="btn-cancel-row" data-id="${appt.id}"
-                        ${appt.status === 'cancelled' ? 'disabled' : ''}>Cancel</button>
+                        ${normalizedStatus === 'cancelled' || normalizedStatus === 'completed' ? 'disabled' : ''}>Cancel</button>
                 </td>
             `;
             tbody.appendChild(tr);
         });
 
+        tbody.querySelectorAll('.btn-confirm-row:not(:disabled)').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                try {
+                    await AppointmentService.confirm(Number(btn.dataset.confirmId));
+                    showToast('Appointment confirmed.');
+                    await Promise.all([loadAppointments(), renderTimeSlots(), refreshDoctorLinkedState()]);
+                } catch (err) {
+                    showToast(err.message || 'Failed to confirm appointment.', true);
+                }
+            });
+        });
         tbody.querySelectorAll('.btn-cancel-row:not(:disabled)').forEach(btn => {
+            if (btn.dataset.confirmId) return;
             btn.addEventListener('click', () => {
                 pendingCancelId = btn.dataset.id;
                 $('cancel-overlay')?.removeAttribute('hidden');
@@ -196,19 +246,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     searchInput?.addEventListener('input', renderTable);
     statusFilt?.addEventListener('change', renderTable);
-    renderTable();
+    loadAppointments();
+    refreshDoctorLinkedState();
+    SecretaryState.subscribe(async (next) => {
+        if (Number(doctorSelect?.value || 0) === Number(next.selectedDoctorId || 0)) return;
+        doctorSelect.value = next.selectedDoctorId ? String(next.selectedDoctorId) : "";
+        await Promise.all([renderTimeSlots(), refreshDoctorLinkedState()]);
+    });
 
     /* ─────────────────────────────────────────
        CANCEL MODAL
     ───────────────────────────────────────── */
-    $('cancel-yes')?.addEventListener('click', () => {
+    $('cancel-yes')?.addEventListener('click', async () => {
         if (!pendingCancelId) return;
-        AppointmentService.cancel(pendingCancelId);
-        pendingCancelId = null;
-        $('cancel-overlay')?.setAttribute('hidden', '');
-        renderTable();
-        renderTimeSlots();
-        showToast('Appointment cancelled.');
+        try {
+            await AppointmentService.cancel(pendingCancelId);
+            showToast('Appointment cancelled.');
+            await Promise.all([loadAppointments(), renderTimeSlots(), refreshDoctorLinkedState()]);
+        } catch (err) {
+            showToast(err.message || 'Failed to cancel appointment.', true);
+        } finally {
+            pendingCancelId = null;
+            $('cancel-overlay')?.setAttribute('hidden', '');
+        }
     });
 
     $('cancel-no')?.addEventListener('click', () => {
@@ -268,5 +328,70 @@ document.addEventListener('DOMContentLoaded', async () => {
         const div = document.createElement('div');
         div.textContent = str || '';
         return div.innerHTML;
+    }
+
+    function resolvePatient(value) {
+        const v = String(value || '').trim();
+        if (!v) return null;
+        const byCombined = patients.find(p => `${p.id} - ${p.name}`.toLowerCase() === v.toLowerCase());
+        if (byCombined) return byCombined;
+        const byId = /^\d+$/.test(v) ? patients.find(p => String(p.id) === v) : null;
+        if (byId) return byId;
+        const exactByName = patients.find(p => String(p.name || '').toLowerCase() === v.toLowerCase());
+        if (exactByName) return exactByName;
+        const looseByName = patients.filter(p => String(p.name || '').toLowerCase().includes(v.toLowerCase()));
+        return looseByName.length === 1 ? looseByName[0] : null;
+    }
+
+    function toDisplayStatus(rawStatus) {
+        const normalized = String(rawStatus || '').toLowerCase();
+        if (normalized === 'booked' || normalized === 'pending') return { key: 'pending', label: 'Pending' };
+        if (normalized === 'confirmed') return { key: 'confirmed', label: 'Confirmed' };
+        if (normalized === 'cancelled') return { key: 'cancelled', label: 'Cancelled' };
+        if (normalized === 'completed') return { key: 'completed', label: 'Completed' };
+        return { key: 'pending', label: 'Pending' };
+    }
+
+    function renderPatientSuggestions(query) {
+        if (!patientSuggestions) return;
+        const q = String(query || '').toLowerCase().trim();
+        const filtered = !q
+            ? patients.slice(0, 50)
+            : patients.filter((p) =>
+                String(p.name || '').toLowerCase().includes(q) || String(p.id || '').includes(q)
+            ).slice(0, 50);
+        patientSuggestions.innerHTML = '';
+        filtered.forEach((p) => {
+            const opt = document.createElement('option');
+            opt.value = `${p.id} - ${p.name}`;
+            patientSuggestions.appendChild(opt);
+        });
+    }
+
+    async function refreshDoctorLinkedState() {
+        const doctorId = Number(doctorSelect?.value || 0);
+        if (!doctorId) {
+            linkedPatientHistory = [];
+            return;
+        }
+        try {
+            const doctorAppointments = await AppointmentService.getDoctorAppointments(doctorId);
+            const patientIds = new Set(doctorAppointments.map(a => Number(a.patientId)).filter(Boolean));
+            linkedPatientHistory = patients.filter(p => patientIds.has(Number(p.id)));
+            showToast(`Doctor context updated: ${doctorAppointments.length} appointments, ${linkedPatientHistory.length} linked patients.`);
+        } catch {
+            linkedPatientHistory = [];
+        }
+    }
+
+    async function loadAppointments() {
+        try {
+            allAppointments = await AppointmentService.getAllAppointmentsFromDoctors(doctors);
+            renderTable();
+        } catch (err) {
+            showToast(err.message || 'Failed to load appointments.', true);
+            allAppointments = [];
+            renderTable();
+        }
     }
 });

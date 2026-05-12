@@ -14,25 +14,7 @@
 </head>
 <body>
 
-<nav class="navbar" id="main-navbar">
-  <div class="nav-container">
-    <a href="../../index.html" class="logo">
-      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
-      <span>Smart Clinic</span>
-    </a>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="dashboard.html" class="active">Dashboard</a></li>
-      <li><a href="manage-appointments.html">Appointments</a></li>
-      <li><a href="patients.html">Patients</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
-      <i class="ph-bold ph-list"></i>
-    </button>
-    <button class="btn-logout" id="btn-logout" type="button">
-      <i class="ph-bold ph-sign-out"></i> Logout
-    </button>
-  </div>
-</nav>
+<div id="navbar-container"></div>
 
 <main class="sec-page">
   <div class="container">
@@ -82,6 +64,9 @@
 </main>
 
 <script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
+<script src="../../js/appointmentService.js"></script>
 <script src="../../js/pages/secretary/dashboard.js"></script>
 </body>
 </html>

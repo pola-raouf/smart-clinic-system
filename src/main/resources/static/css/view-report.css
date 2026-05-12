@@ -301,3 +301,20 @@ body { font-family:'Inter',sans-serif; color:var(--slate-700); background:var(--
 @media(max-width:960px)  { .report-grid { grid-template-columns:1fr; } .panel-col { order:-1; } }
 @media(max-width:620px)  { .dx-notes-grid { grid-template-columns:1fr; } .visit-meta { border-left:none; padding-left:0; border-top:1px solid var(--slate-100); padding-top:14px; } }
 @media(max-width:480px)  { .report-actions { flex-direction:column; align-items:flex-start; } }
+
+.err-banner {
+    padding: 24px;
+    text-align: center;
+    color: var(--red-500);
+}
+.err-banner a {
+    color: var(--blue-600);
+}
+.mini-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--slate-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+}

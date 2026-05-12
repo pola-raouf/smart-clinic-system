@@ -1,6 +1,6 @@
 /* ================================================
-   appointments.js  –  Doctor Appointments (no auth)
-   ================================================ */
+  appointments.js  –  Doctor Appointments
+  ================================================ */
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -12,23 +12,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const $ = id => document.getElementById(id);
-
-    /* ── Demo data (8 appointments) ── */
-    const ALL_APPTS = [
-        { id:'A001', time:'09:00 AM', date:'2026-04-22', patient:'Mohamed Hassan', ptId:'P1001', hue:215, reason:'Chest Pain',          status:'confirmed', bookedDate:'2026-04-12', bookedTime:'02:35 PM' },
-        { id:'A002', time:'10:00 AM', date:'2026-04-22', patient:'Sara Ahmed',     ptId:'P1002', hue:340, reason:'Shortness of Breath', status:'pending',   bookedDate:'2026-04-13', bookedTime:'09:15 AM' },
-        { id:'A003', time:'11:00 AM', date:'2026-04-22', patient:'Ahmed Mahmoud',  ptId:'P1003', hue:160, reason:'Follow-up',           status:'completed', bookedDate:'2026-04-11', bookedTime:'11:45 AM' },
-        { id:'A004', time:'12:00 PM', date:'2026-04-22', patient:'Nour El Din',    ptId:'P1004', hue:280, reason:'Heart Palpitations',  status:'confirmed', bookedDate:'2026-04-14', bookedTime:'03:20 PM' },
-        { id:'A005', time:'01:00 PM', date:'2026-04-22', patient:'Omar Khaled',    ptId:'P1005', hue:30,  reason:'High Blood Pressure', status:'pending',   bookedDate:'2026-04-15', bookedTime:'10:05 AM' },
-        { id:'A006', time:'02:30 PM', date:'2026-04-22', patient:'Manar Tarek',    ptId:'P1006', hue:50,  reason:'Dizziness',           status:'confirmed', bookedDate:'2026-04-15', bookedTime:'04:30 PM' },
-        { id:'A007', time:'04:00 PM', date:'2026-04-22', patient:'Youssef Ali',    ptId:'P1007', hue:190, reason:'Routine Checkup',     status:'completed', bookedDate:'2026-04-16', bookedTime:'09:00 AM' },
-        { id:'A008', time:'05:00 PM', date:'2026-04-22', patient:'Heba Mostafa',   ptId:'P1008', hue:260, reason:'Fatigue',             status:'pending',   bookedDate:'2026-04-16', bookedTime:'11:20 AM' },
-    ];
-
-    let filtered    = [...ALL_APPTS];
+    let allAppointments = [];
+    let filtered = [];
     let currentPage = 1;
     let rowsPerPage = 10;
 
+    try {
+        const me = await AppointmentService.getCurrentUser();
+        const doctors = await AppointmentService.getDoctors();
+
+        // Resolve doctor ID robustly across environments:
+        // - preferred: doctor.userId === current user id
+        // - fallback: doctor.id === current user id (some datasets use this)
+        // - fallback: persisted doctorId from localStorage
+        const doctorByUser = doctors.find(d => Number(d.userId) === Number(me.id));
+        const doctorById = doctors.find(d => Number(d.id) === Number(me.id));
+        const storedDoctorId = Number(localStorage.getItem('doctorId'));
+        const doctorByStoredId = doctors.find(d => Number(d.id) === storedDoctorId);
+        const doctor = doctorByUser || doctorById || doctorByStoredId;
+
+        if (!doctor || !doctor.id) {
+            throw new Error('Doctor profile not linked to current user.');
+        }
+
+        localStorage.setItem('doctorId', String(doctor.id));
+        allAppointments = await AppointmentService.getDoctorAppointments(doctor.id);
+        filtered = [...allAppointments];
+    } catch (err) {
+        const tbody = $('appt-tbody');
+        if (tbody) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--slate-400)">${err.message || 'Failed to load appointments.'}</td></tr>`;
+        }
+    }
     render();
 
     /* ── Filters ── */
@@ -46,10 +61,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const date   = $('filter-date')?.value    || '';
         const status = $('filter-status')?.value  || '';
         const query  = ($('filter-search')?.value || '').toLowerCase().trim();
-        filtered = ALL_APPTS.filter(a => {
+        filtered = allAppointments.filter(a => {
             if (date   && a.date   !== date)                              return false;
-            if (status && a.status !== status)                            return false;
-            if (query  && !a.patient.toLowerCase().includes(query) && !a.ptId.toLowerCase().includes(query)) return false;
+            if (status && String(a.status || '').toLowerCase() !== status) return false;
+            if (query) {
+                const patientName = (a.patientName || '').toLowerCase();
+                const patientId = String(a.patientId || '').toLowerCase();
+                if (!patientName.includes(query) && !patientId.includes(query)) return false;
+            }
             return true;
         });
         currentPage = 1; render();
@@ -102,37 +121,38 @@ document.addEventListener('DOMContentLoaded', async () => {
             tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--slate-400)">No appointments found.</td></tr>`;
         } else {
             slice.forEach(a => {
-                const isConfirmed = a.status === 'confirmed';
+                const statusKey = String(a.status || '').toLowerCase();
+                const isConfirmed = statusKey === 'confirmed';
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>
                         <div class="time-col">
                             <i class="ph-bold ph-clock time-icon"></i>
-                            <strong>${a.time}</strong>
+                            <strong>${(a.time || '—').substring(0, 5)}</strong>
                             <span>${fmt(a.date)}</span>
                         </div>
                     </td>
                     <td>
                         <div class="pt-cell">
-                            <div class="pt-av" style="--hue:${a.hue}"><i class="ph-fill ph-user"></i></div>
+                            <div class="pt-av" style="--hue:215"><i class="ph-fill ph-user"></i></div>
                             <div>
-                                <div class="pt-name">${a.patient}</div>
-                                <div class="pt-sub">ID: ${a.ptId}</div>
+                                <div class="pt-name">${a.patientName || 'Patient'}</div>
+                                <div class="pt-sub">ID: ${a.patientId || '—'}</div>
                             </div>
                         </div>
                     </td>
-                    <td>${a.reason}</td>
-                    <td><span class="badge ${a.status}">${statusLabel(a.status)}</span></td>
+                    <td>${a.specialty || 'General Consultation'}</td>
+                    <td><span class="badge ${statusKey}">${statusLabel(statusKey)}</span></td>
                     <td>
                         <div class="booked-col">
-                            <strong>${fmt(a.bookedDate)}</strong>
-                            <span>${a.bookedTime}</span>
+                            <strong>${fmt(a.date)}</strong>
+                            <span>${(a.time || '—').substring(0, 5)}</span>
                         </div>
                     </td>
                     <td>
                         <div class="action-group">
                             ${isConfirmed
-                                ? `<a href="start-consultation.html?patient=${a.ptId}" class="btn-start"><i class="ph-bold ph-play"></i> Start Consultation</a>`
+                                ? `<a href="start-consultation.html?patient=${encodeURIComponent(a.patientId)}&appointment=${encodeURIComponent(a.id)}" class="btn-start"><i class="ph-bold ph-play"></i> Start Consultation</a>`
                                 : `<a href="appointment-details.html?id=${a.id}" class="btn-secondary"><i class="ph-bold ph-eye"></i> View Details</a>`
                             }
                             <button class="btn-more" title="More options"><i class="ph-bold ph-dots-three-vertical"></i></button>
@@ -188,7 +208,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function statusLabel(s) {
-        return s === 'confirmed' ? 'Confirmed' : s === 'completed' ? 'Completed' : 'Pending';
+        if (s === 'booked' || s === 'pending') return 'Pending';
+        if (s === 'confirmed') return 'Confirmed';
+        if (s === 'completed') return 'Completed';
+        if (s === 'cancelled') return 'Cancelled';
+        return 'Pending';
     }
 
     function fmt(iso) {

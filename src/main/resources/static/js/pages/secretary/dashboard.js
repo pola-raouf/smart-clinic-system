@@ -10,18 +10,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const greet = document.getElementById("sec-dash-greeting");
     try {
-        const res = await fetch("/api/user/me", {
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-        });
-        if (res.ok) {
-            const d = await res.json();
-            if (greet) {
-                greet.textContent =
-                    "Hello, " + (d.name || d.email || "Secretary") + "!";
-            }
+        const d = await AppointmentService.getCurrentUser();
+        if (greet) {
+            greet.textContent = "Hello, " + (d.name || d.email || "Secretary") + "!";
         }
+        await hydrateDashboardStats();
     } catch {
         /* ignore */
     }
@@ -32,4 +25,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     if (window.initSmartClinicNavbar) window.initSmartClinicNavbar();
+
+    async function hydrateDashboardStats() {
+        const doctors = await AppointmentService.getDoctors();
+        const allAppointments = await AppointmentService.getAllAppointmentsFromDoctors(doctors);
+        const patients = await AppointmentService.getSecretaryPatients();
+        const statCards = document.querySelectorAll(".stat-card");
+        if (statCards[0]) {
+            statCards[0].querySelector("div:nth-child(2)").textContent = String(allAppointments.length);
+            statCards[0].querySelector("p").textContent = "Total appointments tracked";
+        }
+        if (statCards[1]) {
+            statCards[1].querySelector("div:nth-child(2)").textContent = String(patients.length);
+            statCards[1].querySelector("p").textContent = "Registered patients";
+        }
+    }
 });

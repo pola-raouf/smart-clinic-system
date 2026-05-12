@@ -1,193 +1,248 @@
 /* ================================================
-   schedule.js  –  Doctor Weekly Schedule
+   schedule.js  –  Doctor Appointment Calendar
+   Fetches all appointments and renders a month-view
+   calendar with colour-coded status dots.
    ================================================ */
 
-document.addEventListener('DOMContentLoaded', async () => {
-
+document.addEventListener("DOMContentLoaded", async () => {
+    // ── Auth ──
     try {
-        const { bootRoleShell } = await import('/js/core/page-boot.js');
-        await bootRoleShell('DOCTOR');
-    } catch {
-        return;
+        const { requireAuth, requireRole } = await import("/js/core/auth.js");
+        requireAuth();
+        requireRole("DOCTOR");
+    } catch { return; }
+
+    // ── Resolve doctor ID (stored after login) ──
+    const doctorId = localStorage.getItem("doctorId") || localStorage.getItem("userId");
+    if (!doctorId) {
+        console.warn("Doctor ID not found in localStorage.");
     }
 
-    const $ = id => document.getElementById(id);
+    // ── State ──
+    let allAppointments = [];      // raw API list
+    let byDate = {};               // { "2026-04-28": [appt, …] }
+    let viewDate = new Date();     // first day of rendered month
+    let selectedDate = null;
 
-    /* ── Time slots 08:00 AM → 05:00 PM ── */
-    const HOURS = [
-        '08:00 AM','09:00 AM','10:00 AM','11:00 AM',
-        '12:00 PM','01:00 PM','02:00 PM','03:00 PM',
-        '04:00 PM','05:00 PM',
-    ];
+    // ── DOM refs ──
+    const calDays        = document.getElementById("cal-days");
+    const calMonthLabel  = document.getElementById("cal-month-label");
+    const calPrev        = document.getElementById("cal-prev");
+    const calNext        = document.getElementById("cal-next");
+    const calToday       = document.getElementById("cal-today");
+    const panelDayTitle  = document.getElementById("panel-day-title");
+    const dayApptCont    = document.getElementById("day-appt-container");
+    const statTotal      = document.getElementById("stat-total");
+    const statConfirmed  = document.getElementById("stat-confirmed");
+    const statPending    = document.getElementById("stat-pending");
+    const statCompleted  = document.getElementById("stat-completed");
 
-    const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-    const MONTHS     = ['January','February','March','April','May','June',
-                        'July','August','September','October','November','December'];
+    // ── Fetch ──
+    async function fetchAppointments() {
+        try {
+            const token    = localStorage.getItem("token");
+            // Resolve real doctor entity ID
+            const me       = await AppointmentService.getCurrentUser();
+            const doctors  = await AppointmentService.getDoctors();
+            const doctor   = doctors.find(d => d.userId === me.id || d.id === me.id);
+            if (!doctor) { console.warn("Could not match doctor profile."); return; }
 
-    const today    = new Date();
-    let weekOffset = 0;
+            // Store for re-use
+            localStorage.setItem("doctorId", doctor.id);
 
-    /* ── Mock appointments matching screenshot ── */
-    /* dayOffset: 0=Mon,1=Tue,2=Wed,3=Thu,4=Fri */
-    const APPTS = [
-        // Monday
-        { dayOffset:0, hour:'09:00 AM', name:'Mohamed Hassan', time:'09:00 AM – 09:30 AM', status:'confirmed'  },
-        { dayOffset:0, hour:'10:00 AM', name:'Sara Ahmed',     time:'10:00 AM – 10:30 AM', status:'pending'    },
-        { dayOffset:0, hour:'11:00 AM', name:'Omar Khaled',    time:'11:00 AM – 11:30 AM', status:'confirmed'  },
-        { dayOffset:0, hour:'03:00 PM', name:'Nour El Din',    time:'03:00 PM – 03:30 PM', status:'completed'  },
-        { dayOffset:0, hour:'04:00 PM', name:'Ahmed Mahmoud',  time:'04:00 PM – 04:30 PM', status:'confirmed'  },
-        // Tuesday
-        { dayOffset:1, hour:'09:00 AM', name:'Ahmed Tarek',    time:'09:30 AM – 10:00 AM', status:'pending'    },
-        { dayOffset:1, hour:'11:00 AM', name:'Heba Mohamed',   time:'11:00 AM – 11:30 AM', status:'pending'    },
-        { dayOffset:1, hour:'01:00 PM', name:'Youssef Ali',    time:'01:00 PM – 01:30 PM', status:'pending'    },
-        { dayOffset:1, hour:'03:00 PM', name:'Merna Ashraf',   time:'03:00 PM – 03:30 PM', status:'confirmed'  },
-        // Wednesday
-        { dayOffset:2, hour:'09:00 AM', name:'Khaled Mostafa', time:'09:00 AM – 09:30 AM', status:'confirmed'  },
-        { dayOffset:2, hour:'10:00 AM', name:'Mariam Samir',   time:'10:30 AM – 11:00 AM', status:'pending'    },
-        { dayOffset:2, hour:'02:00 PM', name:'Ali Samy',       time:'02:00 PM – 02:30 PM', status:'completed'  },
-        { dayOffset:2, hour:'04:00 PM', name:'Laila Hassan',   time:'04:00 PM – 04:30 PM', status:'confirmed'  },
-        // Thursday
-        { dayOffset:3, hour:'09:00 AM', name:'Yara Ahmed',     time:'09:00 AM – 09:30 AM', status:'pending'    },
-        { dayOffset:3, hour:'11:00 AM', name:'Islam Fathy',    time:'11:00 AM – 11:30 AM', status:'confirmed'  },
-        { dayOffset:3, hour:'02:00 PM', name:'Mostafa Adel',   time:'01:30 PM – 02:00 PM', status:'pending'    },
-        { dayOffset:3, hour:'03:00 PM', name:'Marwan Ataf',    time:'03:30 PM – 04:00 PM', status:'completed'  },
-        // Friday
-        { dayOffset:4, hour:'10:00 AM', name:'Salma Magdy',    time:'10:00 AM – 10:30 AM', status:'confirmed'  },
-        { dayOffset:4, hour:'12:00 PM', name:'Hassan Gamal',   time:'12:00 PM – 12:30 PM', status:'pending'    },
-        { dayOffset:4, hour:'04:00 PM', name:'Dosa Reda',      time:'04:30 PM – 05:00 PM', status:'confirmed'  },
-    ];
-
-    /* ── Get Monday of week ── */
-    function getWeekStart(offset) {
-        const d   = new Date(today);
-        const day = d.getDay();
-        const diff = (day === 0 ? -6 : 1 - day);
-        d.setDate(d.getDate() + diff + offset * 7);
-        d.setHours(0,0,0,0);
-        return d;
+            const res = await fetch(`/api/appointments/doctor/${doctor.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error("Failed");
+            allAppointments = await res.json();
+        } catch (e) {
+            console.error("Failed to load appointments:", e);
+            allAppointments = [];
+        }
+        // Index by date  (API field: date = "YYYY-MM-DD")
+        byDate = {};
+        allAppointments.forEach(a => {
+            const d = a.date ? String(a.date) : null;   // "YYYY-MM-DD"
+            if (!d) return;
+            if (!byDate[d]) byDate[d] = [];
+            byDate[d].push(a);
+        });
     }
 
-    /* ── Format date like "May 12" ── */
-    function fmtDate(d) {
-        return `${MONTHS[d.getMonth()].slice(0,3)} ${d.getDate()}`;
+    // ── Helpers ──
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function toKey(y, m, d) { return `${y}-${pad(m)}-${pad(d)}`; }
+
+    function statusClass(s) {
+        s = (s || "").toLowerCase();
+        if (s === "booked")    return "booked";
+        if (s === "confirmed") return "confirmed";
+        if (s === "completed") return "completed";
+        if (s === "cancelled") return "cancelled";
+        return "pending";
     }
 
-    /* ── Render entire grid ── */
-    function render() {
-        const weekStart = getWeekStart(weekOffset);
-        const weekEnd   = new Date(weekStart);
-        weekEnd.setDate(weekStart.getDate() + 4);
+    function fmt12(timeStr) {
+        if (!timeStr) return "";
+        const [h, m] = timeStr.split(":").map(Number);
+        const ampm = h >= 12 ? "PM" : "AM";
+        const h12  = h % 12 || 12;
+        return `${h12}:${pad(m)} ${ampm}`;
+    }
 
-        /* Update week label */
-        $('week-range-label').textContent =
-            `${fmtDate(weekStart)} – ${fmtDate(weekEnd)}, ${weekEnd.getFullYear()}`;
+    // ── Render calendar ──
+    function renderCalendar() {
+        const year  = viewDate.getFullYear();
+        const month = viewDate.getMonth();          // 0-based
+        const today = new Date();
 
-        /* Build Mon–Fri dates */
-        const days = [];
-        for (let i = 0; i < 5; i++) {
-            const d = new Date(weekStart);
-            d.setDate(weekStart.getDate() + i);
-            days.push(d);
+        calMonthLabel.textContent = viewDate.toLocaleDateString("en-GB", {
+            month: "long", year: "numeric"
+        });
+
+        // First day of month, last day
+        const firstDay = new Date(year, month, 1);
+        const lastDay  = new Date(year, month + 1, 0);
+
+        // Days to show before (from prev month)
+        const startPad = firstDay.getDay();          // 0=Sun
+        const totalCells = Math.ceil((startPad + lastDay.getDate()) / 7) * 7;
+
+        calDays.innerHTML = "";
+
+        for (let i = 0; i < totalCells; i++) {
+            const offset = i - startPad;
+            const cellDate = new Date(year, month, 1 + offset);
+            const cellDay  = cellDate.getDate();
+            const cellMonth= cellDate.getMonth();
+            const cellYear = cellDate.getFullYear();
+            const key      = toKey(cellYear, cellMonth + 1, cellDay);
+
+            const appts = byDate[key] || [];
+            const isToday   = cellDate.toDateString() === today.toDateString();
+            const isOther   = cellMonth !== month;
+            const isSel     = selectedDate === key;
+
+            const cell = document.createElement("div");
+            cell.className = "cal-day" +
+                (isOther  ? " other-month" : "") +
+                (isToday  ? " today"       : "") +
+                (isSel    ? " selected"    : "");
+            cell.dataset.key = key;
+
+            // Day number
+            const numEl = document.createElement("span");
+            numEl.className = "cal-day-num";
+            numEl.textContent = cellDay;
+            cell.appendChild(numEl);
+
+            // Dots
+            if (appts.length > 0 && !isOther) {
+                const dotsEl = document.createElement("div");
+                dotsEl.className = "cal-dots";
+                // Show up to 5 dots
+                appts.slice(0, 5).forEach(a => {
+                    const d = document.createElement("div");
+                    d.className = `cal-dot ${statusClass(a.status)}`;
+                    dotsEl.appendChild(d);
+                });
+                cell.appendChild(dotsEl);
+            }
+
+            cell.addEventListener("click", () => {
+                selectedDate = key;
+                renderCalendar();     // re-render to update selection
+                renderDayPanel(key);
+            });
+
+            calDays.appendChild(cell);
         }
 
-        /* ── THEAD ── */
-        const thead = $('sched-thead');
-        thead.innerHTML = '';
-        const headRow = document.createElement('tr');
+        // Update monthly stats
+        updateStats(year, month);
+    }
 
-        /* Time header cell */
-        const timeTh = document.createElement('th');
-        timeTh.textContent = 'Time';
-        timeTh.className = 'time-header-cell';
-        headRow.appendChild(timeTh);
+    function updateStats(year, month) {
+        const keys = Object.keys(byDate).filter(k =>
+            k.startsWith(`${year}-${pad(month + 1)}`));
 
-        days.forEach(d => {
-            const isT  = isSameDay(d, today);
-            const th   = document.createElement('th');
-            th.className = isT ? 'today-col' : '';
-            const dayName = DAYS_SHORT[d.getDay()];
-            const dateStr = fmtDate(d);
-            th.innerHTML = `
-                <span class="day-name-label${isT ? ' today-name':''}">${dayName}</span>
-                <span class="day-date-label${isT ? ' today-date':''}">${dateStr}</span>`;
-            headRow.appendChild(th);
-        });
-        thead.appendChild(headRow);
-
-        /* ── TBODY ── */
-        const tbody = $('sched-tbody');
-        tbody.innerHTML = '';
-
-        let totals = { total:0, confirmed:0, pending:0, completed:0 };
-
-        HOURS.forEach(hour => {
-            const tr = document.createElement('tr');
-
-            /* Time label */
-            const tdTime = document.createElement('td');
-            tdTime.className = 'time-label-cell';
-            tdTime.textContent = hour;
-            tr.appendChild(tdTime);
-
-            /* Day cells */
-            days.forEach((d, di) => {
-                const isT = isSameDay(d, today);
-                const td  = document.createElement('td');
-                td.className = `day-cell${isT ? ' today-col' : ''}`;
-
-                const matched = APPTS.filter(a => a.dayOffset === di && a.hour === hour);
-
-                if (matched.length > 0) {
-                    matched.forEach(a => {
-                        totals.total++;
-                        totals[a.status]++;
-                        const chip = document.createElement('div');
-                        chip.className = `appt-chip ${a.status}`;
-                        chip.innerHTML = `
-                            <div class="chip-name">${a.name}</div>
-                            <div class="chip-time">${a.time}</div>
-                            <span class="chip-badge ${a.status}">${cap(a.status)}</span>`;
-                        td.appendChild(chip);
-                    });
-                }
-                tr.appendChild(td);
+        let total = 0, confirmed = 0, pending = 0, completed = 0;
+        keys.forEach(k => {
+            byDate[k].forEach(a => {
+                total++;
+                const s = (a.status || "").toLowerCase();
+                if (s === "confirmed") confirmed++;
+                else if (s === "completed") completed++;
+                else if (s === "booked" || s === "pending") pending++;
             });
-            tbody.appendChild(tr);
         });
-
-        /* Update panel stats */
-        setText('stat-total',     totals.total);
-        setText('stat-confirmed', totals.confirmed);
-        setText('stat-pending',   totals.pending);
-        setText('stat-completed', totals.completed);
+        if (statTotal)     statTotal.textContent     = total;
+        if (statConfirmed) statConfirmed.textContent = confirmed;
+        if (statPending)   statPending.textContent   = pending;
+        if (statCompleted) statCompleted.textContent = completed;
     }
 
-    /* ── Navigation ── */
-    $('prev-week')?.addEventListener('click', () => { weekOffset--; render(); });
-    $('next-week')?.addEventListener('click', () => { weekOffset++; render(); });
-    $('today-btn')?.addEventListener('click', () => { weekOffset = 0; render(); });
+    function renderDayPanel(key) {
+        const appts = byDate[key] || [];
+        const label = new Date(key + "T00:00:00").toLocaleDateString("en-GB", {
+            weekday: "long", day: "numeric", month: "short", year: "numeric"
+        });
+        panelDayTitle.textContent = label;
 
-    /* ── View toggle ── */
-    $('week-view-btn')?.addEventListener('click', () => {
-        $('week-view-btn').classList.add('active');
-        $('day-view-btn').classList.remove('active');
-    });
-    $('day-view-btn')?.addEventListener('click', () => {
-        $('day-view-btn').classList.add('active');
-        $('week-view-btn').classList.remove('active');
-    });
+        if (appts.length === 0) {
+            dayApptCont.innerHTML = `
+                <div class="panel-empty">
+                    <i class="ph-bold ph-calendar-x"></i>
+                    No appointments on this day
+                </div>`;
+            return;
+        }
 
-    /* ── Hamburger ── */
-    if (window.initSmartClinicNavbar) window.initSmartClinicNavbar();
+        // Sort by time (API field: time = "HH:mm:ss")
+        const sorted = [...appts].sort((a, b) =>
+            (String(a.time || "")).localeCompare(String(b.time || "")));
 
-    /* ── Helpers ── */
-    function isSameDay(a, b) {
-        return a.getFullYear() === b.getFullYear() &&
-               a.getMonth()    === b.getMonth()    &&
-               a.getDate()     === b.getDate();
+        dayApptCont.innerHTML = `
+            <div class="day-appt-list">
+                ${sorted.map(a => {
+                    const sc = statusClass(a.status);
+                    const timeStr = a.time ? fmt12(String(a.time)) : "—";
+                    return `
+                    <div class="day-appt-item ${sc}">
+                        <div style="flex:1">
+                            <div class="da-time">${timeStr}</div>
+                            <div class="da-name">${a.patientName || "Patient"}</div>
+                            <div class="da-reason">${a.specialty || ""}</div>
+                        </div>
+                        <span class="da-badge ${sc}">${(a.status || "").toUpperCase()}</span>
+                    </div>`;
+                }).join("")}
+            </div>`;
     }
-    function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-    function setText(id, val) { const el = $(id); if (el) el.textContent = val; }
 
-    render();
+    // ── Event listeners ──
+    calPrev.addEventListener("click", () => {
+        viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
+        renderCalendar();
+    });
+    calNext.addEventListener("click", () => {
+        viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
+        renderCalendar();
+    });
+    calToday.addEventListener("click", () => {
+        viewDate = new Date();
+        viewDate.setDate(1);
+        renderCalendar();
+    });
+
+    // ── Init ──
+    viewDate.setDate(1);
+    await fetchAppointments();
+    renderCalendar();
+
+    // Auto-select today
+    const todayKey = toKey(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
+    selectedDate = todayKey;
+    renderCalendar();
+    renderDayPanel(todayKey);
 });

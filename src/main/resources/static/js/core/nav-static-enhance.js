@@ -24,6 +24,8 @@ function profileHrefForRole(role) {
 
 export async function enhanceStaticNavbar() {
     const container = document.querySelector("#main-navbar .nav-container");
+    // Unified navbar from /components/navbar.html already provides profile UI
+    if (document.getElementById("profile-btn")) return;
     if (!container || document.getElementById("nav-user-injected")) return;
 
     ensureNavbarCss();

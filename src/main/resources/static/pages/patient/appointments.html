@@ -2,14 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments - Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/patient-pages.css">
 </head>
 <body>
+<div id="navbar-container"></div>
 
-<script type="module">
-import { requireAuth, requireRole } from '/js/core/auth.js';
-requireAuth();
-requireRole('PATIENT');
-</script>
+<main class="patient-page">
+  <header class="page-header">
+    <div>
+      <h1>My Appointments</h1>
+      <p>Track upcoming visits and see your appointment history.</p>
+    </div>
+  </header>
+
+  <section class="stats-row">
+    <article class="stat-card"><p class="stat-label">Total</p><p class="stat-value" id="stat-total">0</p></article>
+    <article class="stat-card"><p class="stat-label">Upcoming</p><p class="stat-value" id="stat-upcoming">0</p></article>
+    <article class="stat-card"><p class="stat-label">Completed</p><p class="stat-value" id="stat-completed">0</p></article>
+    <article class="stat-card"><p class="stat-label">Cancelled</p><p class="stat-value" id="stat-cancelled">0</p></article>
+  </section>
+
+  <section class="card filter-bar">
+    <label class="filter-input">
+      <i class="ph-bold ph-magnifying-glass"></i>
+      <input type="text" id="search-input" placeholder="Search by doctor or specialty">
+    </label>
+    <label class="filter-input">
+      <i class="ph-bold ph-funnel"></i>
+      <select id="status-filter">
+        <option value="">All Statuses</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="completed">Completed</option>
+        <option value="pending">Pending</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </label>
+    <button class="btn-clear" id="clear-filters" type="button">Clear</button>
+  </section>
+
+  <section class="card table-wrap">
+    <table>
+      <thead>
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Doctor</th>
+        <th>Specialty</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody id="appointments-body"></tbody>
+    </table>
+    <div class="empty-state" id="empty-state" hidden>No appointments found.</div>
+  </section>
+</main>
+
+<script src="../../js/appointmentService.js"></script>
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
+<script src="../../js/pages/patient/appointments.js"></script>
 </body>
 </html>

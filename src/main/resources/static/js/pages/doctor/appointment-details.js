@@ -1,6 +1,6 @@
 /* ================================================
-   appointment-details.js  –  No auth
-   ================================================ */
+  appointment-details.js  –  Doctor Appointment Details
+  ================================================ */
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -13,27 +13,47 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const $ = id => document.getElementById(id);
 
-    /* ── Demo data (keyed by appointment ID) ── */
-    const APPTS = {
-        A001: { status:'confirmed', patient:'Mohamed Hassan', ptId:'P1001', ptHue:215,
-                age:'45 years, Male', phone:'0123 456 7890', email:'m.hassan@email.com', address:'Cairo, Egypt',
-                date:'2026-04-22', time:'09:00 AM', reason:'Chest Pain', booked:'Apr 12, 2026 — 02:35 PM', notes:'' },
-        A002: { status:'pending',   patient:'Sara Ahmed',     ptId:'P1002', ptHue:340,
-                age:'32 years, Female', phone:'0111 222 3333', email:'sara.ahmed@email.com', address:'Giza, Egypt',
-                date:'2026-04-22', time:'10:00 AM', reason:'Shortness of Breath', booked:'Apr 13, 2026 — 09:15 AM',
-                notes:'Patient mentioned previous episode 2 weeks ago. Bring ECG results.' },
-        A003: { status:'completed', patient:'Ahmed Mahmoud',  ptId:'P1003', ptHue:160,
-                age:'50 years, Male', phone:'0100 555 6666', email:'ahmed.m@email.com', address:'Alexandria, Egypt',
-                date:'2026-04-22', time:'11:00 AM', reason:'Follow-up', booked:'Apr 11, 2026 — 11:45 AM', notes:'' },
-        A004: { status:'confirmed', patient:'Nour El Din',    ptId:'P1004', ptHue:280,
-                age:'28 years, Female', phone:'0122 333 4444', email:'nourhan@email.com', address:'Cairo, Egypt',
-                date:'2026-04-22', time:'12:00 PM', reason:'Heart Palpitations', booked:'Apr 14, 2026 — 03:20 PM', notes:'' },
-    };
-
     /* Read ?id= from URL */
     const params = new URLSearchParams(window.location.search);
-    const apptId = params.get('id') || 'A001';
-    const a      = APPTS[apptId] || APPTS['A001'];
+    const apptId = params.get('id');
+    if (!apptId) {
+        window.location.replace('appointments.html');
+        return;
+    }
+
+    let appointment = null;
+    try {
+        const me = await AppointmentService.getCurrentUser();
+        const doctors = await AppointmentService.getDoctors();
+        const doctor = doctors.find(d => d.userId === me.id);
+        if (!doctor) throw new Error('Doctor profile not linked.');
+        const appts = await AppointmentService.getDoctorAppointments(doctor.id);
+        appointment = appts.find(a => String(a.id) === String(apptId));
+    } catch (err) {
+        console.error(err);
+    }
+
+    if (!appointment) {
+        window.location.replace('appointments.html');
+        return;
+    }
+
+    const statusKey = String(appointment.status || '').toLowerCase();
+    const a = {
+        status: statusKey === 'booked' ? 'pending' : statusKey,
+        patient: appointment.patientName || 'Patient',
+        ptId: String(appointment.patientId || '—'),
+        ptHue: 215,
+        age: '—',
+        phone: '—',
+        email: '—',
+        address: '—',
+        date: appointment.date,
+        time: (appointment.time || '—').substring(0, 5),
+        reason: appointment.specialty || 'Consultation',
+        booked: `${fmtDate(appointment.date)} — ${(appointment.time || '—').substring(0, 5)}`,
+        notes: ''
+    };
 
     /* ── Populate Patient Info ── */
     const ptAv = $('pt-avatar');
@@ -86,7 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (a.status === 'confirmed') {
         if (actionMsg)  actionMsg.textContent  = 'This appointment is confirmed. You can start the consultation now.';
         if (actionIcon) actionIcon.className   = 'ph-bold ph-info';
-        if (btnStart)   btnStart.href          = `start-consultation.html?patient=${a.ptId}`;
+        if (btnStart)   btnStart.href          = `start-consultation.html?patient=${encodeURIComponent(a.ptId)}&appointment=${encodeURIComponent(apptId)}`;
     } else if (a.status === 'pending') {
         if (actionMsg)  actionMsg.textContent  = 'This appointment is pending confirmation. Start Consultation is disabled.';
         if (actionIcon) actionIcon.className   = 'ph-bold ph-warning';

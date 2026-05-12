@@ -12,11 +12,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
+    /* ─── Load patient identity for booking linkage ─── */
+    let currentPatient = { id: "guest", name: "Guest Patient" };
+    try {
+        const auth = await import("/js/core/auth.js");
+        const res = await fetch("/api/user/me", {
+            headers: { Authorization: "Bearer " + auth.getToken() },
+        });
+        if (res.ok) {
+            const me = await res.json();
+            currentPatient = {
+                id: String(me.id),
+                name: me.name || "Patient",
+            };
+        }
+    } catch {
+        // Keep fallback guest identity if profile fetch fails.
+    }
+
     /* ─── Read doctor from URL: ?id=1 ─── */
     const params   = new URLSearchParams(window.location.search);
     const doctorId = params.get('id') || 1;
-    const doctor   = AppointmentService.getDoctorById(doctorId)
-                  || AppointmentService.getDoctors()[0];
+    let doctors = [];
+    try {
+        doctors = await AppointmentService.getDoctors();
+    } catch (err) {
+        alert(err.message || "Failed to load doctors.");
+        return;
+    }
+    const doctor = doctors.find(d => d.id === Number(doctorId)) || doctors[0];
+    if (!doctor) {
+        alert("No doctors are currently available.");
+        return;
+    }
 
     /* ─── State ─── */
     let selectedDate = null;   // 'YYYY-MM-DD'
@@ -33,10 +61,10 @@ document.addEventListener('DOMContentLoaded', async () => {
        POPULATE DOCTOR INFO CARD
     ────────────────────────────────────────── */
     const avatar  = $('doc-avatar');
-    if (avatar)           avatar.style.setProperty('--hue', doctor.hue);
+    if (avatar)           avatar.style.setProperty('--hue', doctor.hue || 215);
     setText('doc-name',   doctor.name);
     setText('doc-spec',   doctor.specialty);
-    setText('doc-exp',    doctor.exp + ' Experience');
+    setText('doc-exp',    doctor.exp ? `${doctor.exp} Experience` : 'Specialist');
     setText('sum-name',   doctor.name);
     setText('sum-spec',   doctor.specialty);
 
@@ -126,32 +154,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     /* ──────────────────────────────────────────
        TIME SLOTS
     ────────────────────────────────────────── */
-    function renderTimeSlots() {
+    async function renderTimeSlots() {
         const grid     = $('time-grid');
         if (!grid) return;
         grid.innerHTML = '';
 
-        const booked = selectedDate
-            ? AppointmentService.getBookedSlots(doctor.id, selectedDate)
-            : [];
+        if (!selectedDate) {
+            grid.innerHTML = '<p class="text-muted">Please select a date first.</p>';
+            return;
+        }
 
-        AppointmentService.getTimeSlots().forEach(slot => {
+        grid.innerHTML = '<div style="text-align: center; padding: 1rem; grid-column: 1 / -1;"><i class="ph-bold ph-spinner ph-spin"></i> Loading slots...</div>';
+
+        let availableSlots = [];
+        try {
+            availableSlots = await AppointmentService.getDoctorAvailability(doctor.id, selectedDate);
+        } catch (err) {
+            console.error("Failed to fetch slots", err);
+            grid.innerHTML = '<div style="color: red; text-align: center; grid-column: 1 / -1;">Failed to load available slots</div>';
+            return;
+        }
+
+        grid.innerHTML = '';
+        if (availableSlots.length === 0) {
+            grid.innerHTML = '<p class="text-muted" style="grid-column: 1 / -1; text-align: center;">No available slots for this date.</p>';
+            return;
+        }
+
+        // Format to standard AM/PM for display if needed, but the backend returns e.g. "09:30:00"
+        availableSlots.forEach(slot => {
             const btn       = document.createElement('button');
             btn.type        = 'button';
             btn.className   = 'time-slot';
-            btn.textContent = slot;
+            btn.textContent = slot.substring(0, 5); // display "HH:MM"
 
-            if (booked.includes(slot)) {
-                btn.classList.add('booked');
-                btn.disabled = true;
-                btn.title    = 'Already booked';
-            } else if (slot === selectedTime) {
+            if (slot === selectedTime) {
                 btn.classList.add('selected');
             }
 
-            if (!btn.disabled) {
-                btn.addEventListener('click', () => onTimeClick(slot));
-            }
+            btn.addEventListener('click', () => onTimeClick(slot));
             grid.appendChild(btn);
         });
     }
@@ -176,36 +217,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     /* ──────────────────────────────────────────
        CONFIRM BOOKING
     ────────────────────────────────────────── */
-    $('btn-confirm')?.addEventListener('click', () => {
+    $('btn-confirm')?.addEventListener('click', async () => {
         if (!selectedDate || !selectedTime) return;
 
-        const user = { id: 'guest', name: 'Guest Patient' };
+        const btn = $('btn-confirm');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<i class="ph-bold ph-spinner ph-spin"></i> Booking...`;
+        btn.disabled = true;
 
         try {
-            const appt = AppointmentService.book({
+            const appt = await AppointmentService.book({
                 doctorId:    doctor.id,
-                doctorName:  doctor.name,
-                specialty:   doctor.specialty,
-                patientId:   user.id,
-                patientName: user.name,
+                patientId:   currentPatient.id,
                 date:        selectedDate,
-                time:        selectedTime,
-                createdBy:   'patient',
+                time:        selectedTime
             });
 
             /* Fill modal */
-            setText('modal-doc',  appt.doctorName);
+            setText('modal-doc',  doctor.name);
             setText('modal-date', displayDate(appt.date));
-            setText('modal-time', appt.time);
+            setText('modal-time', appt.time.substring(0, 5));
             $('modal-overlay')?.removeAttribute('hidden');
 
             /* Reset selection */
             selectedTime = null;
-            renderTimeSlots();
+            await renderTimeSlots();
             updateSummary();
 
         } catch (err) {
             alert('Booking failed: ' + err.message);
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
         }
     });
 

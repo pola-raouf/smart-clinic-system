@@ -7,6 +7,7 @@ import org.smartclinic.clinic.Dto.RegisterRequestDTO;
 import org.smartclinic.clinic.Entity.*;
 import org.smartclinic.clinic.Repository.*;
 import org.smartclinic.clinic.exception.ApiException;
+import org.smartclinic.clinic.util.ClinicLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ import java.util.List;
 
 @Service
 public class OwnerUserService {
+
+    private final ClinicLogger logger = ClinicLogger.getInstance();
+
 
     @Autowired
     private UserRepository userRepository;
@@ -135,6 +139,7 @@ public class OwnerUserService {
                 ownerRepository.save(o);
             }
         }
+        logger.info("User created by owner: email=" + dto.getEmail() + " role=" + dto.getRole());
     }
 
     @Transactional
@@ -157,6 +162,7 @@ public class OwnerUserService {
             applyProfileName(user, dto.getName().trim());
         }
         userRepository.save(user);
+        logger.info("User updated by owner: id=" + userId);
     }
 
     private void applyProfileName(User user, String name) {
@@ -197,5 +203,6 @@ public class OwnerUserService {
             case OWNER -> ownerRepository.findByUserId(user.getId())
                     .ifPresent(ownerRepository::delete);
         }
+        logger.info("User deleted by owner: id=" + userId + " email=" + user.getEmail());
     }
 }

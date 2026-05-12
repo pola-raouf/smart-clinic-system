@@ -17,26 +17,7 @@
 <body>
 
 <!-- ===================== NAVBAR ===================== -->
-<nav class="navbar" id="main-navbar">
-  <div class="nav-container">
-    <a href="../../index.html" class="logo" id="nav-logo">
-      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
-      <span>Smart Clinic</span>
-    </a>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="../../index.html">Home</a></li>
-      <li><a href="../doctors.html">Doctors</a></li>
-      <li><a href="../services.html">Services</a></li>
-      <li><a href="manage-appointments.html" class="active">Appointments</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
-      <i class="ph-bold ph-list"></i>
-    </button>
-    <button class="btn-logout" id="btn-logout">
-      <i class="ph-bold ph-sign-out"></i> Logout
-    </button>
-  </div>
-</nav>
+<div id="navbar-container"></div>
 
 <!-- ===================== MAIN PAGE ===================== -->
 <main class="sec-page" id="sec-page">
@@ -74,9 +55,11 @@
               <input
                 type="text"
                 id="patient-name-input"
-                placeholder="Type patient name..."
+                placeholder="Type patient name or ID..."
                 autocomplete="off"
+                list="patient-suggestions"
               >
+              <datalist id="patient-suggestions"></datalist>
             </div>
             <span class="field-err" id="err-patient"></span>
           </div>
@@ -145,8 +128,10 @@
           <div class="input-wrap select-wrap filter-select">
             <select id="status-filter">
               <option value="">All Statuses</option>
+              <option value="pending">Pending</option>
               <option value="confirmed">Confirmed</option>
               <option value="cancelled">Cancelled</option>
+              <option value="completed">Completed</option>
             </select>
             <i class="ph-bold ph-caret-down sel-arrow"></i>
           </div>
@@ -206,7 +191,12 @@
 
 <!-- Shared services -->
 <script src="../../js/appointmentService.js"></script>
+<script src="../../js/pages/secretary/secretaryState.js"></script>
+<script src="../../js/pages/secretary/validationStrategies.js"></script>
+<script src="../../js/pages/secretary/bookingService.js"></script>
 <script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
 <script src="../../js/pages/secretary/manage-appointments.js"></script>
 
 </body>

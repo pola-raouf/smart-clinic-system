@@ -1,49 +1,69 @@
-<nav class="navbar">
+<nav class="navbar" id="main-navbar">
   <div class="nav-container">
 
-    <!-- Logo -->
-    <a href="/index.html" class="logo">
-      <div class="logo-icon">
-        <i class="ph-bold ph-plus"></i>
-      </div>
-      <span>Smart Clinic</span>
-    </a>
+    <!-- ── Logo ── -->
+    <a href="/index.html" class="navbar-logo">Smart Clinic</a>
 
-    <!-- Links -->
+    <!-- ── Navigation Links ── -->
     <ul class="nav-links" id="nav-links">
-      <li><a href="/index.html">Home</a></li>
-      <li><a href="/pages/doctors.html">Doctors</a></li>
-      <li><a href="/pages/services.html">Services</a></li>
-      <li><a href="/pages/patient/dashboard.html">Dashboard</a></li>
+      <!-- Populated dynamically by navbar.js based on role -->
     </ul>
 
-    <!-- USER (logged in) -->
-    <div id="nav-user" hidden>
-      <button class="profile-trigger" id="profile-trigger">
-
-        <!-- 🔥 FIXED PATH -->
-        <img src="/assets/images/doctor.png" class="nav-avatar-img">
-
-        <div class="nav-user-meta">
-          <span id="nav-user-name">User</span>
-          <span id="nav-user-role">Patient</span>
-        </div>
+    <!-- ── Notification Bell (authenticated users only) ── -->
+    <div class="nav-notifications" id="nav-notifications" hidden style="position:relative; margin-right:12px;">
+      <button class="nav-notif-btn" id="notif-btn" type="button" aria-haspopup="true" aria-expanded="false" style="background:none; border:none; padding:8px; cursor:pointer; color:var(--slate-500); position:relative; border-radius:50%; transition:all 0.2s;">
+        <i class="ph-bold ph-bell" style="font-size:22px;"></i>
+        <span id="notif-badge" class="notif-badge" style="position:absolute; top:4px; right:4px; background:var(--red-500); color:#fff; font-size:10px; font-weight:bold; height:16px; min-width:16px; padding:0 4px; border-radius:8px; display:flex; align-items:center; justify-content:center; display:none;">0</span>
       </button>
-
-      <div id="profile-dropdown" hidden>
-        <a href="/pages/patient/profile.html">My Profile</a>
-        <a href="#" id="logout-btn">Logout</a>
+      
+      <div class="notif-dropdown" id="notif-dropdown" style="position:absolute; top:calc(100% + 10px); right:-50px; width:340px; background:#fff; border:1px solid var(--slate-200); border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1); display:none; flex-direction:column; z-index:100; overflow:hidden;">
+        <div class="notif-header" style="padding:16px; border-bottom:1px solid var(--slate-100); display:flex; align-items:center; justify-content:space-between; background:var(--slate-50);">
+          <h3 style="font-size:14px; font-weight:700; color:var(--slate-900); margin:0;">Notifications</h3>
+          <button id="notif-mark-all" style="background:none; border:none; color:var(--blue-600); font-size:12px; font-weight:600; cursor:pointer;">Mark all read</button>
+        </div>
+        <div class="notif-body" id="notif-list" style="max-height:360px; overflow-y:auto; padding:0; display:flex; flex-direction:column;">
+          <!-- Items go here -->
+        </div>
+        <div class="notif-footer" style="padding:10px; text-align:center; border-top:1px solid var(--slate-100); background:var(--slate-50);">
+          <a href="#" id="notif-view-all" style="font-size:12px; font-weight:600; color:var(--blue-600); text-decoration:none;">View all</a>
+        </div>
       </div>
     </div>
 
-    <!-- GUEST -->
-    <div id="nav-guest">
-      <a href="/pages/login.html">Login</a>
-      <a href="/pages/register.html">Sign Up</a>
+    <!-- ── Profile Section (authenticated users only) ── -->
+    <div class="nav-profile" id="nav-profile" hidden>
+      <button class="nav-profile-btn" id="profile-btn" type="button"
+              aria-haspopup="true" aria-expanded="false">
+        <span class="nav-profile-avatar" id="nav-profile-avatar" aria-hidden="true">
+          <img id="nav-profile-avatar-img" alt="" width="36" height="36" hidden>
+          <span id="nav-profile-avatar-fallback">?</span>
+        </span>
+        <div class="nav-profile-text">
+          <span class="nav-profile-name" id="nav-user-name">—</span>
+          <span class="nav-profile-role" id="nav-user-role">—</span>
+        </div>
+        <i class="ph-bold ph-caret-down nav-profile-caret"></i>
+      </button>
+      <div class="nav-profile-dropdown" id="profile-dropdown">
+        <a class="nav-dd-item" href="#" id="nav-profile-link">
+          <i class="ph-bold ph-user"></i> My Profile
+        </a>
+        <hr class="nav-dd-divider">
+        <button class="nav-dd-item nav-dd-logout" id="logout-btn" type="button">
+          <i class="ph-bold ph-sign-out"></i> Logout
+        </button>
+      </div>
     </div>
 
-    <!-- Hamburger -->
-    <button class="hamburger" id="hamburger-btn">
+    <!-- ── Guest Links (unauthenticated users only) ── -->
+    <div class="nav-guest" id="nav-guest" hidden>
+      <a href="/pages/login.html" class="nav-guest-login">Login</a>
+      <a href="/pages/register.html" class="btn-signup">Sign Up</a>
+    </div>
+
+    <!-- ── Hamburger ── -->
+    <button class="hamburger" id="hamburger-btn" type="button"
+            aria-label="Toggle navigation" aria-expanded="false">
       <i class="ph-bold ph-list"></i>
     </button>
 

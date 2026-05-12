@@ -2,14 +2,84 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Reports – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/doctor-pages.css">
 </head>
 <body>
 
-<script type="module">
-import { requireAuth, requireRole } from '/js/core/auth.js';
-requireAuth();
-requireRole('DOCTOR');
-</script>
+<div id="navbar-container"></div>
+
+<main class="doc-page">
+  <div class="page-wrap">
+    <div class="page-header">
+      <div class="page-header-left">
+        <h1>Medical Reports</h1>
+        <p>All patient reports for doctor review and follow-up.</p>
+      </div>
+      <button class="btn-export" id="btn-export-reports">
+        <i class="ph-bold ph-download-simple"></i> Export
+      </button>
+    </div>
+
+    <div class="filter-bar extended">
+      <div class="filter-item grow">
+        <label class="filter-label">Search</label>
+        <div class="input-icon-wrap">
+          <i class="ph-bold ph-magnifying-glass"></i>
+          <input type="text" id="report-search" placeholder="Search by patient, report ID, diagnosis...">
+        </div>
+      </div>
+      <div class="filter-item">
+        <label class="filter-label">Status</label>
+        <div class="input-icon-wrap select-wrap">
+          <select id="report-status">
+            <option value="">All</option>
+            <option value="Final">Final</option>
+            <option value="Pending">Pending</option>
+            <option value="Needs Follow-up">Needs Follow-up</option>
+          </select>
+          <i class="ph-bold ph-caret-down sel-arrow"></i>
+        </div>
+      </div>
+      <button class="btn-clear" id="clear-report-filters">
+        <i class="ph-bold ph-x-circle"></i> Clear Filters
+      </button>
+    </div>
+
+    <div class="table-card">
+      <div class="table-card-header">
+        <h2>Reports (<span id="report-count">0</span>)</h2>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table appt-data-table">
+          <thead>
+            <tr>
+              <th>Report ID</th>
+              <th>Patient</th>
+              <th>Date</th>
+              <th>Diagnosis</th>
+              <th>Status</th>
+              <th>PDF</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="report-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
+<script src="../../js/appointmentService.js"></script>
+<script src="../../js/pages/doctor/medical-report.js"></script>
 </body>
 </html>

@@ -13,26 +13,7 @@
 </head>
 <body>
 
-<nav class="navbar" id="main-navbar">
-  <div class="nav-container">
-    <a href="dashboard.html" class="logo">
-      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
-      <span>Smart Clinic</span>
-    </a>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="appointments.html">Appointments</a></li>
-      <li><a href="patients.html" class="active">My Patients</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
-      <i class="ph-bold ph-list"></i>
-    </button>
-    <div class="nav-doctor-badge">
-      <div class="nav-avatar-sm"><i class="ph-fill ph-user"></i></div>
-      <span>Dr. Ahmed Ali</span>
-    </div>
-  </div>
-</nav>
+<div id="navbar-container"></div>
 
 <main class="detail-page">
   <div class="detail-wrap">
@@ -140,6 +121,9 @@
 </main>
 
 <script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
+<script src="../../js/appointmentService.js"></script>
 <script src="../../js/pages/doctor/patient-profile.js"></script>
 </body>
 </html>

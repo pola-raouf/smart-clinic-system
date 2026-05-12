@@ -1,4 +1,5 @@
 package org.smartclinic.clinic.Dto;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -12,6 +13,8 @@ public class MedicalRecordRequestDTO {
 
     @NotBlank
     private String chiefComplaint;
+
+    private String symptoms;
 
     @NotBlank
     private String diagnosis;

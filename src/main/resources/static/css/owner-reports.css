@@ -184,16 +184,27 @@ body{font-family:'Inter',sans-serif;color:var(--slate-700);background:var(--page
     border-radius:var(--card-r); box-shadow:var(--card-sh);
     overflow:hidden;
 }
+.table-section > div {
+    max-height: 400px;
+    overflow-y: auto;
+}
 .table-section-header {
     padding:16px 20px; border-bottom:1px solid var(--slate-100);
     font-size:14px; font-weight:700; color:var(--slate-900);
 }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--slate-300); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--slate-400); }
 
 .detail-table { width:100%; border-collapse:collapse; }
 .detail-table thead th {
     padding:11px 20px; font-size:12px; font-weight:600;
     color:var(--slate-500); text-align:left; border-bottom:1px solid var(--slate-200);
     background:var(--slate-50); white-space:nowrap;
+    position: sticky; top: 0; z-index: 10;
 }
 .detail-table tbody tr { border-bottom:1px solid var(--slate-100); transition:background var(--tr); }
 .detail-table tbody tr:last-child { border-bottom:none; }
@@ -202,7 +213,7 @@ body{font-family:'Inter',sans-serif;color:var(--slate-700);background:var(--page
 .detail-table tfoot tr { background:var(--blue-50); border-top:2px solid var(--blue-200); }
 .detail-table tfoot td {
     padding:12px 20px; font-size:14px; font-weight:800;
-    color:var(--blue-600);
+    color:var(--blue-600); position: sticky; bottom: 0; z-index: 10;
 }
 .detail-table tfoot td:first-child { color:var(--slate-900); }
 

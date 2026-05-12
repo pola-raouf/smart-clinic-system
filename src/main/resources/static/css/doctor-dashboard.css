@@ -108,6 +108,17 @@ body { font-family:'Inter',sans-serif; color:var(--slate-700); background:var(--
     gap:20px; align-items:start;
 }
 
+.doc-bottom-full {
+    grid-template-columns: 1fr;
+}
+
+.schedule-empty {
+    font-size: 13px;
+    color: var(--slate-400);
+    padding: 12px 20px 20px;
+    margin: 0;
+}
+
 /* ── COMMON CARD ── */
 .doc-card {
     background:var(--white); border:var(--card-bd);
@@ -209,6 +220,26 @@ body { font-family:'Inter',sans-serif; color:var(--slate-700); background:var(--
     text-decoration:none; transition:all var(--tr);
 }
 .btn-view:hover { border-color:var(--blue-500); color:var(--blue-600); }
+
+.appt-subsection {
+    border-top: 1px solid var(--slate-100);
+    padding-top: 10px;
+}
+
+.appt-subsection-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--slate-900);
+    padding: 0 20px 10px;
+}
+
+.appt-subsection-title i {
+    color: var(--blue-500);
+    font-size: 14px;
+}
 
 /* ── MINI CALENDAR ── */
 .mini-cal { padding:16px 16px 8px; }

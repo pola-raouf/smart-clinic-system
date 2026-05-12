@@ -26,6 +26,10 @@ public class Patient {
     private String phoneNumber;
     private String address;
 
+    /** Incremented when an appointment-linked consultation is completed. */
+    @Column(nullable = false)
+    private int visitCount = 0;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", unique = true)
     private User user;

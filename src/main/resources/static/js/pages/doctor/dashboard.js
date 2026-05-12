@@ -1,138 +1,352 @@
 /* ================================================
-   dashboard.js  –  Doctor Dashboard (no auth)
-   ================================================ */
+  dashboard.js  –  Doctor Dashboard (API-backed)
+  ================================================ */
 
-document.addEventListener('DOMContentLoaded', async () => {
-
+document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const { bootRoleShell } = await import('/js/core/page-boot.js');
-        await bootRoleShell('DOCTOR');
+        const { bootRoleShell } = await import("/js/core/page-boot.js");
+        await bootRoleShell("DOCTOR");
     } catch {
         return;
     }
 
-    const $ = id => document.getElementById(id);
-
-    /* ── Date display ── */
-    const dateEl = $('greeting-date');
-    if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-
-    /* ── Demo data ── */
-    const PATIENTS = [
-        { id:'P1001', name:'Mohamed Hassan', age:45, gender:'Male',   hue:215, phone:'0123 456 7890', lastVisit:'2026-04-22', reason:'Regular Checkup',     status:'confirmed' },
-        { id:'P1002', name:'Sara Ahmed',     age:32, gender:'Female', hue:340, phone:'0111 222 3333', lastVisit:'2026-04-22', reason:'Chest Pain',          status:'confirmed' },
-        { id:'P1003', name:'Ahmed Mahmoud',  age:50, gender:'Male',   hue:160, phone:'0100 555 6666', lastVisit:'2026-04-21', reason:'Follow-up',           status:'confirmed' },
-        { id:'P1004', name:'Nourhan Ali',    age:28, gender:'Female', hue:280, phone:'0122 333 4444', lastVisit:'2026-04-21', reason:'Shortness of Breath',  status:'pending'   },
-        { id:'P1005', name:'Khaled Samy',    age:60, gender:'Male',   hue:30,  phone:'0114 567 8901', lastVisit:'2026-04-20', reason:'Heart Disease',        status:'confirmed' },
-        { id:'P1006', name:'Marwan Adel',    age:50, gender:'Male',   hue:50,  phone:'0112 345 6789', lastVisit:'2026-04-20', reason:'ECG Review',           status:'pending'   },
-    ];
-    const TIMES = ['09:00 AM','10:00 AM','11:00 AM','12:00 PM','01:00 PM','02:00 PM'];
-
-    /* ── Appointments Table ── */
-    const tbody = $('appt-tbody');
-    if (tbody) {
-        PATIENTS.forEach((p, i) => {
-            const tr = document.createElement('tr');
-            const ok = p.status === 'confirmed';
-            tr.innerHTML = `
-                <td><strong>${TIMES[i]}</strong></td>
-                <td>
-                    <div class="pt-cell">
-                        <div class="pt-avatar" style="--hue:${p.hue}"><i class="ph-fill ph-user"></i></div>
-                        <div>
-                            <div class="pt-name">${p.name}</div>
-                            <div class="pt-meta">${p.age} yrs, ${p.gender} &bull; ID: ${p.id}</div>
-                        </div>
-                    </div>
-                </td>
-                <td>${p.reason}</td>
-                <td><span class="badge ${p.status}">${ok ? 'Confirmed' : 'Pending'}</span></td>
-                <td>${ok
-                    ? `<a href="start-consultation.html?patient=${p.id}" class="btn-start"><i class="ph-bold ph-play"></i> Start Consultation</a>`
-                    : `<a href="appointment-details.html" class="btn-view"><i class="ph-bold ph-eye"></i> View Details</a>`
-                }</td>`;
-            tbody.appendChild(tr);
+    const $ = (id) => document.getElementById(id);
+    const dateEl = $("greeting-date");
+    if (dateEl) {
+        dateEl.textContent = new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
         });
     }
 
-    /* ── Recent Patients Table ── */
-    const ptbody = $('patients-tbody');
+    const me = await AppointmentService.getCurrentUser();
+    const doctors = await AppointmentService.getDoctors();
+    const doctor = doctors.find((d) => d.userId === me.id || d.id === me.id);
+    if (!doctor) return;
+
+    localStorage.setItem("doctorId", doctor.id);
+
+    const doctorName = doctor.name || "Doctor";
+    const greetingName = $("doctor-greeting-name");
+    if (greetingName) greetingName.textContent = `Dr. ${doctorName}`;
+
+    const [allAppointments, patientSummaries] = await Promise.all([
+        AppointmentService.getDoctorAppointments(doctor.id),
+        AppointmentService.getDoctorMyPatients().catch(() => []),
+    ]);
+
+    const todayIso = (() => {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    })();
+    const todayAppointments = allAppointments.filter((a) => String(a.date) === todayIso);
+    const upcomingAppointments = allAppointments.filter((a) => {
+        if (!a.date) return false;
+        const d = new Date(String(a.date) + "T00:00:00");
+        const t = new Date(new Date().toDateString());
+        return d > t;
+    });
+
+    const weekEnd = new Date();
+    weekEnd.setDate(weekEnd.getDate() + 7);
+    const weekCount = allAppointments.filter((a) => {
+        const d = a.date ? new Date(String(a.date) + "T12:00:00") : null;
+        return d && d >= new Date(new Date().toDateString()) && d <= weekEnd;
+    }).length;
+
+    const pendingToday = todayAppointments.filter((a) => {
+        const s = String(a.status || "").toLowerCase();
+        return s === "booked" || s === "pending";
+    }).length;
+
+    const statToday = $("stat-today-appts");
+    const statPatients = $("stat-total-patients");
+    const statWeek = $("stat-week-appts");
+    const statPending = $("stat-pending-today");
+    if (statToday) statToday.textContent = String(todayAppointments.length);
+    if (statPatients) statPatients.textContent = String(patientSummaries.length);
+    if (statWeek) statWeek.textContent = String(weekCount);
+    if (statPending) statPending.textContent = String(pendingToday);
+
+    renderAppointmentTable($("appt-tbody"), todayAppointments, {
+        emptyMessage: "No appointments scheduled for today.",
+        includeDate: false,
+    });
+    renderAppointmentTable($("upcoming-appt-tbody"), upcomingAppointments, {
+        emptyMessage: "No upcoming appointments found.",
+        includeDate: true,
+    });
+
+    const ptbody = $("patients-tbody");
     if (ptbody) {
-        PATIENTS.forEach(p => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><div class="pt-cell"><div class="pt-avatar" style="--hue:${p.hue}"><i class="ph-fill ph-user"></i></div><div class="pt-name">${p.name}</div></div></td>
-                <td>${p.age} yrs, ${p.gender}</td>
-                <td>${p.phone}</td>
-                <td>${fmt(p.lastVisit)}</td>
-                <td><i class="ph-bold ph-caret-right" style="color:var(--slate-300)"></i></td>`;
-            ptbody.appendChild(tr);
-        });
+        ptbody.innerHTML = "";
+        const rows = (patientSummaries || []).slice(0, 10);
+        if (rows.length === 0) {
+            ptbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:28px;color:var(--slate-400)">No patient visits on record yet.</td></tr>`;
+        } else {
+            rows.forEach((row) => {
+                const p = row.patient || {};
+                const gender = (p.gender || "—").toString();
+                const age = row.age != null ? `${row.age} yrs` : "—";
+                const phone = p.phoneNumber || "—";
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>
+                  <div class="pt-cell">
+                    <div class="pt-avatar" style="--hue:${hueFromId(p.id)}"><i class="ph-fill ph-user"></i></div>
+                    <div>
+                      <div class="pt-name">${esc(p.name || "Patient")}</div>
+                      <div class="pt-meta">ID: ${esc(p.id || "—")}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>${esc(age)}, ${esc(gender)}</td>
+                <td>${esc(phone)}</td>
+                <td>${fmt(row.lastVisitDate)}<br><span style="font-size:11.5px;color:var(--slate-400)">${fmtTime(row.lastVisitTime)}</span></td>
+                <td>${row.appointmentCount != null ? row.appointmentCount : "—"}</td>
+                <td><a href="patient-profile.html?id=${encodeURIComponent(p.id)}" class="btn-view"><i class="ph-bold ph-arrow-right"></i></a></td>`;
+                ptbody.appendChild(tr);
+            });
+        }
     }
 
-    /* ── Patient Search ── */
-    $('patient-search')?.addEventListener('input', function () {
+    $("patient-search")?.addEventListener("input", function () {
         const q = this.value.toLowerCase().trim();
-        $('patients-tbody')?.querySelectorAll('tr').forEach(r => {
-            r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+        $("patients-tbody")?.querySelectorAll("tr").forEach((r) => {
+            r.style.display = r.textContent.toLowerCase().includes(q) ? "" : "none";
         });
     });
 
-    /* ── Mini Calendar ── */
-    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const today  = new Date();
-    let cY = today.getFullYear(), cM = today.getMonth(), sel = today.getDate();
-    const apptDays = new Set([sel, sel+2, sel+4, sel-1].filter(d=>d>0 && d<=31));
+    const MONTHS = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
+    const today = new Date();
+    let cY = today.getFullYear();
+    let cM = today.getMonth();
+    let sel = today.getDate();
 
-    function renderCal() {
-        const hdr  = $('mini-cal-header');
-        const grid = $('mini-cal-days');
-        if (!hdr || !grid) return;
-        hdr.textContent = `${MONTHS[cM]} ${cY}`;
-        grid.innerHTML  = '';
-        const first = new Date(cY,cM,1).getDay();
-        const total = new Date(cY,cM+1,0).getDate();
-        const prev  = new Date(cY,cM,0).getDate();
-        for (let i=first-1;i>=0;i--) { grid.appendChild(mk(prev-i,true)); }
-        for (let d=1;d<=total;d++) {
-            const isT = d===today.getDate()&&cM===today.getMonth()&&cY===today.getFullYear();
-            const isS = d===sel&&cM===today.getMonth();
-            const btn = mk(d,false,isT,isS,apptDays.has(d)&&cM===today.getMonth());
-            btn.addEventListener('click',()=>{ sel=d; renderCal(); lbl(); });
-            grid.appendChild(btn);
-        }
-        for (let i=1;i<=42-first-total;i++) { grid.appendChild(mk(i,true)); }
-        lbl();
+    function pad(n) {
+        return String(n).padStart(2, "0");
     }
 
-    function mk(n,o=false,isT=false,isS=false,appt=false) {
-        const b = document.createElement('button');
-        b.type='button'; b.textContent=n;
-        const c=['cal-day'];
-        if(o) c.push('other-m');
-        if(isT) c.push('today');
-        if(isS&&!isT) c.push('selected');
-        if(appt) c.push('has-appt');
-        b.className=c.join(' ');
-        if(o) b.disabled=true;
+    function apptDaysForMonth(y, m0) {
+        const set = new Set();
+        allAppointments.forEach((a) => {
+            if (!a.date) return;
+            const [yy, mm, dd] = String(a.date).split("-").map(Number);
+            if (yy === y && mm === m0 + 1) set.add(dd);
+        });
+        return set;
+    }
+
+    function selectedIso() {
+        const maxD = new Date(cY, cM + 1, 0).getDate();
+        const day = Math.min(sel, maxD);
+        return `${cY}-${pad(cM + 1)}-${pad(day)}`;
+    }
+
+    async function loadScheduleSlots() {
+        const container = $("schedule-slots");
+        const emptyEl = $("schedule-slots-empty");
+        if (!container) return;
+        const iso = selectedIso();
+        const blocks = await AppointmentService.getDoctorMyScheduleForDate(iso).catch(() => []);
+        const staticRows = container.querySelectorAll(".session-item");
+        staticRows.forEach((el) => el.remove());
+        if (!blocks || blocks.length === 0) {
+            emptyEl?.removeAttribute("hidden");
+            return;
+        }
+        emptyEl?.setAttribute("hidden", "");
+        blocks.forEach((b, i) => {
+            const row = document.createElement("div");
+            row.className = "session-item";
+            row.setAttribute("role", "listitem");
+            row.innerHTML = `
+            <div class="session-bar ${i % 2 === 0 ? "morning" : "afternoon"}"></div>
+            <div class="session-info">
+              <span class="session-time">${fmtTime(b.startTime)} – ${fmtTime(b.endTime)}</span>
+              <span class="session-name">Scheduled session</span>
+            </div>
+            <span class="session-badge active">Saved</span>`;
+            container.appendChild(row);
+        });
+    }
+
+    function renderCal() {
+        const hdr = $("mini-cal-header");
+        const grid = $("mini-cal-days");
+        if (!hdr || !grid) return;
+
+        const maxD = new Date(cY, cM + 1, 0).getDate();
+        if (sel > maxD) sel = maxD;
+
+        hdr.textContent = `${MONTHS[cM]} ${cY}`;
+        grid.innerHTML = "";
+        const apptDays = apptDaysForMonth(cY, cM);
+        const first = new Date(cY, cM, 1).getDay();
+        const total = new Date(cY, cM + 1, 0).getDate();
+        const prev = new Date(cY, cM, 0).getDate();
+        for (let i = first - 1; i >= 0; i--) {
+            grid.appendChild(mk(prev - i, true));
+        }
+        for (let d = 1; d <= total; d++) {
+            const isT = d === today.getDate() && cM === today.getMonth() && cY === today.getFullYear();
+            const btn = mk(d, false, isT, d === sel, apptDays.has(d));
+            btn.addEventListener("click", () => {
+                sel = d;
+                renderCal();
+            });
+            grid.appendChild(btn);
+        }
+        for (let i = 1; i <= 42 - first - total; i++) {
+            grid.appendChild(mk(i, true));
+        }
+        lbl();
+        loadScheduleSlots();
+    }
+
+    function mk(n, o = false, isT = false, isS = false, appt = false) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = n;
+        const c = ["cal-day"];
+        if (o) c.push("other-m");
+        if (isT) c.push("today");
+        if (isS && !isT) c.push("selected");
+        if (appt) c.push("has-appt");
+        b.className = c.join(" ");
+        if (o) b.disabled = true;
         return b;
     }
 
     function lbl() {
-        const el=$('schedule-day-label'); if(!el) return;
-        el.textContent = new Date(cY,cM,sel).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+        const el = $("schedule-day-label");
+        if (!el) return;
+        const maxD = new Date(cY, cM + 1, 0).getDate();
+        const day = Math.min(sel, maxD);
+        el.textContent = new Date(cY, cM, day).toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+        });
     }
 
-    $('cal-prev')?.addEventListener('click',()=>{ cM===0?(cM=11,cY--):cM--; renderCal(); });
-    $('cal-next')?.addEventListener('click',()=>{ cM===11?(cM=0,cY++):cM++; renderCal(); });
+    $("cal-prev")?.addEventListener("click", () => {
+        if (cM === 0) {
+            cM = 11;
+            cY--;
+        } else {
+            cM--;
+        }
+        renderCal();
+    });
+    $("cal-next")?.addEventListener("click", () => {
+        if (cM === 11) {
+            cM = 0;
+            cY++;
+        } else {
+            cM++;
+        }
+        renderCal();
+    });
     renderCal();
 
-    /* ── Hamburger ── */
     if (window.initSmartClinicNavbar) window.initSmartClinicNavbar();
 
     function fmt(iso) {
-        if(!iso) return '—';
-        const [y,m,d]=iso.split('-').map(Number);
-        return new Date(y,m-1,d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+        if (!iso) return "—";
+        const [y, m, d] = String(iso).split("-").map(Number);
+        return new Date(y, m - 1, d).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+        });
+    }
+
+    function fmtTime(t) {
+        if (t == null || t === "") return "—";
+        const s = String(t);
+        const [h, m] = s.split(":").map(Number);
+        const ampm = h >= 12 ? "PM" : "AM";
+        const h12 = h % 12 || 12;
+        return `${h12}:${pad(m || 0)} ${ampm}`;
+    }
+
+    function renderAppointmentTable(tbody, appointments, options = {}) {
+        if (!tbody) return;
+        const includeDate = Boolean(options.includeDate);
+        const emptyMessage = options.emptyMessage || "No appointments found.";
+
+        tbody.innerHTML = "";
+        if (!appointments || appointments.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--slate-400)">${esc(emptyMessage)}</td></tr>`;
+            return;
+        }
+
+        appointments
+            .slice()
+            .sort((a, b) => {
+                const da = `${a.date || ""}T${String(a.time || "").slice(0, 8)}`;
+                const db = `${b.date || ""}T${String(b.time || "").slice(0, 8)}`;
+                return da.localeCompare(db);
+            })
+            .slice(0, 12)
+            .forEach((a) => {
+                const statusRaw = String(a.status || "").toLowerCase();
+                const statusKey = statusRaw === "booked" || statusRaw === "pending" ? "pending" : statusRaw;
+                const tr = document.createElement("tr");
+                const timeCell = includeDate
+                    ? `<strong>${esc(fmt(a.date))}</strong><br><span style="font-size:11.5px;color:var(--slate-400)">${esc((a.time || "—").toString().substring(0, 5))}</span>`
+                    : `<strong>${esc((a.time || "—").toString().substring(0, 5))}</strong>`;
+                tr.innerHTML = `
+                <td>${timeCell}</td>
+                <td>
+                    <div class="pt-cell">
+                        <div class="pt-avatar" style="--hue:215"><i class="ph-fill ph-user"></i></div>
+                        <div>
+                            <div class="pt-name">${esc(a.patientName || "Patient")}</div>
+                            <div class="pt-meta">ID: ${esc(a.patientId || "—")}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>${esc(a.specialty ? `Follow-up · ${a.specialty}` : "Consultation")}</td>
+                <td><span class="badge ${statusKey === "confirmed" ? "confirmed" : "pending"}">${cap(statusKey || "pending")}</span></td>
+                <td>${
+                    statusKey === "confirmed"
+                        ? `<a href="start-consultation.html?patient=${encodeURIComponent(a.patientId)}&appointment=${encodeURIComponent(a.id)}" class="btn-start"><i class="ph-bold ph-play"></i> Start Consultation</a>`
+                        : `<a href="appointment-details.html?id=${encodeURIComponent(a.id)}" class="btn-view"><i class="ph-bold ph-eye"></i> Details</a>`
+                }</td>`;
+                tbody.appendChild(tr);
+            });
+    }
+
+    function esc(s) {
+        const div = document.createElement("div");
+        div.textContent = s == null ? "" : String(s);
+        return div.innerHTML;
+    }
+
+    function cap(s) {
+        return s ? s.charAt(0).toUpperCase() + s.slice(1) : "Booked";
+    }
+
+    function hueFromId(id) {
+        const n = Number(id) || 0;
+        return 200 + (n % 120);
     }
 });

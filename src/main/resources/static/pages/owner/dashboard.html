@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Owner Dashboard – Smart Clinic</title>
+    <meta name="description" content="Smart Clinic owner dashboard: real-time KPIs, appointment trends, patient growth, and activity feed.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,150 +15,108 @@
 </head>
 <body>
 
-<nav class="navbar" id="main-navbar">
-  <div class="nav-container">
-    <a href="dashboard.html" class="logo">
-      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
-      <span>Smart Clinic</span>
-    </a>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="dashboard.html" class="active">Dashboard</a></li>
-      <li><a href="reports.html">Reports</a></li>
-      <li><a href="profile.html">My Profile</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
-      <i class="ph-bold ph-list"></i>
-    </button>
-    <div class="nav-owner-badge">
-      <div class="nav-av-owner"><i class="ph-fill ph-user-gear"></i></div>
-      <span>Dr. Eyad Ashraf</span>
-    </div>
-  </div>
-</nav>
+<div id="navbar-container"></div>
 
 <main class="dash-page">
   <div class="dash-wrap">
 
-    <!-- ── TOPBAR ── -->
     <div class="dash-topbar">
       <div class="dash-topbar-left">
-        <h1>Good morning, Dr. Eyad! 👋</h1>
-        <p>Here's what's happening in your clinic today.</p>
+        <h1 id="dash-greeting">Dashboard</h1>
+        <p>Here's what's happening in your clinic.</p>
       </div>
-      <button class="date-dropdown" id="date-toggle">
+      <div class="date-dropdown" id="date-toggle">
         <i class="ph-bold ph-calendar-blank"></i>
-        <span id="date-label">May 19, 2025</span>
-        <i class="ph-bold ph-caret-down caret"></i>
-      </button>
+        <span id="date-label">Loading…</span>
+      </div>
     </div>
 
-    <!-- ── STAT CARDS ── -->
     <div class="stats-grid">
 
-      <div class="stat-card">
+      <div class="stat-card" id="kpi-appointments">
         <div class="stat-icon-box blue"><i class="ph-bold ph-calendar-blank"></i></div>
         <div class="stat-content">
           <div class="stat-label">Total Appointments</div>
-          <div class="stat-num">1,284</div>
-          <div class="stat-change up">
-            <i class="ph-bold ph-trend-up"></i> 8.5%
-            <span class="vs">vs last week</span>
-          </div>
+          <div class="stat-num skeleton-line" id="kpi-appt-num">&nbsp;</div>
+          <div class="stat-change" id="kpi-appt-change"><span class="skeleton-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
         </div>
       </div>
 
-      <div class="stat-card">
+      <div class="stat-card" id="kpi-patients">
         <div class="stat-icon-box green"><i class="ph-bold ph-users-three"></i></div>
         <div class="stat-content">
           <div class="stat-label">Total Patients</div>
-          <div class="stat-num">560</div>
-          <div class="stat-change up">
-            <i class="ph-bold ph-trend-up"></i> 6.2%
-            <span class="vs">vs last week</span>
-          </div>
+          <div class="stat-num skeleton-line" id="kpi-patient-num">&nbsp;</div>
+          <div class="stat-change" id="kpi-patient-change"><span class="skeleton-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
         </div>
       </div>
 
-      <div class="stat-card">
+      <div class="stat-card" id="kpi-doctors">
         <div class="stat-icon-box purple"><i class="ph-bold ph-user-circle-gear"></i></div>
         <div class="stat-content">
           <div class="stat-label">Total Doctors</div>
-          <div class="stat-num">18</div>
-          <div class="stat-change up">
-            <i class="ph-bold ph-trend-up"></i> 2.1%
-            <span class="vs">vs last week</span>
-          </div>
+          <div class="stat-num skeleton-line" id="kpi-doctor-num">&nbsp;</div>
+          <div class="stat-change" id="kpi-doctor-change"><span class="skeleton-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
         </div>
       </div>
 
-      <div class="stat-card">
+      <div class="stat-card" id="kpi-cancelled">
         <div class="stat-icon-box red"><i class="ph-bold ph-x-circle"></i></div>
         <div class="stat-content">
           <div class="stat-label">Cancelled Appointments</div>
-          <div class="stat-num">73</div>
-          <div class="stat-change down">
-            <i class="ph-bold ph-trend-up"></i> 12.4%
-            <span class="vs">vs last week</span>
-          </div>
+          <div class="stat-num skeleton-line" id="kpi-cancel-num">&nbsp;</div>
+          <div class="stat-change" id="kpi-cancel-change"><span class="skeleton-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
         </div>
       </div>
 
-    </div><!-- /stats-grid -->
+    </div>
 
-    <!-- ── MIDDLE: Charts + Quick Insights ── -->
     <div class="mid-grid">
 
-      <!-- Appointments Trend -->
       <div class="chart-card">
         <div class="chart-card-header">
           <div class="chart-card-title">
             <i class="ph-bold ph-trend-up"></i> Appointments Trend
           </div>
-          <button class="chart-period-select">Daily <i class="ph-bold ph-caret-down"></i></button>
+          <div class="chart-period-tabs" id="appt-period-tabs">
+            <button class="period-tab active" data-period="daily">Daily</button>
+            <button class="period-tab" data-period="weekly">Weekly</button>
+            <button class="period-tab" data-period="monthly">Monthly</button>
+          </div>
         </div>
-        <div class="chart-container">
+        <div class="chart-container" id="appt-chart-wrap">
           <canvas id="apptTrendChart"></canvas>
+          <div class="chart-empty" id="appt-empty" hidden>No appointment data available.</div>
+          <div class="chart-error" id="appt-error" hidden>Failed to load chart data.</div>
         </div>
       </div>
 
-      <!-- Patient Growth -->
       <div class="chart-card">
         <div class="chart-card-header">
           <div class="chart-card-title">
             <i class="ph-bold ph-users-three"></i> Patient Growth
           </div>
-          <button class="chart-period-select">Monthly <i class="ph-bold ph-caret-down"></i></button>
+          <span class="chart-period-label">Monthly</span>
         </div>
-        <div class="chart-container">
+        <div class="chart-container" id="pat-chart-wrap">
           <canvas id="patientGrowthChart"></canvas>
+          <div class="chart-empty" id="pat-empty" hidden>No patient data available.</div>
+          <div class="chart-error" id="pat-error" hidden>Failed to load chart data.</div>
         </div>
       </div>
 
-      <!-- Quick Insights -->
       <div class="qi-card">
         <div class="qi-title">Quick Insights</div>
-
-        <div class="qi-item">
-          <div class="qi-icon blue"><i class="ph-bold ph-clock"></i></div>
-          <div class="qi-content">
-            <div class="qi-name">Avg. Waiting Time</div>
-            <div class="qi-val">12 min</div>
-          </div>
-          <div class="qi-delta">
-            <span>vs last week</span>
-            <span class="down"><i class="ph-bold ph-trend-down"></i> 5%</span>
-          </div>
-        </div>
 
         <div class="qi-item">
           <div class="qi-icon orange"><i class="ph-bold ph-chart-pie"></i></div>
           <div class="qi-content">
             <div class="qi-name">Cancellation Rate</div>
-            <div class="qi-val">5.6%</div>
+            <div class="qi-val skeleton-line" id="qi-cancel-rate">&nbsp;</div>
           </div>
-          <div class="qi-delta">
+          <div class="qi-delta" id="qi-cancel-delta">
             <span>vs last week</span>
-            <span class="up"><i class="ph-bold ph-trend-up"></i> 1.2%</span>
+            <span class="skeleton-line" id="qi-cancel-trend">&nbsp;&nbsp;&nbsp;&nbsp;</span>
           </div>
         </div>
 
@@ -165,111 +124,71 @@
           <div class="qi-icon green"><i class="ph-bold ph-check-circle"></i></div>
           <div class="qi-content">
             <div class="qi-name">Completed Today</div>
-            <div class="qi-val">42</div>
+            <div class="qi-val skeleton-line" id="qi-completed-today">&nbsp;</div>
           </div>
-          <div class="qi-delta">
+          <div class="qi-delta" id="qi-completed-delta">
             <span>vs yesterday</span>
-            <span class="up"><i class="ph-bold ph-trend-up"></i> 10%</span>
+            <span class="skeleton-line" id="qi-completed-trend">&nbsp;&nbsp;&nbsp;&nbsp;</span>
           </div>
         </div>
 
-      </div><!-- /qi-card -->
+        <div class="qi-item">
+          <div class="qi-icon blue"><i class="ph-bold ph-calendar-check"></i></div>
+          <div class="qi-content">
+            <div class="qi-name">This Week</div>
+            <div class="qi-val skeleton-line" id="qi-weekly">&nbsp;</div>
+          </div>
+          <div class="qi-delta" id="qi-weekly-delta">
+            <span>vs last week</span>
+            <span class="skeleton-line" id="qi-weekly-trend">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          </div>
+        </div>
 
-    </div><!-- /mid-grid -->
+      </div>
 
-    <!-- ── BOTTOM ROW ── -->
+    </div>
+
     <div class="bot-grid">
 
-      <!-- Recent Activity -->
       <div class="bot-card">
         <div class="bot-card-header">
           <h3>Recent Activity</h3>
           <a href="reports.html" class="link-view-all">View All</a>
         </div>
-        <ul class="activity-list">
-          <li class="activity-item">
-            <div class="act-icon green"><i class="ph-bold ph-user-plus"></i></div>
+        <ul class="activity-list" id="activity-feed">
+          <li class="activity-item skeleton-item">
+            <div class="act-icon blue skeleton-circle"></div>
             <div class="act-info">
-              <div class="act-action">New patient registered</div>
-              <div class="act-patient">Patient: Omar Mohamed</div>
+              <div class="skeleton-line act-action">&nbsp;</div>
+              <div class="skeleton-line act-patient" style="width:60%">&nbsp;</div>
             </div>
-            <div class="act-time">2 min ago</div>
+            <div class="skeleton-line act-time" style="width:50px">&nbsp;</div>
           </li>
-          <li class="activity-item">
-            <div class="act-icon red"><i class="ph-bold ph-x-circle"></i></div>
+          <li class="activity-item skeleton-item">
+            <div class="act-icon green skeleton-circle"></div>
             <div class="act-info">
-              <div class="act-action">Appointment cancelled</div>
-              <div class="act-patient">Patient: Sara Ahmed</div>
+              <div class="skeleton-line act-action">&nbsp;</div>
+              <div class="skeleton-line act-patient" style="width:55%">&nbsp;</div>
             </div>
-            <div class="act-time">10 min ago</div>
+            <div class="skeleton-line act-time" style="width:50px">&nbsp;</div>
           </li>
-          <li class="activity-item">
-            <div class="act-icon blue"><i class="ph-bold ph-calendar-check"></i></div>
+          <li class="activity-item skeleton-item">
+            <div class="act-icon red skeleton-circle"></div>
             <div class="act-info">
-              <div class="act-action">New appointment booked</div>
-              <div class="act-patient">Patient: Mohamed Ali</div>
+              <div class="skeleton-line act-action">&nbsp;</div>
+              <div class="skeleton-line act-patient" style="width:50%">&nbsp;</div>
             </div>
-            <div class="act-time">25 min ago</div>
-          </li>
-          <li class="activity-item">
-            <div class="act-icon purple"><i class="ph-bold ph-file-text"></i></div>
-            <div class="act-info">
-              <div class="act-action">New medical report added</div>
-              <div class="act-patient">Patient: Hiba Khaled</div>
-            </div>
-            <div class="act-time">1 hr ago</div>
+            <div class="skeleton-line act-time" style="width:50px">&nbsp;</div>
           </li>
         </ul>
+        <div class="activity-empty" id="activity-empty" hidden>No recent activity found.</div>
+        <div class="activity-error" id="activity-error" hidden>Failed to load activity feed.</div>
       </div>
 
-      <!-- Reports -->
-      <div class="bot-card">
-        <div class="bot-card-header">
-          <h3>Reports</h3>
-        </div>
-        <p class="report-helper-text">
-          View detailed reports and analyze clinic performance.
-        </p>
-        <ul class="report-link-list">
-          <li>
-            <a href="reports.html" class="report-link-item">
-              <div class="rpt-icon blue"><i class="ph-bold ph-calendar-blank"></i></div>
-              <div class="rpt-info">
-                <div class="rpt-name">Appointments Report</div>
-                <div class="rpt-desc">Summary of all appointments</div>
-              </div>
-              <i class="ph-bold ph-caret-right rpt-arrow"></i>
-            </a>
-          </li>
-          <li>
-            <a href="reports.html" class="report-link-item">
-              <div class="rpt-icon green"><i class="ph-bold ph-users-three"></i></div>
-              <div class="rpt-info">
-                <div class="rpt-name">Patients Report</div>
-                <div class="rpt-desc">Overview of patients and registrations</div>
-              </div>
-              <i class="ph-bold ph-caret-right rpt-arrow"></i>
-            </a>
-          </li>
-          <li>
-            <a href="reports.html" class="report-link-item">
-              <div class="rpt-icon purple"><i class="ph-bold ph-chart-bar"></i></div>
-              <div class="rpt-info">
-                <div class="rpt-name">Clinic Performance Report</div>
-                <div class="rpt-desc">Analytics of clinic performance</div>
-              </div>
-              <i class="ph-bold ph-caret-right rpt-arrow"></i>
-            </a>
-          </li>
-        </ul>
-        <a href="reports.html" class="btn-view-reports">View All Reports</a>
-      </div>
-
-      <!-- System Shortcuts -->
       <div class="bot-card">
         <div class="bot-card-header"><h3>System Shortcuts</h3></div>
         <div class="shortcuts-grid">
-          <a href="../secretary/manage-appointments.html" class="shortcut-item">
+          <a href="users.html" class="shortcut-item">
             <div class="sc-icon blue"><i class="ph-bold ph-users-three"></i></div>
             <div class="sc-name">Manage Users</div>
             <div class="sc-desc">Add, edit and manage doctors &amp; staff</div>
@@ -284,14 +203,16 @@
         </div>
       </div>
 
-    </div><!-- /bot-grid -->
+    </div>
 
     <div class="dash-footer">© 2025 Smart Clinic Management System. All rights reserved.</div>
 
-  </div><!-- /dash-wrap -->
+  </div>
 </main>
 
 <script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
 <script src="../../js/pages/owner/dashboard.js"></script>
 </body>
 </html>

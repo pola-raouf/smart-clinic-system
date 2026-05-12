@@ -14,4 +14,6 @@ public class PatientResponseDTO {
     private Long userId;
 
     private String email; // ✅ ممتاز
+
+    private int visitCount;
 }

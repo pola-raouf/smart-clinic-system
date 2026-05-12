@@ -19,4 +19,8 @@ public class User {
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    /** Public URL path, e.g. /uploads/profiles/uuid.jpg — shown in navbar & profiles */
+    @Column(length = 512)
+    private String profileImageUrl;
 }

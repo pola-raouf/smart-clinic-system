@@ -2,14 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reports - Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/patient-pages.css">
 </head>
 <body>
+<div id="navbar-container"></div>
 
-<script type="module">
-import { requireAuth, requireRole } from '/js/core/auth.js';
-requireAuth();
-requireRole('PATIENT');
-</script>
+<main class="patient-page">
+  <header class="page-header">
+    <div>
+      <h1>My Reports</h1>
+      <p>Review your past visits and open report details.</p>
+    </div>
+  </header>
+
+  <section class="stats-row">
+    <article class="stat-card"><p class="stat-label">Total Reports</p><p class="stat-value" id="stat-total-reports">0</p></article>
+    <article class="stat-card"><p class="stat-label">This Year</p><p class="stat-value" id="stat-this-year">0</p></article>
+  </section>
+
+  <section class="reports-grid" id="reports-grid"></section>
+
+  <section class="card table-wrap">
+    <table>
+      <thead>
+      <tr>
+        <th>Visit Date</th>
+        <th>Doctor</th>
+        <th>Diagnosis</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody id="reports-body"></tbody>
+    </table>
+    <div class="empty-state" id="reports-empty" hidden>No reports available yet.</div>
+  </section>
+</main>
+
+<script src="../../js/appointmentService.js"></script>
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
+<script src="../../js/pages/patient/reports.js"></script>
 </body>
 </html>

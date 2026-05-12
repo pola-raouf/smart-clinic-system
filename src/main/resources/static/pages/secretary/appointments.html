@@ -2,14 +2,135 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Appointments – Secretary</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments – Smart Clinic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js" defer></script>
+    <link rel="stylesheet" href="../../css/layout.css">
+    <link rel="stylesheet" href="../../css/manage-appointments.css">
 </head>
 <body>
 
-<script type="module">
-import { requireAuth, requireRole } from '/js/core/auth.js';
-requireAuth();
-requireRole('SECRETARY');
-</script>
+<div id="navbar-container"></div>
+
+<main class="sec-page" id="sec-page">
+  <div class="container">
+    <div class="page-header">
+      <div>
+        <h1>Appointments</h1>
+        <p class="page-subtitle">View and filter all clinic appointments.</p>
+      </div>
+      <div class="header-meta">
+        <span class="role-badge"><i class="ph-bold ph-identification-badge"></i> Secretary</span>
+        <span class="user-name" id="sec-username">—</span>
+      </div>
+    </div>
+
+    <div class="form-card" style="padding-bottom: 18px;">
+      <div class="table-filters">
+        <div class="search-wrap">
+          <i class="ph-bold ph-magnifying-glass"></i>
+          <input type="text" id="table-search" placeholder="Search patient or doctor...">
+        </div>
+        <div class="input-wrap select-wrap filter-select">
+          <select id="status-filter">
+            <option value="">All Statuses</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="completed">Completed</option>
+            <option value="pending">Pending</option>
+          </select>
+          <i class="ph-bold ph-caret-down sel-arrow"></i>
+        </div>
+        <div class="input-wrap select-wrap filter-select">
+          <select id="created-filter">
+            <option value="">Booked By Anyone</option>
+            <option value="secretary">Booked by Secretary</option>
+            <option value="patient">Booked by Patient</option>
+          </select>
+          <i class="ph-bold ph-caret-down sel-arrow"></i>
+        </div>
+        <button class="btn-reset" id="clear-filters" type="button">
+          <i class="ph-bold ph-x"></i> Clear
+        </button>
+        <a href="manage-appointments.html" class="btn-book" style="text-decoration:none;">
+          <i class="ph-bold ph-calendar-plus"></i> New Appointment
+        </a>
+      </div>
+    </div>
+
+    <section class="form-row" style="margin-bottom: 20px;">
+      <article class="form-card" style="padding:14px;">
+        <p class="table-count">Total</p>
+        <h2 id="stat-total">0</h2>
+      </article>
+      <article class="form-card" style="padding:14px;">
+        <p class="table-count">Confirmed</p>
+        <h2 id="stat-confirmed">0</h2>
+      </article>
+      <article class="form-card" style="padding:14px;">
+        <p class="table-count">Cancelled</p>
+        <h2 id="stat-cancelled">0</h2>
+      </article>
+    </section>
+
+    <div class="table-card">
+      <div class="table-header">
+        <div>
+          <h2><i class="ph-bold ph-list-checks"></i> All Appointments</h2>
+          <p class="table-count" id="table-count">0 appointments</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="appt-table" id="appt-table">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Booked By</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody id="appt-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" id="empty-state" hidden>
+        <i class="ph-bold ph-calendar-x"></i>
+        <p>No appointments found.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast" aria-live="polite">
+  <i class="ph-bold ph-check-circle" id="toast-icon"></i>
+  <span id="toast-msg">Done</span>
+</div>
+
+<div class="modal-overlay" id="cancel-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cancel-title">
+    <div class="modal-icon cancel"><i class="ph-bold ph-warning"></i></div>
+    <h3 id="cancel-title">Cancel Appointment?</h3>
+    <p>This will mark the appointment as cancelled and free its time slot.</p>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" id="cancel-no">Keep It</button>
+      <button class="btn-modal-confirm" id="cancel-yes">Yes, Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="../../js/appointmentService.js"></script>
+<script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
+<script src="../../js/pages/secretary/appointments.js"></script>
 </body>
 </html>

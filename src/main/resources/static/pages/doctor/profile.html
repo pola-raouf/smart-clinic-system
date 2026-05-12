@@ -13,26 +13,7 @@
 </head>
 <body data-role="doctor">
 
-<nav class="navbar" id="main-navbar">
-  <div class="nav-container">
-    <a href="dashboard.html" class="logo">
-      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
-      <span>Smart Clinic</span>
-    </a>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="appointments.html">Appointments</a></li>
-      <li><a href="profile.html" class="active">My Profile</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
-      <i class="ph-bold ph-list"></i>
-    </button>
-    <div class="nav-user-badge">
-      <div class="nav-av" style="background:linear-gradient(135deg,#16a34a,#15803d)"><i class="ph-fill ph-user"></i></div>
-      <span>Dr. Ahmed Ali</span>
-    </div>
-  </div>
-</nav>
+<div id="navbar-container"></div>
 
 <main class="profile-page">
   <div class="profile-wrap">
@@ -48,17 +29,19 @@
       <aside>
         <div class="profile-card">
           <div class="profile-av-wrap">
-            <div class="profile-av" style="background:linear-gradient(135deg,#16a34a,#15803d)"><i class="ph-fill ph-user-circle"></i></div>
-            <button class="profile-av-change" title="Change photo"><i class="ph-bold ph-camera"></i></button>
+            <img id="profile-avatar-preview" class="profile-av-img" alt="" width="90" height="90" hidden>
+            <div id="profile-avatar-fallback" class="profile-av" style="background:linear-gradient(135deg,#16a34a,#15803d)"><i class="ph-fill ph-user-circle"></i></div>
+            <input type="file" id="profile-photo-input" accept="image/jpeg,image/png,image/webp" hidden>
+            <button type="button" class="profile-av-change" id="profile-photo-btn" title="Change photo"><i class="ph-bold ph-camera"></i></button>
+            <button type="button" class="profile-av-delete" id="profile-photo-del-btn" title="Delete photo"><i class="ph-bold ph-trash"></i></button>
           </div>
-          <h2>Dr. Ahmed Ali</h2>
+          <h2 id="card-name">Doctor</h2>
           <span class="role-badge doctor">Doctor</span>
-          <p class="pid">ID: D0001 · Cardiologist</p>
+          <p class="pid" id="card-id">ID: D0001</p>
+          <p class="profile-role-blurb" id="profile-role-blurb"></p>
           <div class="profile-divider"></div>
           <ul class="profile-meta-list">
-            <li><i class="ph-bold ph-calendar-blank"></i> <div><small style="font-size:10.5px;color:var(--slate-400);display:block">Joined</small> <strong>March 2023</strong></div></li>
-            <li><i class="ph-bold ph-hospital"></i> <div>Cardiology Dept, Floor 3</div></li>
-            <li><i class="ph-bold ph-star"></i> <div>4.9 rating · 120 reviews</div></li>
+            <li><i class="ph-bold ph-hospital"></i> <div>Smart Clinic</div></li>
           </ul>
         </div>
       </aside>
@@ -72,24 +55,9 @@
           </div>
           <div class="section-body">
             <div class="form-grid">
-              <div class="form-group">
+              <div class="form-group" style="grid-column:1/-1">
                 <label class="form-label">Full Name</label>
-                <input type="text" class="form-input" id="f-name" value="Dr. Ahmed Ali" readonly>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Date of Birth</label>
-                <input type="date" class="form-input" id="f-dob" value="1985-03-20" readonly>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Gender</label>
-                <select class="form-input form-select" id="f-gender" disabled>
-                  <option value="male" selected>Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Specialty</label>
-                <input type="text" class="form-input" value="Cardiologist" readonly>
+                <input type="text" class="form-input" id="f-name" value="" readonly>
               </div>
             </div>
           </div>
@@ -101,17 +69,9 @@
           </div>
           <div class="section-body">
             <div class="form-grid">
-              <div class="form-group">
-                <label class="form-label">Phone</label>
-                <input type="tel" class="form-input" id="f-phone" value="+20 100 999 0000" readonly>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-input" id="f-email" value="dr.ahmed@smartclinic.com" readonly>
-              </div>
               <div class="form-group" style="grid-column:1/-1">
-                <label class="form-label">Address</label>
-                <input type="text" class="form-input" id="f-address" value="Smart Clinic, 123 Medical Drive, Cairo, Egypt" readonly>
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="f-email" value="" readonly>
               </div>
             </div>
           </div>
@@ -145,6 +105,9 @@
 
 <div class="toast" id="toast"><i class="ph-bold ph-check-circle"></i><span id="toast-msg"></span></div>
 <script src="../../js/components/nav-menu.js"></script>
-<script src="../../js/pages/profile.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
+<script src="../../js/appointmentService.js"></script>
+<script src="../../js/pages/doctor/profile.js"></script>
 </body>
 </html>

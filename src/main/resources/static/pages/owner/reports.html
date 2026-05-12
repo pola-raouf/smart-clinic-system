@@ -14,31 +14,11 @@
 </head>
 <body>
 
-<nav class="navbar" id="main-navbar">
-  <div class="nav-container">
-    <a href="dashboard.html" class="logo">
-      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
-      <span>Smart Clinic</span>
-    </a>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="dashboard.html">Dashboard</a></li>
-      <li><a href="reports.html" class="active">Reports</a></li>
-      <li><a href="profile.html">My Profile</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
-      <i class="ph-bold ph-list"></i>
-    </button>
-    <div class="nav-owner-badge">
-      <div class="nav-av-owner"><i class="ph-fill ph-user-gear"></i></div>
-      <span>Dr. Eyad Ashraf</span>
-    </div>
-  </div>
-</nav>
+<div id="navbar-container"></div>
 
 <main class="rpt-page">
   <div class="rpt-wrap">
 
-    <!-- ── TOPBAR ── -->
     <div class="rpt-topbar">
       <div class="rpt-topbar-left">
         <h1>Reports &amp; Analytics</h1>
@@ -54,155 +34,130 @@
       </div>
     </div>
 
-    <!-- ── FILTER BAR ── -->
     <div class="filter-bar">
       <div class="filter-group">
-        <span class="filter-label">Date Range</span>
-        <div class="filter-input-wrap">
-          <i class="ph-bold ph-calendar-blank"></i>
-          <span>May 13, 2025 – May 19, 2025</span>
-          <i class="ph-bold ph-caret-down caret"></i>
+        <span class="filter-label">From Date</span>
+        <div class="filter-input-wrap" style="padding:0; overflow:hidden">
+          <input type="date" id="filter-from" style="width:100%; height:100%; border:none; outline:none; padding:0 12px; font-family:'Inter'; font-size:13px; color:var(--slate-700);">
         </div>
       </div>
 
       <div class="filter-group">
-        <span class="filter-label">Select Period</span>
-        <div class="period-toggle">
-          <button class="period-btn">Daily</button>
-          <button class="period-btn active" id="period-weekly">Weekly</button>
-          <button class="period-btn">Monthly</button>
-          <button class="period-btn">Custom</button>
+        <span class="filter-label">To Date</span>
+        <div class="filter-input-wrap" style="padding:0; overflow:hidden">
+          <input type="date" id="filter-to" style="width:100%; height:100%; border:none; outline:none; padding:0 12px; font-family:'Inter'; font-size:13px; color:var(--slate-700);">
         </div>
       </div>
 
       <div class="filter-group">
         <span class="filter-label">Doctor</span>
-        <select class="filter-select">
-          <option>All Doctors</option>
-          <option>Dr. Ahmed Ali</option>
-          <option>Dr. Sara Hassan</option>
-          <option>Dr. Mohamed Said</option>
+        <select class="filter-select" id="filter-doctor">
+          <option value="">All Doctors</option>
         </select>
       </div>
 
-      <div class="filter-group">
-        <span class="filter-label">Department</span>
-        <select class="filter-select">
-          <option>All Departments</option>
-          <option>Cardiology</option>
-          <option>Dentistry</option>
-          <option>General Medicine</option>
-          <option>Pediatrics</option>
-        </select>
-      </div>
-
-      <button class="btn-apply">
+      <button class="btn-apply" id="btn-apply-filters">
         <i class="ph-bold ph-funnel"></i> Apply Filters
       </button>
     </div>
 
-    <!-- ── STAT CARDS ── -->
     <div class="rpt-stats-grid">
 
       <div class="rpt-stat-card">
         <div class="rpt-stat-icon blue"><i class="ph-bold ph-calendar-blank"></i></div>
         <div class="rpt-stat-content">
           <div class="rpt-stat-label">Total Appointments</div>
-          <div class="rpt-stat-num">120</div>
-          <div class="rpt-stat-pct blue">100% of total</div>
+          <div class="rpt-stat-num skeleton-line" id="kpi-total">&nbsp;</div>
         </div>
       </div>
 
       <div class="rpt-stat-card">
         <div class="rpt-stat-icon green"><i class="ph-bold ph-check-circle"></i></div>
         <div class="rpt-stat-content">
-          <div class="rpt-stat-label">Completed Appointments</div>
-          <div class="rpt-stat-num">95</div>
-          <div class="rpt-stat-pct green">79.2% of total</div>
+          <div class="rpt-stat-label">Completed</div>
+          <div class="rpt-stat-num skeleton-line" id="kpi-completed">&nbsp;</div>
+          <div class="rpt-stat-pct green skeleton-line" id="kpi-completed-pct">&nbsp;</div>
         </div>
       </div>
 
       <div class="rpt-stat-card">
         <div class="rpt-stat-icon orange"><i class="ph-bold ph-x-circle"></i></div>
         <div class="rpt-stat-content">
-          <div class="rpt-stat-label">Cancelled Appointments</div>
-          <div class="rpt-stat-num">10</div>
-          <div class="rpt-stat-pct orange">8.3% of total</div>
+          <div class="rpt-stat-label">Cancelled</div>
+          <div class="rpt-stat-num skeleton-line" id="kpi-cancelled">&nbsp;</div>
+          <div class="rpt-stat-pct orange skeleton-line" id="kpi-cancelled-pct">&nbsp;</div>
         </div>
       </div>
 
       <div class="rpt-stat-card">
         <div class="rpt-stat-icon purple"><i class="ph-bold ph-prohibit"></i></div>
         <div class="rpt-stat-content">
-          <div class="rpt-stat-label">No-show Appointments</div>
-          <div class="rpt-stat-num">15</div>
-          <div class="rpt-stat-pct purple">12.5% of total</div>
+          <div class="rpt-stat-label">No-show</div>
+          <div class="rpt-stat-num skeleton-line" id="kpi-noshow">&nbsp;</div>
+          <div class="rpt-stat-pct purple skeleton-line" id="kpi-noshow-pct">&nbsp;</div>
         </div>
       </div>
 
     </div>
 
-    <!-- ── CHARTS ROW ── -->
     <div class="charts-row">
 
-      <!-- Appointments Overview -->
       <div class="chart-panel">
         <div class="chart-panel-header">
           <div class="chart-panel-title">
-            <i class="ph-bold ph-trend-up"></i> Appointments Overview
+            <i class="ph-bold ph-trend-up"></i> Appointments Trend
           </div>
-          <div class="period-badge">Weekly <i class="ph-bold ph-caret-down"></i></div>
         </div>
-        <div class="chart-container">
+        <div class="chart-container" id="chart-appt-wrap">
           <canvas id="rptApptChart"></canvas>
+          <div class="chart-empty" id="chart-appt-empty" hidden>No data available.</div>
         </div>
       </div>
 
-      <!-- Patient Growth -->
       <div class="chart-panel">
         <div class="chart-panel-header">
           <div class="chart-panel-title">
             <i class="ph-bold ph-users-three"></i> Patient Growth
           </div>
-          <div class="period-badge">Monthly <i class="ph-bold ph-caret-down"></i></div>
+          <div class="period-badge">Monthly</div>
         </div>
-        <div class="chart-container">
+        <div class="chart-container" id="chart-pat-wrap">
           <canvas id="rptPatientChart"></canvas>
+          <div class="chart-empty" id="chart-pat-empty" hidden>No data available.</div>
         </div>
       </div>
 
-      <!-- Cancellation Rate (Pie) -->
       <div class="chart-panel">
         <div class="chart-panel-header">
           <div class="chart-panel-title">
-            <i class="ph-bold ph-chart-pie-slice"></i> Cancellation Rate
+            <i class="ph-bold ph-chart-pie-slice"></i> Status Rate
           </div>
         </div>
-        <div class="pie-center-wrap">
+        <div class="pie-center-wrap" id="chart-pie-wrap">
           <canvas id="rptPieChart" width="160" height="160"></canvas>
+          <div class="chart-empty" id="chart-pie-empty" hidden style="font-size:12px; text-align:center;">No<br>data</div>
         </div>
-        <div class="pie-legend">
+        <div class="pie-legend" id="pie-legend-container" style="display:none;">
           <div class="pie-legend-item">
             <span class="pie-legend-label"><span class="pie-legend-dot" style="background:#3b82f6"></span>Completed</span>
-            <span class="pie-legend-val">79.2%</span>
+            <span class="pie-legend-val" id="leg-completed">0%</span>
           </div>
           <div class="pie-legend-item">
             <span class="pie-legend-label"><span class="pie-legend-dot" style="background:#f97316"></span>Cancelled</span>
-            <span class="pie-legend-val">8.3%</span>
+            <span class="pie-legend-val" id="leg-cancelled">0%</span>
           </div>
           <div class="pie-legend-item">
             <span class="pie-legend-label"><span class="pie-legend-dot" style="background:#a78bfa"></span>No-show</span>
-            <span class="pie-legend-val">12.5%</span>
+            <span class="pie-legend-val" id="leg-noshow">0%</span>
           </div>
         </div>
       </div>
 
-    </div><!-- /charts-row -->
+    </div>
 
-    <!-- ── DETAILED TABLE ── -->
     <div class="table-section">
-      <div class="table-section-header">
-        Detailed Report (May 13 – May 19, 2025)
+      <div class="table-section-header" id="table-title">
+        Detailed Report
       </div>
       <div style="overflow-x:auto">
         <table class="detail-table" id="detail-table">
@@ -217,26 +172,28 @@
             </tr>
           </thead>
           <tbody id="detail-tbody">
-            <!-- JS rendered -->
           </tbody>
-          <tfoot>
+          <tfoot id="detail-tfoot" style="display:none;">
             <tr>
               <td>Total</td>
-              <td>120</td>
-              <td>95</td>
-              <td>10</td>
-              <td>15</td>
-              <td class="completion-rate">79.2%</td>
+              <td id="tf-total">0</td>
+              <td id="tf-completed">0</td>
+              <td id="tf-cancelled">0</td>
+              <td id="tf-noshow">0</td>
+              <td class="completion-rate" id="tf-rate">0%</td>
             </tr>
           </tfoot>
         </table>
+        <div id="table-empty" style="text-align:center; padding:30px; font-size:14px; color:var(--slate-400); display:none;">No records found for the selected period.</div>
       </div>
     </div>
 
-  </div><!-- /rpt-wrap -->
+  </div>
 </main>
 
 <script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
 <script src="../../js/pages/owner/reports.js"></script>
 </body>
 </html>

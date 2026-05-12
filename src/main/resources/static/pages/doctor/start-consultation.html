@@ -63,17 +63,8 @@
       <a href="#diagnosis-section"  class="snav-item active" id="snav-consult">
         <i class="ph-bold ph-stethoscope"></i> Consultation
       </a>
-      <a href="#clinical-section"  class="snav-item" id="snav-history">
+      <a href="#history-section"  class="snav-item" id="snav-history">
         <i class="ph-bold ph-clock-clockwise"></i> Medical History
-      </a>
-      <a href="#prescription-section" class="snav-item" id="snav-rx">
-        <i class="ph-bold ph-pill"></i> Previous Prescriptions
-      </a>
-      <a href="#files-section" class="snav-item" id="snav-appts">
-        <i class="ph-bold ph-calendar-check"></i> Appointments
-      </a>
-      <a href="#diagnosis-section" class="snav-item" id="snav-info">
-        <i class="ph-bold ph-user-circle"></i> Patient Information
       </a>
     </nav>
 
@@ -106,6 +97,14 @@
       </div>
 
       <div class="field-group">
+        <label class="field-label">Symptoms</label>
+        <div class="textarea-wrap">
+          <textarea id="symptoms-field" placeholder="Signs and symptoms (optional)" maxlength="2000" rows="3"></textarea>
+          <span class="char-count" data-max="2000" data-target="symptoms-field">0/2000</span>
+        </div>
+      </div>
+
+      <div class="field-group">
         <label class="field-label">Diagnosis</label>
         <div class="diagnosis-input-row">
           <input type="text" id="diagnosis-input" placeholder="Enter diagnosis (e.g. Hypertension I10)">
@@ -127,27 +126,13 @@
       </div>
     </section>
 
-    <!-- SECTION 2: CLINICAL NOTES -->
-    <section class="consult-card" id="clinical-section">
-      <div class="consult-card-header">
-        <i class="ph-bold ph-note-pencil"></i>
-        <h2>2. Clinical Notes <span class="optional-label">(Optional)</span></h2>
-      </div>
 
-      <div class="field-group">
-        <label class="field-label">Clinical Notes</label>
-        <div class="textarea-wrap">
-          <textarea id="clinical-notes" placeholder="Enter clinical notes…" maxlength="1000" rows="5"></textarea>
-          <span class="char-count" data-max="1000" data-target="clinical-notes">0/1000</span>
-        </div>
-      </div>
-    </section>
 
-    <!-- SECTION 3: PRESCRIPTION -->
+    <!-- SECTION 2: PRESCRIPTION -->
     <section class="consult-card" id="prescription-section">
       <div class="consult-card-header">
         <i class="ph-bold ph-prescription"></i>
-        <h2>3. Prescription</h2>
+        <h2>2. Prescription</h2>
       </div>
 
       <div class="field-group">
@@ -179,34 +164,19 @@
       <button class="btn-add-med" id="add-med-btn">
         <i class="ph-bold ph-plus"></i> Add Medication
       </button>
-
-      <!-- Additional Instructions -->
-      <div class="field-group instructions-group">
-        <label class="field-label green-label">Additional Instructions (for patient)</label>
-        <div class="textarea-wrap">
-          <textarea id="instructions" placeholder="Enter additional instructions or advice for the patient…" maxlength="500" rows="3"></textarea>
-          <span class="char-count" data-max="500" data-target="instructions">0/500</span>
-        </div>
-      </div>
     </section>
 
-    <!-- SECTION 4: ATTACH FILES -->
-    <section class="consult-card" id="files-section">
+    <!-- SECTION 3: MEDICAL HISTORY -->
+    <section class="consult-card" id="history-section">
       <div class="consult-card-header">
-        <i class="ph-bold ph-paperclip"></i>
-        <h2>4. Attach Files <span class="optional-label">(Optional)</span></h2>
-        <p class="section-sub">Upload lab results, images, or any related files</p>
+        <i class="ph-bold ph-clock-clockwise"></i>
+        <h2>3. Medical History</h2>
       </div>
-
-      <div class="upload-area" id="upload-area">
-        <i class="ph-bold ph-cloud-arrow-up"></i>
-        <p>Drag &amp; drop files here, or</p>
-        <label class="btn-upload-label" for="file-input">Browse Files</label>
-        <input type="file" id="file-input" multiple hidden>
-        <p class="upload-hint">Supports: PDF, JPG, PNG, DICOM (max 10MB each)</p>
+      
+      <div class="history-content" id="history-content">
+        <!-- Fetched medical history will be rendered here -->
+        <p style="color: var(--slate-400); text-align: center; padding: 20px;">Loading history...</p>
       </div>
-
-      <ul class="uploaded-files" id="uploaded-files"></ul>
     </section>
 
   </div><!-- /consult-content -->
@@ -216,6 +186,7 @@
 <!-- Toast -->
 <div class="toast" id="toast"><i class="ph-bold ph-check-circle"></i><span id="toast-msg"></span></div>
 
+<script src="../../js/appointmentService.js"></script>
 <script src="../../js/pages/doctor/start-consultation.js"></script>
 </body>
 </html>

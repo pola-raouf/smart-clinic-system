@@ -16,26 +16,7 @@
 </head>
 <body>
 
-<!-- ===================== NAVBAR ===================== -->
-<nav class="navbar" id="main-navbar">
-  <div class="nav-container">
-    <a href="../../index.html" class="logo" id="nav-logo">
-      <div class="logo-icon"><i class="ph-bold ph-plus"></i></div>
-      <span>Smart Clinic</span>
-    </a>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="../../index.html">Home</a></li>
-      <li><a href="../doctors.html">Doctors</a></li>
-      <li><a href="../services.html">Services</a></li>
-      <li><a href="../about.html">About Us</a></li>
-      <li><a href="../login.html">Login</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
-      <i class="ph-bold ph-list"></i>
-    </button>
-    <a href="../register.html" class="btn-signup" id="nav-signup">Sign Up</a>
-  </div>
-</nav>
+<div id="navbar-container"></div>
 
 <!-- ===================== MAIN BOOKING PAGE ===================== -->
 <main class="booking-page" id="booking-page">
@@ -241,6 +222,8 @@
 <!-- Shared services must load BEFORE page JS -->
 <script src="../../js/appointmentService.js"></script>
 <script src="../../js/components/nav-menu.js"></script>
+<script src="../../js/components/navbar.js"></script>
+<script src="../../js/components/components.js"></script>
 <script src="../../js/pages/patient/book-appointment.js"></script>
 
 </body>

@@ -1,31 +1,30 @@
-/* =========================================
-   components.js – LOAD NAVBAR
-========================================= */
+/* =============================================================
+   components.js  –  Injects navbar.html then initialises it
+   Include on every page that uses <div id="navbar-container">
+   ============================================================= */
 
 async function loadNavbar() {
-    const res = await fetch('/components/navbar.html');
-    const html = await res.text();
+    const container = document.getElementById("navbar-container");
+    if (!container) return;
 
-    document.getElementById('navbar-container').innerHTML = html;
+    try {
+        const res = await fetch("/components/navbar.html");
+        if (!res.ok) throw new Error("Could not load navbar component");
+        container.innerHTML = await res.text();
+    } catch (err) {
+        console.error("Navbar load error:", err);
+        return;
+    }
 
-    await window.initNavbar?.();
-    window.initSmartClinicNavbar?.();
+    // Run navbar.js logic (auth, user info, dropdown)
+    if (typeof window.initNavbar === "function") {
+        await window.initNavbar();
+    }
 
-    setActiveNavLink();
+    // Run hamburger toggle after the navbar HTML is in the DOM
+    if (typeof window.initSmartClinicNavbar === "function") {
+        window.initSmartClinicNavbar();
+    }
 }
 
-function setActiveNavLink() {
-    const currentPage = window.location.pathname.split('/').pop();
-
-    document.querySelectorAll('#nav-links a').forEach(link => {
-        link.classList.remove('active');
-
-        const linkPage = link.getAttribute('href').split('/').pop();
-
-        if (currentPage === linkPage) {
-            link.classList.add('active');
-        }
-    });
-}
-
-document.addEventListener('DOMContentLoaded', loadNavbar);
+document.addEventListener("DOMContentLoaded", loadNavbar);

@@ -52,6 +52,8 @@ public class PatientMapper {
             dto.setEmail(patient.getUser().getEmail()); // 🔥 مهم
         }
 
+        dto.setVisitCount(patient.getVisitCount());
+
         return dto;
     }
 }

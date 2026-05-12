@@ -2,12 +2,65 @@
    index.js  –  Smart Clinic Home Page
    ================================================ */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     const $ = id => document.getElementById(id);
 
     /* ─────────────────────────────────────────
-       1. MOBILE HAMBURGER MENU
+       0. LIVE COUNTS (public API)
+    ───────────────────────────────────────── */
+    try {
+        if (window.AppointmentService?.getPublicClinicSummary) {
+            const s = await AppointmentService.getPublicClinicSummary();
+            const pEl = $('hero-stat-patients');
+            const dEl = $('hero-stat-doctors');
+            if (pEl && s.patientLabel) pEl.textContent = s.patientLabel;
+            if (dEl && s.doctorLabel) dEl.textContent = s.doctorLabel;
+        }
+    } catch {
+        const pEl = $('hero-stat-patients');
+        const dEl = $('hero-stat-doctors');
+        if (pEl) pEl.textContent = '—';
+        if (dEl) dEl.textContent = '—';
+    }
+
+    /* ─────────────────────────────────────────
+       1. AUTHENTICATED STATE
+    ───────────────────────────────────────── */
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (token && role) {
+        const routes = {
+            PATIENT: "pages/patient/dashboard.html",
+            DOCTOR: "pages/doctor/dashboard.html",
+            OWNER: "pages/owner/dashboard.html",
+            SECRETARY: "pages/secretary/dashboard.html",
+        };
+        const dashboardUrl = routes[role] || "index.html";
+
+        const bookBtn = $("hero-book-btn");
+        const loginBtn = $("hero-login-btn");
+
+        if (loginBtn) {
+            loginBtn.textContent = "Go to Dashboard";
+            loginBtn.href = dashboardUrl;
+        }
+
+        if (bookBtn) {
+            if (role === "PATIENT") {
+                bookBtn.href = "pages/patient/book.html";
+            } else {
+                bookBtn.style.display = "none";
+                if (loginBtn) {
+                    loginBtn.className = "btn-primary";
+                }
+            }
+        }
+    }
+
+    /* ─────────────────────────────────────────
+       2. MOBILE HAMBURGER MENU
     ───────────────────────────────────────── */
     if (window.initSmartClinicNavbar) window.initSmartClinicNavbar();
 
@@ -39,40 +92,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ─────────────────────────────────────────
-       3. TEASER CARDS  →  navigate to services
-          with specialty pre-selected
+       3. TEASER CARDS (Dynamically fetched)
     ───────────────────────────────────────── */
-    const specMap = {
-        'Cardiology':       'cardiologist',
-        'Dentistry':        'dentist',
-        'Pediatrics':       'pediatrician',
-        'General Medicine': 'general-physician',
-        'Dermatology':      'dermatologist',
-        'Orthopedics':      'orthopedic-surgeon',
-        'Ophthalmology':    'ophthalmologist',
-        'Gynecology':       'gynecologist',
-    };
-
-    document.querySelectorAll('.teaser-card').forEach(card => {
-        const label = card.querySelector('span')?.textContent?.trim();
-        if (label) {
-            card.setAttribute('role', 'button');
-            card.setAttribute('tabindex', '0');
-            card.title = `Go to ${label} services`;
-
-            const navigate = () => {
-                const spec = specMap[label];
-                const url  = spec
-                    ? `services.html#services-section`
-                    : 'services.html';
-                window.location.href = url;
+    const grid = document.getElementById("services-teaser-grid");
+    if (grid && window.AppointmentService?.getPublicServices) {
+        try {
+            const services = await AppointmentService.getPublicServices();
+            
+            const HUE_MAP = {
+                cardiology: 0, dentistry: 200, pediatrics: 160,
+                "general-medicine": 220, dermatology: 30, orthopedics: 280,
+                ophthalmology: 50, gynecology: 340, default: 215
             };
 
-            card.addEventListener('click', navigate);
-            card.addEventListener('keydown', e => {
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(); }
-            });
+            grid.innerHTML = "";
+            if (!services || services.length === 0) {
+                grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--slate-500);">No specialties available yet.</p>`;
+            } else {
+                // Show up to 8 specialties on the homepage teaser
+                services.slice(0, 8).forEach(s => {
+                    const specKey = s.specialtyId || s.name.toLowerCase().replace(/\s+/g, '-');
+                    const hue = HUE_MAP[specKey] ?? HUE_MAP.default;
+
+                    const card = document.createElement("div");
+                    card.className = "teaser-card";
+                    card.setAttribute('role', 'button');
+                    card.setAttribute('tabindex', '0');
+                    card.title = `Go to ${s.name} services`;
+                    
+                    card.innerHTML = `
+                        <div class="teaser-icon" style="--t-hue:${hue}">
+                            <i class="ph-bold ph-${s.icon || 'stethoscope'}"></i>
+                        </div>
+                        <span>${s.name}</span>
+                    `;
+
+                    const navigate = () => {
+                        window.location.href = `pages/services.html#services-section`;
+                    };
+
+                    card.addEventListener('click', navigate);
+                    card.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(); }
+                    });
+
+                    grid.appendChild(card);
+                });
+            }
+        } catch (err) {
+            console.error("Failed to load services teaser:", err);
+            grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--slate-500);">Could not load services.</p>`;
         }
-    });
+    }
 
 });

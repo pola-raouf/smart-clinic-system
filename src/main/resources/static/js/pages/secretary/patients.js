@@ -2,17 +2,6 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
     const app = document.getElementById("sec-patients-app");
-    const token = localStorage.getItem("token");
-
-    const api = (path, opts = {}) =>
-        fetch(path, {
-            ...opts,
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + token,
-                ...(opts.headers || {}),
-            },
-        });
 
     function escapeHtml(s) {
         const d = document.createElement("div");
@@ -115,15 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     };
                     const pw = fd.get("password");
                     if (pw && String(pw).trim()) patch.password = pw;
-                    const res = await api("/api/secretary/patients/" + edit, {
-                        method: "PUT",
-                        body: JSON.stringify(patch),
-                    });
-                    if (!res.ok) {
-                        const err = await res.json().catch(() => ({}));
-                        msg.textContent = err.message || "Update failed";
-                        return;
-                    }
+                    await AppointmentService.updateSecretaryPatient(edit, patch);
                 } else {
                     const body = {
                         name: fd.get("name"),
@@ -134,19 +115,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         gender: fd.get("gender"),
                         address: fd.get("address") || "",
                     };
-                    const res = await api("/api/secretary/patients", {
-                        method: "POST",
-                        body: JSON.stringify(body),
-                    });
-                    if (!res.ok) {
-                        const err = await res.json().catch(() => ({}));
-                        msg.textContent = err.message || "Create failed";
-                        return;
-                    }
+                    await AppointmentService.createSecretaryPatient(body);
                 }
                 await refresh(null);
             } catch (err) {
-                msg.textContent = "Network error";
+                msg.textContent = err.message || "Network error";
             }
         });
 
@@ -158,13 +131,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             btn.addEventListener("click", async () => {
                 if (!confirm("Delete this patient account?")) return;
                 const id = btn.getAttribute("data-id");
-                const res = await api("/api/secretary/patients/" + id, { method: "DELETE" });
-                if (!res.ok) {
-                    const err = await res.json().catch(() => ({}));
+                try {
+                    await AppointmentService.deleteSecretaryPatient(id);
+                    await refresh(null);
+                } catch (err) {
                     alert(err.message || "Delete failed");
-                    return;
                 }
-                await refresh(null);
             });
         });
 
@@ -177,19 +149,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     async function refresh(editId) {
-        const res = await api("/api/secretary/patients");
-        if (res.status === 401 || res.status === 403) {
-            localStorage.removeItem("token");
-            localStorage.removeItem("role");
-            window.location.href = "/pages/login.html";
-            return;
-        }
-        if (!res.ok) {
+        try {
+            const list = await AppointmentService.getSecretaryPatients();
+            render(list, editId);
+        } catch {
             app.textContent = "Could not load patients.";
-            return;
         }
-        const list = await res.json();
-        render(list, editId);
     }
 
     try {

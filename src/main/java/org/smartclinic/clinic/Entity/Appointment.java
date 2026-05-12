@@ -9,14 +9,16 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "appointments")
+@Table(name = "appointments", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"doctor_id", "date", "time"})
+})
 @AllArgsConstructor
 @NoArgsConstructor
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//    private LocalTime time;
+    private LocalTime time;
 
     private LocalDate date;
     @Enumerated(EnumType.STRING)
