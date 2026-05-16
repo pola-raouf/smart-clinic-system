@@ -13,7 +13,7 @@ public class PatientResponseDTO {
     private String address;
     private Long userId;
 
-    private String email; // ✅ ممتاز
+    private String email; 
 
     private int visitCount;
 }
