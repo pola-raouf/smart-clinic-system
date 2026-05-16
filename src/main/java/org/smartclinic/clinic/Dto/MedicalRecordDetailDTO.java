@@ -7,10 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-/**
- * Full visit record for a patient appointment — backed by {@link org.smartclinic.clinic.Entity.MedicalRecord}
- * and linked prescriptions.
- */
+
 @Data
 @Builder
 public class MedicalRecordDetailDTO {
