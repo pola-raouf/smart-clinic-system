@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * Combined response for the "View Medical History" API.
- * Reuses the existing record/prescription DTOs — no duplication.
- */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
