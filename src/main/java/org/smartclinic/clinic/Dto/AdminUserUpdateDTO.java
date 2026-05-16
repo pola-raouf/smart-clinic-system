@@ -7,8 +7,8 @@ import lombok.Setter;
 @Setter
 public class AdminUserUpdateDTO {
     private String email;
-    /** Plain password; if null or blank, password is unchanged */
+    
     private String password;
-    /** Updates profile display name when applicable */
+   
     private String name;
 }
