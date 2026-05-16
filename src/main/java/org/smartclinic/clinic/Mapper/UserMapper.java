@@ -8,7 +8,6 @@ import org.smartclinic.clinic.Entity.Role;
 
 public class UserMapper {
 
-    // 🔹 general use
     public static User toEntity(UserRequestDTO dto, Role role) {
         User user = new User();
         user.setEmail(dto.getEmail());
@@ -17,7 +16,6 @@ public class UserMapper {
         return user;
     }
 
-    // 🔥 register
     public static User toEntity(RegisterRequestDTO dto, Role role) {
         User user = new User();
         user.setEmail(dto.getEmail());
@@ -26,7 +24,6 @@ public class UserMapper {
         return user;
     }
 
-    // 🔹 response
     public static UserResponseDTO toDTO(User user) {
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(user.getId());
