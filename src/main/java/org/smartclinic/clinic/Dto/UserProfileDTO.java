@@ -19,9 +19,6 @@ public class UserProfileDTO {
     private String phoneNumber;
     private String address;
     private String specialty;
-    /** Path or URL to profile photo */
     private String profileImageUrl;
-
-    /** Set for patients only: completed-visit counter from {@code Patient.visitCount}. */
     private Integer visitCount;
 }
