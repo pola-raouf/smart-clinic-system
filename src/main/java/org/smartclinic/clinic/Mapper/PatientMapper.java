@@ -6,12 +6,12 @@ import org.smartclinic.clinic.Dto.*;
 
 public class PatientMapper {
 
-    // 🔹 for admin / create patient
+  
     public static Patient toEntity(PatientRequestDTO dto, User user) {
 
         Patient patient = new Patient();
         patient.setName(dto.getName());
-        patient.setGender(dto.getGender()); // ✅ FIXED
+        patient.setGender(dto.getGender()); 
         patient.setDateOfBirth(dto.getDateOfBirth());
         patient.setPhoneNumber(dto.getPhoneNumber());
         patient.setAddress(dto.getAddress());
@@ -20,12 +20,11 @@ public class PatientMapper {
         return patient;
     }
 
-    // 🔥 for REGISTER
     public static Patient toEntity(RegisterRequestDTO dto, User user) {
 
         Patient patient = new Patient();
         patient.setName(dto.getName());
-        patient.setGender(dto.getGender()); // ✅ FIXED
+        patient.setGender(dto.getGender());
         patient.setDateOfBirth(dto.getDateOfBirth());
         patient.setPhoneNumber(dto.getPhoneNumber());
         patient.setAddress(dto.getAddress());
@@ -34,7 +33,6 @@ public class PatientMapper {
         return patient;
     }
 
-    // 🔹 response
     public static PatientResponseDTO toDTO(Patient patient) {
 
         PatientResponseDTO dto = new PatientResponseDTO();
@@ -49,7 +47,7 @@ public class PatientMapper {
 
         if (patient.getUser() != null) {
             dto.setUserId(patient.getUser().getId());
-            dto.setEmail(patient.getUser().getEmail()); // 🔥 مهم
+            dto.setEmail(patient.getUser().getEmail());
         }
 
         dto.setVisitCount(patient.getVisitCount());
