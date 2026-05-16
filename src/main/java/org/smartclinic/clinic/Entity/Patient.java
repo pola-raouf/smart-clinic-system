@@ -20,13 +20,12 @@ public class Patient {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private Gender gender; // ✅ FIXED
+    private Gender gender; 
 
     private LocalDate dateOfBirth;
     private String phoneNumber;
     private String address;
 
-    /** Incremented when an appointment-linked consultation is completed. */
     @Column(nullable = false)
     private int visitCount = 0;
 
