@@ -25,13 +25,13 @@ public class Notification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_user_id")
-    private User sender; // Optional
+    private User sender; 
 
-    private String notificationType; // e.g., APPOINTMENT_BOOKED, APPOINTMENT_CONFIRMED, REMINDER
+    private String notificationType; 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "related_appointment_id")
-    private Appointment relatedAppointment; // Optional
+    private Appointment relatedAppointment; 
 
     @Column(name = "is_read", nullable = false)
     private boolean read = false;
@@ -40,7 +40,7 @@ public class Notification {
     private LocalDateTime createdAt;
 
     @Column(name = "scheduled_at")
-    private LocalDateTime scheduledAt; // For reminders
+    private LocalDateTime scheduledAt; 
 
     @PrePersist
     protected void onCreate() {
