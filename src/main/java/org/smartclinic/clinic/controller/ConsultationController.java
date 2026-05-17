@@ -24,7 +24,7 @@ public class ConsultationController {
 
     private final ConsultationFacade consultationFacade;
 
-    /** Add Diagnosis API – creates a new MedicalRecord for the patient. */
+    
     @PostMapping("/diagnoses")
     public ResponseEntity<MedicalRecordResponseDTO> addDiagnosis(
             Authentication authentication,
@@ -33,7 +33,7 @@ public class ConsultationController {
                 consultationFacade.addDiagnosis(authentication.getName(), dto));
     }
 
-    /** Add Prescription API – attaches a Prescription to a MedicalRecord. */
+    
     @PostMapping("/prescriptions")
     public ResponseEntity<PrescriptionResponseDTO> addPrescription(
             Authentication authentication,
@@ -42,7 +42,7 @@ public class ConsultationController {
                 consultationFacade.addPrescription(authentication.getName(), dto));
     }
 
-    /** View Medical History API – combined diagnoses + prescriptions for a patient. */
+   
     @GetMapping("/patient/{patientId}/history")
     public ResponseEntity<MedicalHistoryResponseDTO> getMedicalHistory(
             Authentication authentication,
