@@ -3,9 +3,6 @@ package org.smartclinic.clinic.Dto;
 import lombok.Builder;
 import lombok.Data;
 
-/**
- * Full user + role-specific profile fields for owner console (password hash is never exposed).
- */
 @Data
 @Builder
 public class AdminUserDetailDTO {
