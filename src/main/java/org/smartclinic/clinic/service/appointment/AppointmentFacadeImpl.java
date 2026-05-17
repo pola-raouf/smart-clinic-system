@@ -22,17 +22,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Facade Pattern implementation – orchestrates all appointment operations.
- *
- * Responsibilities:
- *  - Validate inputs (doctor/patient existence, dates, double-booking)
- *  - Delegate status transitions to the State Pattern via AppointmentStateResolver
- *  - Use AppointmentMapper for entity↔DTO conversion
- *  - Persist via AppointmentRepository
- *
- * The controller calls ONLY this class. No business logic lives in the controller.
- */
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -47,9 +37,7 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
     private final AppointmentStateResolver resolver;
     private final org.springframework.context.ApplicationEventPublisher eventPublisher;
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // BOOK
-    // ─────────────────────────────────────────────────────────────────────────
+    
 
     @Override
     public AppointmentResponseDTO bookAppointment(AppointmentRequestDTO request) {
@@ -57,30 +45,30 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
         LocalDate date = request.getDate();
         LocalTime time = request.getTime();
 
-        // 1. Doctor must exist
+        
         Doctor doctor = doctorRepository.findById(request.getDoctorId())
                 .orElseThrow(() -> new ApiException("Doctor not found with id: " + request.getDoctorId()));
 
-        // 2. Patient must exist
+        
         Patient patient = patientRepository.findById(request.getPatientId())
                 .orElseThrow(() -> new ApiException("Patient not found with id: " + request.getPatientId()));
 
-        // 3. Date must not be in the past
+       
         if (date.isBefore(LocalDate.now())) {
             throw new ApiException("Cannot book an appointment in the past.");
         }
 
-        // 4. Same-day: time must not be in the past
+        
         if (date.equals(LocalDate.now()) && time.isBefore(LocalTime.now())) {
             throw new ApiException("Cannot book a past time slot for today.");
         }
 
-        // 4.5 Time slot alignment validation (seconds and 30-min intervals)
+        
         if (time.getMinute() % SLOT_MINUTES != 0 || time.getSecond() != 0) {
             throw new ApiException("Invalid time slot");
         }
 
-        // 4.6 Validate against dynamic schedule
+        
         List<org.smartclinic.clinic.Entity.DoctorSchedule> schedules =
             scheduleRepository.findByDoctor_IdAndScheduleDate(doctor.getId(), date);
         
@@ -100,36 +88,34 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
             throw new ApiException("Requested time is outside doctor's working hours.");
         }
 
-        // 5. Double-booking check — blocks only BOOKED or CONFIRMED slots
+        
         boolean slotTaken = appointmentRepository.existsByDoctor_IdAndDateAndTimeAndStatusIn(
                 doctor.getId(), date, time, List.of(AppointmentStatus.BOOKED, AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED));
         if (slotTaken) {
             throw new ApiException("This time slot is already booked for the selected doctor.");
         }
 
-        // 6. Reuse cancelled slot (same doctor/date/time) to avoid unique-key conflict
-        //    and allow rebooking cancelled appointments.
+        
+        
         Appointment appointment = appointmentRepository
                 .findTopByDoctor_IdAndDateAndTimeAndStatusOrderByIdDesc(
                         doctor.getId(), date, time, AppointmentStatus.CANCELLED)
                 .orElseGet(() -> AppointmentMapper.toEntity(date, time, doctor, patient));
 
-        // Ensure rebooked cancelled slots are reassigned to the new patient and active state.
+        
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setDate(date);
         appointment.setTime(time);
         appointment.setStatus(AppointmentStatus.BOOKED);
 
-        // 7. Persist and return DTO
+        
         Appointment saved = appointmentRepository.save(appointment);
         eventPublisher.publishEvent(new org.smartclinic.clinic.event.AppointmentEvent(saved, org.smartclinic.clinic.event.AppointmentEvent.EventType.BOOKED));
         return AppointmentMapper.toDTO(saved);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // CONFIRM
-    // ─────────────────────────────────────────────────────────────────────────
+    
 
     @Override
     public AppointmentResponseDTO confirmAppointment(Long id) {
@@ -140,9 +126,7 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
         return AppointmentMapper.toDTO(saved);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // CANCEL
-    // ─────────────────────────────────────────────────────────────────────────
+    
 
     @Override
     public AppointmentResponseDTO cancelAppointment(Long id) {
@@ -153,9 +137,7 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
         return AppointmentMapper.toDTO(saved);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // COMPLETE
-    // ─────────────────────────────────────────────────────────────────────────
+    
 
     @Override
     public AppointmentResponseDTO completeAppointment(Long id) {
@@ -164,9 +146,7 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
         return AppointmentMapper.toDTO(appointmentRepository.save(appointment));
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // QUERY – doctor appointments
-    // ─────────────────────────────────────────────────────────────────────────
+    
 
     @Override
     @Transactional(readOnly = true)
@@ -180,9 +160,7 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
                 .collect(Collectors.toList());
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // QUERY – patient appointments
-    // ─────────────────────────────────────────────────────────────────────────
+    
 
     @Override
     @Transactional(readOnly = true)
@@ -196,9 +174,7 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
                 .collect(Collectors.toList());
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // QUERY – doctor availability
-    // ─────────────────────────────────────────────────────────────────────────
+   
 
     @Override
     @Transactional(readOnly = true)
@@ -207,7 +183,7 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
             throw new ApiException("Doctor not found with id: " + doctorId);
         }
 
-        // Fetch dynamic schedule
+        
         List<org.smartclinic.clinic.Entity.DoctorSchedule> schedules =
             scheduleRepository.findByDoctor_IdAndScheduleDate(doctorId, date);
 
@@ -215,7 +191,7 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
             return java.util.Collections.emptyList();
         }
 
-        // Fetch only BOOKED or CONFIRMED appointments — CANCELLED/COMPLETED free up the slot
+       
         List<LocalTime> bookedTimes = appointmentRepository
                 .findByDoctor_IdAndDateAndStatusIn(
                         doctorId, date,
@@ -238,15 +214,13 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
             }
         }
         
-        // Sort the slots just in case the ranges were overlapping or out of order
+        
         java.util.Collections.sort(availableSlots);
 
         return availableSlots;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // PRIVATE HELPERS
-    // ─────────────────────────────────────────────────────────────────────────
+    
 
     private Appointment findOrThrow(Long id) {
         return appointmentRepository.findDetailById(id)
