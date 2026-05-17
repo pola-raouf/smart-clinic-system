@@ -42,14 +42,14 @@ public class SystemLogsController {
             e.printStackTrace();
         }
 
-        Collections.reverse(entries); // newest first
+        Collections.reverse(entries);
         return ResponseEntity.ok(entries);
     }
 
     private SystemLogEntryDTO parseLine(String line) {
         if (line == null || line.trim().isEmpty()) return null;
 
-        // Structured pipe format
+      
         String[] parts = line.split("\\|", 9);
         if (parts.length == 9) {
             return SystemLogEntryDTO.builder()
@@ -65,7 +65,7 @@ public class SystemLogsController {
                     .build();
         }
 
-        // Legacy format fallback: [2026-05-12 10:24:06] [INFO ] message
+        
         if (line.startsWith("[")) {
             int timeEnd = line.indexOf(']');
             if (timeEnd > 1) {
@@ -90,7 +90,7 @@ public class SystemLogsController {
             }
         }
 
-        // Unrecognized format
+       
         return SystemLogEntryDTO.builder()
                 .timestamp("")
                 .level("INFO")
