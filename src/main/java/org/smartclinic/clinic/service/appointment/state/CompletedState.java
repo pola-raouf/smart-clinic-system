@@ -4,10 +4,7 @@ import org.smartclinic.clinic.Entity.Appointment;
 import org.smartclinic.clinic.exception.ApiException;
 import org.springframework.stereotype.Component;
 
-/**
- * State Pattern – COMPLETED state.
- * Terminal state — no further transitions allowed.
- */
+
 @Component
 public class CompletedState implements AppointmentState {
 
