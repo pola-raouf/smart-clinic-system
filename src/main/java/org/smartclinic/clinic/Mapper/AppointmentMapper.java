@@ -8,10 +8,7 @@ import java.time.LocalTime;
 
 public class AppointmentMapper {
 
-    /**
-     * Creates an Appointment entity from raw fields.
-     * Status is always set to BOOKED here — facade and controller do NOT set status.
-     */
+  
     public static Appointment toEntity(LocalDate date, LocalTime time, Doctor doctor, Patient patient) {
         Appointment app = new Appointment();
         app.setDate(date);
