@@ -5,10 +5,7 @@ import org.smartclinic.clinic.Entity.AppointmentStatus;
 import org.smartclinic.clinic.exception.ApiException;
 import org.springframework.stereotype.Component;
 
-/**
- * State Pattern – BOOKED state.
- * Allowed transitions: BOOKED → CONFIRMED, BOOKED → CANCELLED
- */
+
 @Component
 public class BookedState implements AppointmentState {
 
