@@ -26,7 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             }
             registry.addResourceHandler("/uploads/**").addResourceLocations(loc);
         } catch (Exception ignored) {
-            // Fallback: still register handler relative to working directory
+            
             registry.addResourceHandler("/uploads/**")
                     .addResourceLocations("file:" + uploadDir + "/");
         }
