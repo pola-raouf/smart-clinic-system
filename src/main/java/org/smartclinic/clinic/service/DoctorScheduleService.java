@@ -47,7 +47,7 @@ public class DoctorScheduleService {
 
     @Transactional
     public List<DoctorScheduleDto> updateDoctorSchedule(Long doctorId, DateScheduleRequestDTO request) {
-        // Null-safe comparison to avoid NPE when doctorId or request.getDoctorId() is null
+        
         if (!java.util.Objects.equals(doctorId, request.getDoctorId())) {
             throw new ApiException("Doctor ID in payload does not match path.");
         }
@@ -55,25 +55,24 @@ public class DoctorScheduleService {
         Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new ApiException("Doctor not found with id: " + doctorId));
 
-        // Treat null timeRanges as empty (clearing the day is valid)
+       
         List<TimeRangeDTO> ranges = request.getTimeRanges() != null
                 ? request.getTimeRanges()
                 : java.util.Collections.emptyList();
 
         validateTimeRanges(ranges);
 
-        // Delete existing schedule for this specific date
-        // @Modifying(clearAutomatically=true) ensures Hibernate cache is evicted before insert
+        
         scheduleRepository.deleteByDoctor_IdAndScheduleDate(doctorId, request.getScheduleDate());
-        // Ensure the delete hits the DB before we insert new rows (avoids unique-constraint conflicts).
+        
         scheduleRepository.flush();
 
-        // If no ranges provided, day is now cleared — return empty list
+        
         if (ranges.isEmpty()) {
             return java.util.Collections.emptyList();
         }
 
-        // Map and save new schedule ranges
+        
         List<DoctorSchedule> newSchedules = ranges.stream()
                 .map(range -> toEntity(range, doctor, request.getScheduleDate()))
                 .collect(Collectors.toList());
@@ -88,7 +87,7 @@ public class DoctorScheduleService {
 
     private void validateTimeRanges(List<TimeRangeDTO> ranges) {
         if (ranges == null || ranges.isEmpty()) {
-            return; // Empty means they are clearing the schedule for the day, which is valid.
+            return; 
         }
 
         for (TimeRangeDTO range : ranges) {
@@ -103,7 +102,7 @@ public class DoctorScheduleService {
             }
         }
         
-        // Optional: Ensure ranges don't overlap within the same day
+       
         ranges.sort((a, b) -> a.getStartTime().compareTo(b.getStartTime()));
         for (int i = 0; i < ranges.size() - 1; i++) {
             if (!ranges.get(i).getEndTime().isBefore(ranges.get(i+1).getStartTime()) && !ranges.get(i).getEndTime().equals(ranges.get(i+1).getStartTime())) {
