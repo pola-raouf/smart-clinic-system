@@ -14,8 +14,6 @@ public class SecretaryPatientUpdateDTO {
     private LocalDate dateOfBirth;
     private String phoneNumber;
     private String address;
-    /** Optional: change login email */
     private String email;
-    /** Optional: set new password (plain text, will be encoded) */
     private String password;
 }
