@@ -44,7 +44,7 @@ public class DiagnosisService {
             }
         }
 
-        // Doctor is taken from the authenticated principal — never from the body.
+        
         MedicalRecord saved = medicalRecordRepository.save(
                 MedicalRecordMapper.toEntity(dto, doctor, patient, appointment));
 
