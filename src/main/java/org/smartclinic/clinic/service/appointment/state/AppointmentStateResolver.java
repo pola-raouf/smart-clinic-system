@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.smartclinic.clinic.Entity.AppointmentStatus;
 import org.springframework.stereotype.Component;
 
-/**
- * Spring-managed resolver that maps an AppointmentStatus → its AppointmentState bean.
- * All state instances are injected (not created with new) so Spring can manage their lifecycle.
- */
+
 @Component
 @RequiredArgsConstructor
 public class AppointmentStateResolver {
