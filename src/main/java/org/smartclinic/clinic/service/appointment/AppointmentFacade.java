@@ -7,11 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-/**
- * Facade Pattern – single entry point for all appointment operations.
- * Controllers must call ONLY this interface. No direct access to
- * repository, mapper, or state classes from the controller layer.
- */
+
 public interface AppointmentFacade {
 
     AppointmentResponseDTO bookAppointment(AppointmentRequestDTO request);
