@@ -60,7 +60,7 @@ public class NotificationService {
         notificationRepository.markAllAsReadForUser(user.getId());
     }
 
-    // Observer Pattern: Listener for Appointment Events
+    
     @EventListener
     @Transactional
     public void handleAppointmentEvent(AppointmentEvent event) {
@@ -69,36 +69,36 @@ public class NotificationService {
         try {
             switch (event.getType()) {
                 case BOOKED -> {
-                    // Notify Doctor
+                    
                     String drMsg = "New appointment booked with " + appt.getPatient().getName() + 
                                    " on " + appt.getDate().format(DATE_FMT) + 
                                    " at " + appt.getTime().format(TIME_FMT) + ".";
                     createNotification(appt.getDoctor().getUser(), "New Appointment", drMsg, "APPOINTMENT_BOOKED", appt);
                     
-                    // Notify Patient
+                    
                     String ptMsg = "You have successfully booked an appointment with " + appt.getDoctor().getName() + 
                                    " on " + appt.getDate().format(DATE_FMT) + 
                                    " at " + appt.getTime().format(TIME_FMT) + ".";
                     createNotification(appt.getPatient().getUser(), "Appointment Booked", ptMsg, "APPOINTMENT_BOOKED", appt);
                 }
                 case CONFIRMED -> {
-                    // Notify Patient
+                    
                     String ptMsg = "Your appointment with " + appt.getDoctor().getName() + " has been confirmed.";
                     createNotification(appt.getPatient().getUser(), "Appointment Confirmed", ptMsg, "APPOINTMENT_CONFIRMED", appt);
                 }
                 case CANCELLED -> {
-                    // Notify Patient
+                    
                     String ptMsg = "Your appointment with " + appt.getDoctor().getName() + " on " + 
                                    appt.getDate().format(DATE_FMT) + " has been cancelled.";
                     createNotification(appt.getPatient().getUser(), "Appointment Cancelled", ptMsg, "APPOINTMENT_CANCELLED", appt);
                     
-                    // Notify Doctor
+                    
                     String drMsg = "Appointment with " + appt.getPatient().getName() + " on " + 
                                    appt.getDate().format(DATE_FMT) + " at " + appt.getTime().format(TIME_FMT) + " was cancelled.";
                     createNotification(appt.getDoctor().getUser(), "Appointment Cancelled", drMsg, "APPOINTMENT_CANCELLED", appt);
                 }
                 case RESCHEDULED -> {
-                    // Notify Patient
+                    
                     String ptMsg = "Your appointment with " + appt.getDoctor().getName() + " was rescheduled to " + 
                                    appt.getDate().format(DATE_FMT) + " at " + appt.getTime().format(TIME_FMT) + ".";
                     createNotification(appt.getPatient().getUser(), "Appointment Rescheduled", ptMsg, "APPOINTMENT_RESCHEDULED", appt);
