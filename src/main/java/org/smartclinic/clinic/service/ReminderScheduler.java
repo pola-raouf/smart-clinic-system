@@ -29,7 +29,7 @@ public class ReminderScheduler {
     
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("hh:mm a");
 
-    // Run every hour
+    
     @Scheduled(fixedRate = 3600000)
     @Transactional
     public void scheduleReminders() {
@@ -41,8 +41,7 @@ public class ReminderScheduler {
         
         List<AppointmentStatus> activeStatuses = Arrays.asList(AppointmentStatus.BOOKED, AppointmentStatus.CONFIRMED);
         
-        // 1. 24-Hour Reminders (Appointments tomorrow)
-        // Since we run hourly, we can just check all active appointments for tomorrow.
+        
         List<Appointment> tomorrowAppts = appointmentRepository.findByDateAndStatusIn(tomorrow, activeStatuses);
         for (Appointment appt : tomorrowAppts) {
             String type = "REMINDER_24H";
@@ -51,10 +50,10 @@ public class ReminderScheduler {
             }
         }
         
-        // 2. 1-Hour Reminders (Appointments today, coming up in the next hour)
+        
         List<Appointment> todayAppts = appointmentRepository.findByDateAndStatusIn(today, activeStatuses);
         LocalTime timeNow = now.toLocalTime();
-        LocalTime timeInOneHour = timeNow.plusHours(1).plusMinutes(5); // slight buffer
+        LocalTime timeInOneHour = timeNow.plusHours(1).plusMinutes(5); 
         
         for (Appointment appt : todayAppts) {
             if (appt.getTime().isAfter(timeNow) && appt.getTime().isBefore(timeInOneHour)) {
@@ -67,10 +66,10 @@ public class ReminderScheduler {
     }
     
     private void sendReminder(Appointment appt, String type, String ptMsg) {
-        // Patient reminder
+        
         createNotification(appt.getPatient().getUser(), "Upcoming Appointment", ptMsg, type, appt);
         
-        // Doctor reminder
+        
         String drMsg = "Upcoming appointment with " + appt.getPatient().getName() + " at " + appt.getTime().format(TIME_FMT) + ".";
         createNotification(appt.getDoctor().getUser(), "Upcoming Appointment", drMsg, type, appt);
     }
