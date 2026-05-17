@@ -47,13 +47,13 @@ public class AuthService {
         return new AuthResponseDTO(token, user.getRole().name());
     }
 
-    // 📝 REGISTER (PATIENT ONLY) — public self-service
+   
     @Transactional
     public void register(RegisterRequestDTO dto) {
         registerPatient(dto);
     }
 
-    /** Used by public register, secretary, and owner when creating a patient account. */
+    
     @Transactional
     public void registerPatient(RegisterRequestDTO dto) {
 
