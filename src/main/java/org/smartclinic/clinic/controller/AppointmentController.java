@@ -13,12 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-/**
- * Appointment Controller – all endpoints under /api/appointments.
- *
- * This controller calls ONLY the AppointmentFacade.
- * No repository, mapper, or state class is referenced here.
- */
+
 @RestController
 @RequestMapping("/api/appointments")
 @RequiredArgsConstructor
@@ -26,18 +21,14 @@ public class AppointmentController {
 
     private final AppointmentFacade appointmentFacade;
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // POST /api/appointments  →  Book appointment
-    // ─────────────────────────────────────────────────────────────────────────
+    
     @PostMapping
     public ResponseEntity<AppointmentResponseDTO> bookAppointment(
             @Valid @RequestBody AppointmentRequestDTO request) {
         return ResponseEntity.ok(appointmentFacade.bookAppointment(request));
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // PATCH /api/appointments/{id}/confirm  →  BOOKED → CONFIRMED
-    // ─────────────────────────────────────────────────────────────────────────
+    
     @PatchMapping("/{id}/confirm")
     public ResponseEntity<AppointmentResponseDTO> confirmAppointment(@PathVariable Long id) {
         try {
@@ -53,9 +44,7 @@ public class AppointmentController {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // PATCH /api/appointments/{id}/cancel  →  BOOKED/CONFIRMED → CANCELLED
-    // ─────────────────────────────────────────────────────────────────────────
+    
     @PatchMapping("/{id}/cancel")
     public ResponseEntity<AppointmentResponseDTO> cancelAppointment(@PathVariable Long id) {
         try {
@@ -65,9 +54,7 @@ public class AppointmentController {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // PATCH /api/appointments/{id}/complete  →  CONFIRMED → COMPLETED
-    // ─────────────────────────────────────────────────────────────────────────
+    
     @PatchMapping("/{id}/complete")
     public ResponseEntity<AppointmentResponseDTO> completeAppointment(@PathVariable Long id) {
         try {
@@ -77,28 +64,21 @@ public class AppointmentController {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // GET /api/appointments/doctor/{doctorId}  →  All appointments for a doctor
-    // ─────────────────────────────────────────────────────────────────────────
+    
     @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<List<AppointmentResponseDTO>> getDoctorAppointments(
             @PathVariable Long doctorId) {
         return ResponseEntity.ok(appointmentFacade.getDoctorAppointments(doctorId));
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // GET /api/appointments/patient/{patientId}  →  All appointments for a patient
-    // ─────────────────────────────────────────────────────────────────────────
+    
     @GetMapping("/patient/{patientId}")
     public ResponseEntity<List<AppointmentResponseDTO>> getPatientAppointments(
             @PathVariable Long patientId) {
         return ResponseEntity.ok(appointmentFacade.getPatientAppointments(patientId));
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // GET /api/appointments/doctor/{doctorId}/availability?date=YYYY-MM-DD
-    //   →  Available time slots (excludes BOOKED + CONFIRMED only)
-    // ─────────────────────────────────────────────────────────────────────────
+    
     @GetMapping("/doctor/{doctorId}/availability")
     public ResponseEntity<List<LocalTime>> getDoctorAvailability(
             @PathVariable Long doctorId,
