@@ -13,12 +13,7 @@ import org.smartclinic.clinic.exception.ApiException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Single Responsibility: create a Prescription attached to an existing
- * MedicalRecord owned by the requesting doctor.
- *
- * Builder Pattern — embedded as a private static class below; used only here.
- */
+
 @Service
 @RequiredArgsConstructor
 public class PrescriptionService {
@@ -46,12 +41,7 @@ public class PrescriptionService {
         return PrescriptionMapper.toDTO(prescriptionRepository.save(prescription));
     }
 
-    /* ──────────────── Builder Pattern (embedded, lightweight) ──────────────── */
-
-    /**
-     * Lightweight Builder for the Prescription entity. Embedded inside the only
-     * service that uses it — no separate builder file, no entity modification.
-     */
+    
     private static final class PrescriptionBuilder {
         private final Prescription p = new Prescription();
 
